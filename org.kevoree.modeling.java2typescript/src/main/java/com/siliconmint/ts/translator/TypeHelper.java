@@ -18,9 +18,15 @@ import java.util.Set;
 public class TypeHelper {
 
     public static String getGenericsIfAny(TranslationContext ctx, String type) {
+        String fqn = ctx.getClassImports().get(type);
+        String className = type;
+        if(fqn != null) {
+            className = fqn;
+        }
+
         StringBuilder paramSB = new StringBuilder();
         if(ctx != null) {
-            Integer generics = ctx.getGenerics().get(type);
+            Integer generics = ctx.getGenerics().get(className);
             if (generics != null) {
                 paramSB.append("<");
                 for (int i = 0; i < generics; i++) {
