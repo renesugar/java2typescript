@@ -7,6 +7,7 @@ class System {
             console.log(obj);
         }
     };
+    
     static err = {
         println(obj:any) {
             console.log(obj);
@@ -15,8 +16,11 @@ class System {
             console.log(obj);
         }
     };
-    static arraycopy(data:Number[], number:Number, d:Number[], number2:Number, numElements:Number):void {
-        //TODO
+
+    static arraycopy(src:Number[], srcPos:number, dest:Number[], destPos:number, numElements:number):void {
+        for (var i = 0; i < numElements; i++) {
+            dest[destPos + i] = src[srcPos + i];
+        }
     }
 }
 
@@ -306,7 +310,7 @@ module java {
                 return result;
             }
 
-            private internalMap= new TSMap<K,V>();
+            private internalMap = new TSMap<K,V>();
 
             clear():void {
                 this.internalMap = new TSMap<K,V>();
