@@ -102,8 +102,15 @@ public class MethodTranslator extends Translator<PsiMethod> {
 
         if (!element.isConstructor()) {
             ctx.append(": ");
-            String resolvedType = TypeHelper.getMethodReturnType(element, ctx);
-            ctx.append(resolvedType);
+            String type = TypeHelper.getMethodReturnType(element, ctx);
+            String fqn = ctx.getClassImports().get(type);
+            if(fqn == null) {
+                fqn = ctx.getClassPackage() + "." + type;
+                ctx.append(type).append(TypeHelper.getGenericsIfAny(ctx, fqn));
+            } else {
+                ctx.append(fqn).append(TypeHelper.getGenericsIfAny(ctx, fqn));
+            }
+
         }
 
         PsiClass containingClass = (PsiClass) element.getParent();
