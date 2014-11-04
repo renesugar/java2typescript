@@ -11,6 +11,7 @@ public abstract class ImportStatementTranslatorBase<T extends PsiImportStatement
 
   @Override
   public void translate(PsiElementVisitor visitor, T element, TranslationContext ctx) {
+
     String [] packagePath = ctx.getClassPackage().split("\\.");
 
     String [] importPath = getImportPath(element);
@@ -76,7 +77,8 @@ public abstract class ImportStatementTranslatorBase<T extends PsiImportStatement
   }
 
   private void printReference(TranslationContext ctx, String dirPath, String fileName) {
-    ctx.print("///<reference path=\"");
+
+      ctx.print("///<reference path=\"");
     ctx.append(dirPath);
     ctx.append(fileName).append(".ts");
     ctx.append("\"/>\n");

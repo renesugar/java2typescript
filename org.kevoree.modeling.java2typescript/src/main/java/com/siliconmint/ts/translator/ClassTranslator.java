@@ -5,6 +5,7 @@ import com.google.common.base.Joiner;
 import com.intellij.psi.*;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class ClassTranslator extends Translator<PsiClass> {
@@ -15,8 +16,13 @@ public class ClassTranslator extends Translator<PsiClass> {
     public void translate(PsiElementVisitor visitor, PsiClass element, TranslationContext ctx) {
 
         boolean anonymousClass = element instanceof PsiAnonymousClass;
-
         if (!anonymousClass) {
+            HashMap<String, String> imports = ctx.getAllImports().get(element.getQualifiedName());
+            if(imports == null) {
+                System.out.println("No imports for: " + element.getQualifiedName());
+            } else {
+            ctx.setClassImports(ctx.getAllImports().get(element.getQualifiedName()));
+            }
             printClassDeclaration(element, ctx);
         }
 

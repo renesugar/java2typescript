@@ -12,6 +12,9 @@ public class TranslationContext {
     private static final int identSize = 2;
     private int ident = 0;
     private HashMap<String, Integer> generics = new HashMap<String, Integer>();
+    private HashMap<String, String> classImports;
+    private HashMap<String, HashMap<String, String>> allImports;
+
 
     public void increaseIdent(){
         ident += identSize;
@@ -88,5 +91,21 @@ public class TranslationContext {
 
     public void setGenerics(HashMap<String, Integer> generics) {
         this.generics = generics;
+    }
+
+    public HashMap<String, HashMap<String, String>> getAllImports() {
+        return allImports;
+    }
+
+    public void setAllImports(HashMap<String, HashMap<String, String>> allImports) {
+        this.allImports = allImports;
+    }
+
+    public HashMap<String, String> getClassImports() {
+        return classImports;
+    }
+
+    public void setClassImports(HashMap<String, String> classImports) {
+        this.classImports = classImports;
     }
 }

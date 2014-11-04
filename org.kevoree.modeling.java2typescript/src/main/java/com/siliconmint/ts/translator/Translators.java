@@ -61,8 +61,8 @@ public class Translators {
         registerTranslator(PsiSwitchStatement.class, new SwitchStatementTranslator());
         registerTranslator(PsiSwitchLabelStatement.class, new SwitchLabelStatementTranslator());
         registerTranslator(PsiPackageStatement.class, new PackageStatementTranslator());
-        registerTranslator(PsiImportStatement.class, new ImportStatementTranslator());
-        registerTranslator(PsiImportStaticStatement.class, new ImportStaticStatementTranslator());
+       // registerTranslator(PsiImportStatement.class, new ImportStatementTranslator());
+       // registerTranslator(PsiImportStaticStatement.class, new ImportStaticStatementTranslator());
 
         registerTranslator(PsiJavaToken.class, new JavaTokenTranslator());
 

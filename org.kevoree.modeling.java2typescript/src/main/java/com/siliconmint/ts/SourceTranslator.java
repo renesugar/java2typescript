@@ -12,6 +12,7 @@ import com.intellij.psi.PsiElement;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiFile;
 import com.intellij.psi.PsiFileFactory;
+import com.intellij.psi.PsiImportStatement;
 import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiRecursiveElementWalkingVisitor;
 import org.jetbrains.annotations.NotNull;
@@ -31,11 +32,13 @@ import static com.siliconmint.ts.util.FileUtil.*;
 
 public class SourceTranslator {
 
-    private static final String baseDir = "/Users/duke/Documents/dev/dukeboard/kevoree-modeling-framework/org.kevoree.modeling.microframework/src/main/java";
+    //private static final String baseDir = "/Users/duke/Documents/dev/dukeboard/kevoree-modeling-framework/org.kevoree.modeling.microframework/src/main/java";
+    private static final String baseDir = "/Users/gregory.nain/Sources/KevoreeRepos/kevoree-modeling-framework/org.kevoree.modeling.microframework/src/main/java";
     private static final String outputDir = new File("target").getAbsolutePath();
 
     private PsiFileFactory psiFileFactory;
     private HashMap<String, Integer> genericsCounts;
+    private HashMap<String, HashMap<String, String>> fqns;
 
     public static void main(String[] args) throws IOException {
         SourceTranslator sourceTranslator = new SourceTranslator();
@@ -71,12 +74,17 @@ public class SourceTranslator {
         try {
             Files.walkFileTree(source.toPath(), new FileVisitor<Path>() {
                 public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
-                    prefix(globalBuilder, deep[0]);
-                    deep[0] = deep[0] + 1;
-                    globalBuilder.append("module ");
-                    globalBuilder.append(dir.getName(dir.getNameCount() - 1).toString().toLowerCase());
-                    globalBuilder.append(" {");
-                    globalBuilder.append("\n");
+                    if(dir != source.toPath()) {
+                        prefix(globalBuilder, deep[0]);
+                        if(deep[0] != 0) {
+                            globalBuilder.append("export ");
+                        }
+                        globalBuilder.append("module ");
+                        globalBuilder.append(dir.getName(dir.getNameCount() - 1).toString().toLowerCase());
+                        globalBuilder.append(" {");
+                        globalBuilder.append("\n");
+                        deep[0] = deep[0] + 1;
+                    }
                     return FileVisitResult.CONTINUE;
                 }
 
@@ -97,10 +105,12 @@ public class SourceTranslator {
                 @NotNull
                 @Override
                 public FileVisitResult postVisitDirectory(Path dir, IOException exc) throws IOException {
-                    deep[0] = deep[0] - 1;
-                    prefix(globalBuilder, deep[0]);
-                    globalBuilder.append("}");
-                    globalBuilder.append("\n");
+                    if(dir != source.toPath()) {
+                        deep[0] = deep[0] - 1;
+                        prefix(globalBuilder, deep[0]);
+                        globalBuilder.append("}");
+                        globalBuilder.append("\n");
+                    }
                     return FileVisitResult.CONTINUE;
                 }
             });
@@ -123,6 +133,7 @@ public class SourceTranslator {
         TypeScriptTranslator translator = new TypeScriptTranslator();
         translator.getCtx().setTranslatedFile(file);
         translator.getCtx().setGenerics(genericsCounts);
+        translator.getCtx().setAllImports(fqns);
         node.getPsi().accept(translator);
         String[] lines = translator.getCtx().getText().split("\n");
         for (int i = 0; i < lines.length; i++) {
@@ -134,20 +145,26 @@ public class SourceTranslator {
 
 
     private void registerGenericsType(File source) {
+        fqns = new HashMap<String, HashMap<String, String>>();
         genericsCounts = new HashMap<String, Integer>();
-        genericsCounts.put("JUSet", 1);
-        genericsCounts.put("JUHsetSet", 1);
-        genericsCounts.put("JUCollection", 1);
-        genericsCounts.put("JUList", 1);
-        genericsCounts.put("JUArrayList", 1);
-        genericsCounts.put("JUMap", 2);
-        genericsCounts.put("JUHashMap", 2);
+        genericsCounts.put("java.util.JUSet", 1);
+        genericsCounts.put("java.util.JUHsetSet", 1);
+        genericsCounts.put("java.util.JUCollection", 1);
+        genericsCounts.put("java.util.JUList", 1);
+        genericsCounts.put("java.util.JUArrayList", 1);
+        genericsCounts.put("java.util.JUMap", 2);
+        genericsCounts.put("java.util.JUHashMap", 2);
         if (source.isFile()) {
         } else {
             try {
                 Files.walkFileTree(source.toPath(), new FileVisitor<Path>() {
                     public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
                         return FileVisitResult.CONTINUE;
+                    }
+
+                    private void completeImports(HashMap<String, String> imports) {
+                        imports.put("Throwable", "java.lang.Throwable");
+                        imports.put("StringBuilder", "java.lang.StringBuilder");
                     }
 
                     @NotNull
@@ -157,13 +174,20 @@ public class SourceTranslator {
                             if (file.toFile().getName().endsWith(".java")) {
                                 FileASTNode node = parseJavaSource(file.toFile(), psiFileFactory);
                                 node.getPsi().accept(new PsiRecursiveElementWalkingVisitor() {
+                                    HashMap<String, String> imports = new HashMap<String, String>();
                                     @Override
                                     public void visitElement(PsiElement element) {
                                         if (element instanceof PsiClass) {
                                             PsiClass clazz = (PsiClass) element;
                                             if (clazz.hasTypeParameters()) {
-                                                genericsCounts.put(clazz.getName(), clazz.getTypeParameters().length);
+                                                genericsCounts.put(clazz.getQualifiedName(), clazz.getTypeParameters().length);
                                             }
+                                            completeImports(imports);
+                                            fqns.put(clazz.getQualifiedName(), imports);
+                                            imports = new HashMap<String, String>();
+                                        } else if (element instanceof PsiImportStatement){
+                                            PsiImportStatement impor = (PsiImportStatement) element;
+                                            imports.put(impor.getQualifiedName().substring(impor.getQualifiedName().lastIndexOf(".")+1),impor.getQualifiedName());
                                         }
                                         super.visitElement(element);
                                     }

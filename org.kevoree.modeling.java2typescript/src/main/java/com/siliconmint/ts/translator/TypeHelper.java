@@ -75,6 +75,10 @@ public class TypeHelper {
         } else {
             typeName = translateType(reference.getReferenceName());
         }
+        String fqn = ctx.getClassImports().get(typeName);
+        if(fqn != null) {
+            typeName = fqn;
+        }
 
         PsiType[] typeParameters = reference.getTypeParameters();
         if (typeParameters != null && typeParameters.length > 0) {
@@ -85,15 +89,23 @@ public class TypeHelper {
     }
 
     public static String getType(PsiType type, TranslationContext ctx) {
+        return getType(type, ctx, true);
+    }
+
+    public static String getType(PsiType type, TranslationContext ctx, boolean withGenerics) {
         if (type instanceof PsiArrayType) {
             type = ((PsiArrayType) type).getComponentType();
             String translatedType = getType(type, ctx);
-            translatedType = translatedType.concat(TypeHelper.getGenericsIfAny(ctx, translatedType));
+            if(withGenerics) {
+                translatedType = translatedType.concat(TypeHelper.getGenericsIfAny(ctx, translatedType));
+            }
             return translatedType.concat("[]");
         } else if (type instanceof PsiClassReferenceType) {
             PsiJavaCodeReferenceElement reference = ((PsiClassReferenceType) type).getReference();
             String resolvedRef = getType(reference, ctx);
-            resolvedRef = resolvedRef + getGenericsIfAny(ctx, resolvedRef);
+            if(withGenerics) {
+                resolvedRef = resolvedRef + getGenericsIfAny(ctx, resolvedRef);
+            }
             return resolvedRef;
         } else {
             return translateType(type.getCanonicalText());
@@ -109,8 +121,6 @@ public class TypeHelper {
             return "string";
         } else if (booleans.contains(type)) {
             return "boolean";
-        } else if (jUtilsExceptions.contains(type)) {
-            return "JU" + type;
         } else {
             return type;
         }
