@@ -108,11 +108,11 @@ public class TypeHelper {
             }
             return resolvedRef;
         } else {
-            return translateType(type.getCanonicalText());
+            return translateType(type.getCanonicalText(), ctx);
         }
     }
 
-    public static String translateType(String type){
+    public static String translateType(String type, TranslationContext ctx){
         if (objects.contains(type)) {
             return "any";
         } else if (primitiveNumbers.contains(type) || objectNumbers.contains(type)) {
@@ -122,6 +122,10 @@ public class TypeHelper {
         } else if (booleans.contains(type)) {
             return "boolean";
         } else {
+            String fqn = ctx.getClassImports().get(type);
+            if(fqn != null) {
+                type = fqn;
+            }
             return type;
         }
     }
