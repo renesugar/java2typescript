@@ -62,6 +62,10 @@ public class ClassTranslator extends Translator<PsiClass> {
             }
         }
 
+        if(element.isEnum()) {
+
+        }
+
         PsiClassInitializer[] initializers = element.getInitializers();
         if (initializers != null && initializers.length > 0) {
             for (PsiClassInitializer initializer : initializers) {
@@ -90,6 +94,20 @@ public class ClassTranslator extends Translator<PsiClass> {
             ctx.print("public equals(other: any): boolean {\n" +
                     "        return this == other;\n" +
                     "    }\n");
+
+            ctx.print("public static _"+element.getName()+"VALUES : "+element.getName()+"[] = [\n");
+            ArrayList<String> enumFileds = new ArrayList<String>();
+            for(int i = 0; i < element.getFields().length; i++) {
+                if(element.getFields()[i].hasModifierProperty("static")) {
+                    enumFileds.add(element.getName()+"."+element.getFields()[i].getName());
+                }
+            }
+            ctx.print(String.join(",\n", enumFileds));
+            ctx.print("];\n" +
+                    "\n" +
+                    "public static values():" + element.getName() + "[] {\n" +
+                    "   return " + element.getName() + "._" + element.getName() + "VALUES;\n" +
+                    "}\n");
         }
 
         ctx.decreaseIdent();
