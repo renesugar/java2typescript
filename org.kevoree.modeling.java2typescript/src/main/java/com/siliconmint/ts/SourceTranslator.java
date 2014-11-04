@@ -17,8 +17,10 @@ import com.intellij.psi.PsiJavaFile;
 import com.intellij.psi.PsiRecursiveElementWalkingVisitor;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.file.FileVisitResult;
 import java.nio.file.FileVisitor;
 import java.nio.file.Files;
@@ -32,8 +34,8 @@ import static com.siliconmint.ts.util.FileUtil.*;
 
 public class SourceTranslator {
 
-    //private static final String baseDir = "/Users/duke/Documents/dev/dukeboard/kevoree-modeling-framework/org.kevoree.modeling.microframework/src/main/java";
-    private static final String baseDir = "/Users/gregory.nain/Sources/KevoreeRepos/kevoree-modeling-framework/org.kevoree.modeling.microframework/src/main/java";
+    private static final String baseDir = "/Users/duke/Documents/dev/dukeboard/kevoree-modeling-framework/org.kevoree.modeling.microframework/src/main/java";
+    //private static final String baseDir = "/Users/gregory.nain/Sources/KevoreeRepos/kevoree-modeling-framework/org.kevoree.modeling.microframework/src/main/java";
     private static final String outputDir = new File("target").getAbsolutePath();
 
     private PsiFileFactory psiFileFactory;
@@ -69,6 +71,16 @@ public class SourceTranslator {
         registerGenericsType(source);
 
         StringBuilder globalBuilder = new StringBuilder();
+
+        //copy default library
+        InputStreamReader is = new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("java.ts"));
+        BufferedReader br = new BufferedReader(is);
+        String read = br.readLine();
+        while(read != null) {
+            globalBuilder.append(read);
+            globalBuilder.append("\n");
+            read =br.readLine();
+        }
         final int[] deep = new int[1];
         deep[0] = 0;
         try {
