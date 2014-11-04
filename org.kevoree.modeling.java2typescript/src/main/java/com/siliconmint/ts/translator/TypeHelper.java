@@ -104,7 +104,14 @@ public class TypeHelper {
             type = ((PsiArrayType) type).getComponentType();
             String translatedType = getType(type, ctx);
             if(withGenerics) {
-                translatedType = translatedType.concat(TypeHelper.getGenericsIfAny(ctx, translatedType));
+                String fqn = ctx.getClassImports().get(translatedType);
+                if(fqn == null) {
+                    fqn = ctx.getClassPackage() + "." + translatedType;
+                    translatedType = translatedType.concat(TypeHelper.getGenericsIfAny(ctx, fqn));
+                } else {
+                    translatedType = fqn.concat(TypeHelper.getGenericsIfAny(ctx, fqn));
+                }
+
             }
             return translatedType.concat("[]");
         } else if (type instanceof PsiClassReferenceType) {
@@ -145,7 +152,16 @@ public class TypeHelper {
     public static String getTypeParameters(PsiType[] typeParameters, TranslationContext ctx) {
         List<String> paramStrings = new ArrayList<String>();
         for (PsiType type: typeParameters) {
-            paramStrings.add(getType(type, ctx));
+
+            String resolvedType = getType(type, ctx);
+            String fqn = ctx.getClassImports().get(resolvedType);
+            if(fqn == null) {
+                fqn = ctx.getClassPackage() + "." + resolvedType;
+                paramStrings.add(resolvedType + TypeHelper.getGenericsIfAny(ctx, fqn));
+            } else {
+                paramStrings.add(fqn + TypeHelper.getGenericsIfAny(ctx, fqn));
+            }
+            //paramStrings.add(resolvedType);
         }
         return Joiner.on(", ").join(paramStrings);
     }
