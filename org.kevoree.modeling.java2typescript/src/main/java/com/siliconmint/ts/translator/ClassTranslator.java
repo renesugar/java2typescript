@@ -17,8 +17,9 @@ public class ClassTranslator extends Translator<PsiClass> {
 
         boolean anonymousClass = element instanceof PsiAnonymousClass;
         if (!anonymousClass) {
-            HashMap<String, String> imports = ctx.getAllImports().get(element.getQualifiedName());
-            ctx.setClassImports(ctx.getAllImports().get(element.getQualifiedName()));
+            if(element.getContainingClass() == null) {
+                ctx.setClassImports(ctx.getAllImports().get(element.getQualifiedName()));
+            }
             printClassDeclaration(element, ctx);
         }
 
@@ -40,7 +41,7 @@ public class ClassTranslator extends Translator<PsiClass> {
     private void printInnerClasses(PsiElementVisitor visitor, PsiClass element, TranslationContext ctx) {
         PsiClass[] innerClasses = element.getInnerClasses();
         if (innerClasses != null && innerClasses.length > 0) {
-            ctx.print("module ").append(element.getName()).append(" { \n");
+            ctx.print("export module ").append(element.getName()).append(" { \n");
             ctx.increaseIdent();
             for (PsiClass innerClass : innerClasses) {
                 innerClass.accept(visitor);
