@@ -29,29 +29,4 @@
         </dependency>
     </dependencies>
 
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.7</version>
-                <executions>
-                    <execution>
-                        <id>copyTarget</id>
-                        <phase>generate-sources</phase>
-                        <configuration>
-                            <tasks>
-                                <delete file="${basedir}/src/main/resources/all.zip" />
-                                <zip basedir="${basedir}/src/main/resources" destfile="${basedir}/src/main/resources/all.zip"/>
-                            </tasks>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
-
 </project>

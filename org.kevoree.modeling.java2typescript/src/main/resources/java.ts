@@ -17,6 +17,9 @@ class System {
     };
 }
 
+var TSMap = Map;
+var TSSet = Set;
+
 interface Number {
     equals : (other:Number) => boolean;
 }
@@ -159,8 +162,8 @@ module java {
 
         export class Collections {
 
-            public static reverse<A>(p:JUList<A>):void {
-                var temp = new JUList<A>();
+            public static reverse<A>(p:List<A>):void {
+                var temp = new List<A>();
                 for (var i = 0; i < p.size(); i++) {
                     temp.add(p.get(i));
                 }
@@ -172,12 +175,12 @@ module java {
 
         }
 
-        export class JUCollection<T> {
+        export class Collection<T> {
             add(val:T):void {
                 throw new java.lang.Exception("Abstract implementation");
             }
 
-            addAll(vals:JUCollection<T>):void {
+            addAll(vals:Collection<T>):void {
                 throw new java.lang.Exception("Abstract implementation");
             }
 
@@ -206,10 +209,10 @@ module java {
             }
         }
 
-        export class JUList<T> extends JUCollection<T> {
+        export class List<T> extends Collection<T> {
             private internalArray:Array<T> = [];
 
-            addAll(vals:JUCollection<T>) {
+            addAll(vals:Collection<T>) {
                 var tempArray = vals.toArray(null);
                 for (var i = 0; i < tempArray.length; i++) {
                     this.internalArray.push(tempArray[i]);
@@ -259,11 +262,11 @@ module java {
             }
         }
 
-        export class JUArrayList<T> extends JUList<T> {
+        export class ArrayList<T> extends List<T> {
 
         }
 
-        export class JUMap<K, V> {
+        export class Map<K, V> {
             get(key:K):V {
                 return this.internalMap.get(key);
             }
@@ -280,9 +283,9 @@ module java {
                 return this.remove(key);
             }
 
-            keySet():JUSet<K> {
-                var result = new JUHashSet<K>();
-                this.internalMap.forEach((value:V, index:K, p1:Map<K,V>)=> {
+            keySet():Set<K> {
+                var result = new HashSet<K>();
+                this.internalMap.forEach((value:V, index:K, p1)=> {
                     result.add(index);
                 });
                 return result;
@@ -292,43 +295,43 @@ module java {
                 return this.internalMap.size == 0;
             }
 
-            values():JUSet<V> {
-                var result = new JUHashSet<V>();
-                this.internalMap.forEach((value:V, index:K, p1:Map<K,V>)=> {
+            values():Set<V> {
+                var result = new HashSet<V>();
+                this.internalMap.forEach((value:V, index:K, p1)=> {
                     result.add(value);
                 });
                 return result;
             }
 
-            private internalMap:Map<K,V> = new Map<K,V>();
+            private internalMap= new TSMap<K,V>();
 
             clear():void {
-                this.internalMap = new Map<K,V>();
+                this.internalMap = new TSMap<K,V>();
             }
 
         }
 
-        export class JUHashMap<K, V> extends JUMap<K,V> {
+        export class JUHashMap<K, V> extends Map<K,V> {
 
         }
 
-        export class JUSet<T> extends JUCollection<T> {
+        export class Set<T> extends Collection<T> {
 
-            private internalSet = new Set<T>();
+            private internalSet = new TSSet<T>();
 
             add(val:T) {
                 this.internalSet.add(val);
             }
 
             clear() {
-                this.internalSet = new Set<T>();
+                this.internalSet = new TSSet<T>();
             }
 
             contains(val:T):boolean {
                 return this.internalSet.has(val);
             }
 
-            addAll(vals:JUCollection<T>) {
+            addAll(vals:Collection<T>) {
                 var tempArray = vals.toArray(null);
                 for (var i = 0; i < tempArray.length; i++) {
                     this.internalSet.add(tempArray[i]);
@@ -350,7 +353,7 @@ module java {
             toArray(other:Array<T>):T[] {
                 var result = new Array<T>(this.internalSet.size);
                 var i = 0;
-                this.internalSet.forEach((value:T, index:T, origin:Set<T>)=> {
+                this.internalSet.forEach((value:T, index:T, origin)=> {
                     result[i] = value;
                     i++;
                 });
@@ -358,7 +361,7 @@ module java {
             }
         }
 
-        class JUHashSet<T> extends JUSet<T> {
+        class HashSet<T> extends Set<T> {
 
         }
 
