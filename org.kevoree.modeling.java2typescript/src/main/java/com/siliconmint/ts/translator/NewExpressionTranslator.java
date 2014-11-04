@@ -38,7 +38,6 @@ public class NewExpressionTranslator extends Translator<PsiNewExpression> {
             if (!arrayDefinition) {
                 if (anonymousClass == null) {
                     ctx.append("new ").append(className).append('(');
-
                     if (element.getArgumentList() != null) {
                         PsiExpression[] arguments = element.getArgumentList().getExpressions();
                         for (int i = 0; i < arguments.length; i++) {
