@@ -71,14 +71,15 @@ public class TypeHelper {
         String typeName;
 
         if (reference.isQualified()) {
-            typeName = translateType(reference.getQualifiedName());
+            typeName = translateType(reference.getQualifiedName(), ctx);
         } else {
-            typeName = translateType(reference.getReferenceName());
+            typeName = translateType(reference.getReferenceName(), ctx);
         }
+        /*
         String fqn = ctx.getClassImports().get(typeName);
         if(fqn != null) {
             typeName = fqn;
-        }
+        }*/
 
         PsiType[] typeParameters = reference.getTypeParameters();
         if (typeParameters != null && typeParameters.length > 0) {

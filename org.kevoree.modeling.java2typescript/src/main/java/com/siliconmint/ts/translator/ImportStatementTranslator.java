@@ -6,10 +6,13 @@ public class ImportStatementTranslator extends ImportStatementTranslatorBase<Psi
 
   @Override
   protected String[] getImportPath(PsiImportStatement element) {
-    String qualifiedName = element.getQualifiedName();
+    /*
+      String qualifiedName = element.getQualifiedName();
       String[] result = qualifiedName.split("\\.");
-      result[result.length-1] = TypeHelper.translateType(result[result.length-1]);
+      result[result.length-1] = TypeHelper.translateType(result[result.length-1], ctx);
     return result;
+    */
+      return null;
   }
 
 }
