@@ -86,7 +86,7 @@ public class ClassTranslator extends Translator<PsiClass> {
         }
 
         if(element.isEnum()) {
-            ctx.print("public equals(other: AccessMode): boolean {\n" +
+            ctx.print("public equals(other: any): boolean {\n" +
                     "        return this == other;\n" +
                     "    }\n");
         }
