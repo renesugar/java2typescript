@@ -18,11 +18,7 @@ public class ClassTranslator extends Translator<PsiClass> {
         boolean anonymousClass = element instanceof PsiAnonymousClass;
         if (!anonymousClass) {
             HashMap<String, String> imports = ctx.getAllImports().get(element.getQualifiedName());
-            if(imports == null) {
-                System.out.println("No imports for: " + element.getQualifiedName());
-            } else {
             ctx.setClassImports(ctx.getAllImports().get(element.getQualifiedName()));
-            }
             printClassDeclaration(element, ctx);
         }
 
