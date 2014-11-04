@@ -8,7 +8,7 @@ public class ArrayInitializerExpressionTranslator extends Translator<PsiArrayIni
 
   @Override
   public void translate(PsiElementVisitor visitor, PsiArrayInitializerExpression element, TranslationContext ctx) {
-    ctx.append("{");
+    ctx.append("[");
     PsiExpression[] initializers = element.getInitializers();
     if (initializers != null && initializers.length > 0) {
       for (int i=0; i < initializers.length; i++){
@@ -18,7 +18,7 @@ public class ArrayInitializerExpressionTranslator extends Translator<PsiArrayIni
         }
       }
     }
-    ctx.append("}");
+    ctx.append("]");
   }
 
 }
