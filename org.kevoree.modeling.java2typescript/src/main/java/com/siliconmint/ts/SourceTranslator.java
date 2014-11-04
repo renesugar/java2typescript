@@ -164,6 +164,7 @@ public class SourceTranslator {
         genericsCounts.put("java.util.Collection", 1);
         genericsCounts.put("java.util.List", 1);
         genericsCounts.put("java.util.ArrayList", 1);
+        genericsCounts.put("java.util.LinkedList", 1);
         genericsCounts.put("java.util.Map", 2);
         genericsCounts.put("java.util.HashMap", 2);
         if (source.isFile()) {
