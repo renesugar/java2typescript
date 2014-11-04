@@ -81,9 +81,20 @@ public class MethodTranslator extends Translator<PsiMethod> {
             paramSB.append(parameter.getName());
             paramSB.append(": ");
 
+            String type = TypeHelper.getParameterType(parameter, ctx);
+            String fqn = ctx.getClassImports().get(type);
+            if(fqn == null) {
+                fqn = ctx.getClassPackage() + "." + type;
+                paramSB.append(type).append(TypeHelper.getGenericsIfAny(ctx, fqn));
+            } else {
+                paramSB.append(fqn).append(TypeHelper.getGenericsIfAny(ctx, fqn));
+            }
+
+
+            /*
             String resolvedType = TypeHelper.getParameterType(parameter, ctx);
             paramSB.append(resolvedType);
-
+*/
             params.add(paramSB.toString());
         }
         ctx.append(joiner.join(params));
