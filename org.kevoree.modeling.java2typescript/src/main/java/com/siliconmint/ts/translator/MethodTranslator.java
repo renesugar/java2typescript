@@ -49,8 +49,13 @@ public class MethodTranslator extends Translator<PsiMethod> {
                         if(extentions.length > 0) {
                             ctx.append(" extends ");
                             for(PsiClassType ext : extentions) {
-                                ctx.append(ext.getClassName());
-                                ctx.append(TypeHelper.getGenericsIfAny(ctx, ext.getClassName()));
+                                String className = ext.getClassName();
+                                String fqn = ctx.getClassImports().get(className);
+                                if(fqn!=null) {
+                                    className = fqn;
+                                }
+                                ctx.append(className);
+                                ctx.append(TypeHelper.getGenericsIfAny(ctx, className));
                             }
                         }
 
