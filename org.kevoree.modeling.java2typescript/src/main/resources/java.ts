@@ -311,7 +311,7 @@ module java {
 
         }
 
-        export class JUHashMap<K, V> extends Map<K,V> {
+        export class HashMap<K, V> extends Map<K,V> {
 
         }
 
@@ -361,7 +361,7 @@ module java {
             }
         }
 
-        class HashSet<T> extends Set<T> {
+        export class HashSet<T> extends Set<T> {
 
         }
 

@@ -104,7 +104,7 @@ public class ClassTranslator extends Translator<PsiClass> {
         }
 
         if (element.isInterface()) {
-            ctx.print("interface ");
+            ctx.print("export interface ");
         } else {
             ctx.print("export class ");
         }

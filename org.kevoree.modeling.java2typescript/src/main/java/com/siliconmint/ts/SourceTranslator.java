@@ -159,13 +159,13 @@ public class SourceTranslator {
     private void registerGenericsType(File source) {
         fqns = new HashMap<String, HashMap<String, String>>();
         genericsCounts = new HashMap<String, Integer>();
-        genericsCounts.put("java.util.JUSet", 1);
-        genericsCounts.put("java.util.JUHsetSet", 1);
-        genericsCounts.put("java.util.JUCollection", 1);
-        genericsCounts.put("java.util.JUList", 1);
-        genericsCounts.put("java.util.JUArrayList", 1);
-        genericsCounts.put("java.util.JUMap", 2);
-        genericsCounts.put("java.util.JUHashMap", 2);
+        genericsCounts.put("java.util.Set", 1);
+        genericsCounts.put("java.util.HsetSet", 1);
+        genericsCounts.put("java.util.Collection", 1);
+        genericsCounts.put("java.util.List", 1);
+        genericsCounts.put("java.util.ArrayList", 1);
+        genericsCounts.put("java.util.Map", 2);
+        genericsCounts.put("java.util.HashMap", 2);
         if (source.isFile()) {
         } else {
             try {
@@ -176,7 +176,10 @@ public class SourceTranslator {
 
                     private void completeImports(HashMap<String, String> imports) {
                         imports.put("Throwable", "java.lang.Throwable");
-                        imports.put("StringBuilder", "java.lang.StringBuilder");
+                        imports.put("Exception", "java.lang.Exception");
+                        imports.put("Long", "java.lang.Long");
+                        imports.put("Double", "java.lang.Double");
+                        imports.put("Integer", "java.lang.Integer");
                     }
 
                     @NotNull
