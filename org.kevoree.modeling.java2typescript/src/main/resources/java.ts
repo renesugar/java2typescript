@@ -1,0 +1,402 @@
+class System {
+    static out = {
+        println(obj:any) {
+            console.log(obj);
+        },
+        print(obj:any) {
+            console.log(obj);
+        }
+    };
+    static err = {
+        println(obj:any) {
+            console.log(obj);
+        },
+        print(obj:any) {
+            console.log(obj);
+        }
+    };
+}
+
+interface Number {
+    equals : (other:Number) => boolean;
+}
+
+Number.prototype.equals = function (other) {
+    return this == other;
+};
+
+interface String {
+    equals : (other:String) => boolean;
+    startsWith : (other:String) => boolean;
+    endsWith : (other:String) => boolean;
+    matches :  (regEx:String) => boolean;
+    getBytes : () => number[];
+    isEmpty : () => boolean;
+}
+
+String.prototype.getBytes = function () {
+    var res:number[] = new Number[this.length];
+    for (var i = 0; i < this.length; i++) {
+        res[i] = Number(this.charAt(i));
+    }
+    return res;
+};
+
+String.prototype.matches = function (regEx) {
+    return this.match(regEx).length > 0;
+};
+
+String.prototype.isEmpty = function () {
+    return this.length == 0;
+};
+
+String.prototype.equals = function (other) {
+    return this == other;
+};
+
+
+String.prototype.startsWith = function (other) {
+    for (var i = 0; i < other.length; i++) {
+        if (other.charAt(i) != this.charAt(i)) {
+            return false;
+        }
+    }
+    return true;
+};
+
+String.prototype.endsWith = function (other) {
+    for (var i = other.length - 1; i >= 0; i--) {
+        if (other.charAt(i) != this.charAt(i)) {
+            return false;
+        }
+    }
+    return true;
+};
+
+module java {
+
+    export module lang {
+
+        export class Double {
+            public static parseDouble(val:string):number {
+                return Number(val);
+            }
+        }
+
+        export class Float {
+            public static parseFloat(val:string):number {
+                return Number(val);
+            }
+        }
+
+        export class Integer {
+            public static parseInt(val:string):number {
+                return Number(val);
+            }
+        }
+
+        export class Long {
+            public static parseLong(val:string):number {
+                return Number(val);
+            }
+        }
+
+        export class Short {
+            public static parseShort(val:string):number {
+                return Number(val);
+            }
+        }
+
+        export class Throwable {
+            printStackTrace() {
+                throw new Exception("Abstract implementation");
+            }
+        }
+
+        export class Exception extends Throwable {
+
+            private message:string;
+
+            constructor(message:string) {
+                super();
+                this.message = message;
+            }
+
+            printStackTrace() {
+                console.error(this.message);
+            }
+        }
+
+        export class StringBuilder {
+
+            buffer = "";
+
+            public length = 0;
+
+            append(val:any):StringBuilder {
+                this.buffer = this.buffer + val;
+                length = this.buffer.length;
+                return this;
+            }
+
+            toString():string {
+                return this.buffer;
+            }
+
+        }
+    }
+
+    export module util {
+
+        export class Arrays {
+            static fill(data:Number[], begin:number, nbElem:number, param:number):void {
+                var max = begin + nbElem;
+                for (var i = begin; i < max; i++) {
+                    data[i] = param;
+                }
+            }
+        }
+
+        export class Collections {
+
+            public static reverse<A>(p:JUList<A>):void {
+                var temp = new JUList<A>();
+                for (var i = 0; i < p.size(); i++) {
+                    temp.add(p.get(i));
+                }
+                p.clear();
+                for (var i = temp.size() - 1; i >= 0; i--) {
+                    p.add(temp.get(i));
+                }
+            }
+
+        }
+
+        export class JUCollection<T> {
+            add(val:T):void {
+                throw new java.lang.Exception("Abstract implementation");
+            }
+
+            addAll(vals:JUCollection<T>):void {
+                throw new java.lang.Exception("Abstract implementation");
+            }
+
+            remove(val:T):void {
+                throw new java.lang.Exception("Abstract implementation");
+            }
+
+            clear():void {
+                throw new java.lang.Exception("Abstract implementation");
+            }
+
+            isEmpty():boolean {
+                throw new java.lang.Exception("Abstract implementation");
+            }
+
+            size():number {
+                throw new java.lang.Exception("Abstract implementation");
+            }
+
+            contains(val:T):boolean {
+                throw new java.lang.Exception("Abstract implementation");
+            }
+
+            toArray(a:Array<T>):T[] {
+                throw new java.lang.Exception("Abstract implementation");
+            }
+        }
+
+        export class JUList<T> extends JUCollection<T> {
+            private internalArray:Array<T> = [];
+
+            addAll(vals:JUCollection<T>) {
+                var tempArray = vals.toArray(null);
+                for (var i = 0; i < tempArray.length; i++) {
+                    this.internalArray.push(tempArray[i]);
+                }
+            }
+
+            clear() {
+                this.internalArray = [];
+            }
+
+            remove(val:T) {
+                //TODO with filter
+            }
+
+            toArray(a:Array<T>):T[] {
+                //TODO
+                var result = new Array<T>(this.internalArray.length);
+                this.internalArray.forEach((value:T, index:number, p1:T[])=> {
+                    result[index] = value;
+                });
+                return result;
+            }
+
+            size():number {
+                return this.internalArray.length;
+            }
+
+            add(val:T):void {
+                this.internalArray.push(val);
+            }
+
+            get(index:number):T {
+                return this.internalArray[index];
+            }
+
+            contains(val:T):boolean {
+                for (var i = 0; i < this.internalArray.length; i++) {
+                    if (this.internalArray[i] == val) {
+                        return true;
+                    }
+                }
+                return false;
+            }
+
+            isEmpty():boolean {
+                return this.internalArray.length == 0;
+            }
+        }
+
+        export class JUArrayList<T> extends JUList<T> {
+
+        }
+
+        export class JUMap<K, V> {
+            get(key:K):V {
+                return this.internalMap.get(key);
+            }
+
+            put(key:K, value:V):void {
+                this.internalMap.set(key, value);
+            }
+
+            containsKey(key:K):boolean {
+                return this.internalMap.has(key);
+            }
+
+            remove(key:K):void {
+                return this.remove(key);
+            }
+
+            keySet():JUSet<K> {
+                var result = new JUHashSet<K>();
+                this.internalMap.forEach((value:V, index:K, p1:Map<K,V>)=> {
+                    result.add(index);
+                });
+                return result;
+            }
+
+            isEmpty():boolean {
+                return this.internalMap.size == 0;
+            }
+
+            values():JUSet<V> {
+                var result = new JUHashSet<V>();
+                this.internalMap.forEach((value:V, index:K, p1:Map<K,V>)=> {
+                    result.add(value);
+                });
+                return result;
+            }
+
+            private internalMap:Map<K,V> = new Map<K,V>();
+
+            clear():void {
+                this.internalMap = new Map<K,V>();
+            }
+
+        }
+
+        export class JUHashMap<K, V> extends JUMap<K,V> {
+
+        }
+
+        export class JUSet<T> extends JUCollection<T> {
+
+            private internalSet = new Set<T>();
+
+            add(val:T) {
+                this.internalSet.add(val);
+            }
+
+            clear() {
+                this.internalSet = new Set<T>();
+            }
+
+            contains(val:T):boolean {
+                return this.internalSet.has(val);
+            }
+
+            addAll(vals:JUCollection<T>) {
+                var tempArray = vals.toArray(null);
+                for (var i = 0; i < tempArray.length; i++) {
+                    this.internalSet.add(tempArray[i]);
+                }
+            }
+
+            remove(val:T) {
+                this.internalSet.delete(val);
+            }
+
+            size():number {
+                return this.internalSet.size;
+            }
+
+            isEmpty():boolean {
+                return this.internalSet.size == 0;
+            }
+
+            toArray(other:Array<T>):T[] {
+                var result = new Array<T>(this.internalSet.size);
+                var i = 0;
+                this.internalSet.forEach((value:T, index:T, origin:Set<T>)=> {
+                    result[i] = value;
+                    i++;
+                });
+                return result;
+            }
+        }
+
+        class JUHashSet<T> extends JUSet<T> {
+
+        }
+
+    }
+
+}
+
+module org {
+
+    export module junit {
+
+        export class Assert {
+            public static assertNotNull(p:any):void {
+                if (p == null) {
+                    throw new java.lang.Exception("Assert Error " + p + " must be null");
+                }
+            }
+
+            public static assertNull(p:any):void {
+                if (p != null) {
+                    throw new java.lang.Exception("Assert Error " + p + " must be null");
+                }
+            }
+
+            public static assertEquals(p:any, p2:any):void {
+                if (p != p2) {
+                    throw new java.lang.Exception("Assert Error " + p + " must be equals to " + p2);
+                }
+            }
+
+            public static assertTrue(b:boolean):void {
+                if (!b) {
+                    throw new java.lang.Exception("Assert Error " + b + " must be true");
+                }
+            }
+        }
+
+    }
+
+}
+
