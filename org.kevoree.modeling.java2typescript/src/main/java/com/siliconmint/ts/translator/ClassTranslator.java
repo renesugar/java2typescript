@@ -118,8 +118,15 @@ public class ClassTranslator extends Translator<PsiClass> {
                     if(extentions.length > 0) {
                         ctx.append(" extends ");
                         for(PsiClassType ext : extentions) {
-                            ctx.append(ext.getClassName());
-                            ctx.append(TypeHelper.getGenericsIfAny(ctx, ext.getClassName()));
+
+                            String fqn = ctx.getClassImports().get(ext.getClassName());
+                            if(fqn == null) {
+                                fqn = ctx.getClassPackage() + "." + ext.getClassName();
+                                ctx.append(ext.getClassName()).append(TypeHelper.getGenericsIfAny(ctx, fqn));
+                            } else {
+                                ctx.append(fqn).append(TypeHelper.getGenericsIfAny(ctx, fqn));
+                            }
+
                         }
                     }
 
