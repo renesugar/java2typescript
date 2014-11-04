@@ -399,6 +399,12 @@ module org {
                 }
             }
 
+            public static assertNotEquals(p:any, p2:any):void {
+                if (p == p2) {
+                    throw new java.lang.Exception("Assert Error " + p + " must be equals to " + p2);
+                }
+            }
+
             public static assertTrue(b:boolean):void {
                 if (!b) {
                     throw new java.lang.Exception("Assert Error " + b + " must be true");
