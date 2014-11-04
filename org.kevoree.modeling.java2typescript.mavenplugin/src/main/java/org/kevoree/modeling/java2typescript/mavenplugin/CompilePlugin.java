@@ -40,35 +40,11 @@ public class CompilePlugin extends AbstractMojo {
         source.mkdirs();
         target.mkdirs();
         SourceTranslator sourceTranslator = new SourceTranslator();
-        sourceTranslator.translateSources(source.getPath(), target.getPath());
-        unzip(this.getClass().getClassLoader().getResourceAsStream("all.zip"), target);
-    }
-
-    private static final int BUFFER = 1024;
-
-    public void unzip(InputStream in_zip, File outFolder) {
         try {
-            ZipInputStream in = new ZipInputStream(new BufferedInputStream(in_zip));
-            ZipEntry entry;
-            while ((entry = in.getNextEntry()) != null) {
-                System.out.println("Extracting: " + entry);
-                int count;
-                byte data[] = new byte[BUFFER];
-                File outTarget = new File(outFolder.getAbsolutePath() + File.separator + entry.getName());
-                if(entry.isDirectory()){
-                    outTarget.mkdirs();
-                } else {
-                    BufferedOutputStream out = new BufferedOutputStream(new FileOutputStream(outTarget), BUFFER);
-                    while ((count = in.read(data, 0, BUFFER)) != -1) {
-                        out.write(data, 0, count);
-                    }
-                    out.flush();
-                    out.close();
-                }
-            }
-        } catch (Exception e) {
-            System.out.println("Failed to extract : " + e.getMessage());
+            sourceTranslator.translateSources(source.getPath(), target.getPath());
+        } catch (IOException e) {
             e.printStackTrace();
+            throw new MojoExecutionException(e.getMessage());
         }
     }
 
