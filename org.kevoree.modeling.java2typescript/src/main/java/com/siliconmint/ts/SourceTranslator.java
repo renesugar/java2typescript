@@ -34,8 +34,8 @@ import static com.siliconmint.ts.util.FileUtil.*;
 
 public class SourceTranslator {
 
-   // private static final String baseDir = "/Users/duke/Documents/dev/dukeboard/kevoree-modeling-framework/org.kevoree.modeling.microframework/src/main/java";
-    private static final String baseDir = "/Users/gregory.nain/Sources/KevoreeRepos/kevoree-modeling-framework/org.kevoree.modeling.microframework/src/main/java";
+    private static final String baseDir = "/Users/duke/Documents/dev/dukeboard/kevoree-modeling-framework/org.kevoree.modeling.microframework/src/main/java";
+   // private static final String baseDir = "/Users/gregory.nain/Sources/KevoreeRepos/kevoree-modeling-framework/org.kevoree.modeling.microframework/src/main/java";
     private static final String outputDir = new File("target").getAbsolutePath();
 
     private PsiFileFactory psiFileFactory;
@@ -180,6 +180,9 @@ public class SourceTranslator {
                         imports.put("Long", "java.lang.Long");
                         imports.put("Double", "java.lang.Double");
                         imports.put("Integer", "java.lang.Integer");
+                        imports.put("Short", "java.lang.Short");
+                        imports.put("Float", "java.lang.Float");
+                        imports.put("StringBuilder", "java.lang.StringBuilder");
                     }
 
                     @NotNull
