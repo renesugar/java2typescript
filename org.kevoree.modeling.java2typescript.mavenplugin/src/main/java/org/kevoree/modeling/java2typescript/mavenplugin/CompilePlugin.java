@@ -30,6 +30,12 @@ public class CompilePlugin extends AbstractMojo {
     private File target;
 
     /**
+     * Target directory
+     */
+    @Parameter(defaultValue = "${project.artifactId}.ts")
+    private String outputFileName;
+
+    /**
      * The maven project.
      */
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
@@ -41,7 +47,7 @@ public class CompilePlugin extends AbstractMojo {
         target.mkdirs();
         SourceTranslator sourceTranslator = new SourceTranslator();
         try {
-            sourceTranslator.translateSources(source.getPath(), target.getPath());
+            sourceTranslator.translateSources(source.getPath(), target.getPath() + File.separator + outputFileName);
         } catch (IOException e) {
             e.printStackTrace();
             throw new MojoExecutionException(e.getMessage());

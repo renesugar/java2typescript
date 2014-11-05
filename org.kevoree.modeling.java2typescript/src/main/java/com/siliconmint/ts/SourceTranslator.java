@@ -34,9 +34,9 @@ import static com.siliconmint.ts.util.FileUtil.*;
 
 public class SourceTranslator {
 
-    private static final String baseDir = "/Users/duke/Documents/dev/dukeboard/kevoree-modeling-framework/org.kevoree.modeling.microframework/src/main/java";
-    //private static final String baseDir = "/Users/gregory.nain/Sources/KevoreeRepos/kevoree-modeling-framework/org.kevoree.modeling.microframework/src/main/java";
-    private static final String outputDir = new File("target").getAbsolutePath();
+    //private static final String baseDir = "/Users/duke/Documents/dev/dukeboard/kevoree-modeling-framework/org.kevoree.modeling.microframework/src/main/java";
+    private static final String baseDir = "/Users/gregory.nain/Sources/KevoreeRepos/kevoree-modeling-framework/org.kevoree.modeling.microframework/src/main/java";
+    private static final String outputFile = new File("target/out.ts").getAbsolutePath();
 
     private PsiFileFactory psiFileFactory;
     private HashMap<String, Integer> genericsCounts;
@@ -44,7 +44,7 @@ public class SourceTranslator {
 
     public static void main(String[] args) throws IOException {
         SourceTranslator sourceTranslator = new SourceTranslator();
-        sourceTranslator.translateSources(baseDir, outputDir);
+        sourceTranslator.translateSources(baseDir, outputFile);
     }
 
     public SourceTranslator() {
@@ -53,7 +53,7 @@ public class SourceTranslator {
 
     public void translateSources(String sourcePath, String outputPath) throws IOException {
         File source = new File(sourcePath);
-        File outputDir = new File(outputPath);
+        File outputFile = new File(outputPath);
         if (source.exists()) {
             if (source.isFile()) {
                 throw new IllegalArgumentException("Source path is not a directory");
@@ -61,12 +61,10 @@ public class SourceTranslator {
         } else {
             source.mkdirs();
         }
-        if (outputDir.exists()) {
-            if (outputDir.isFile()) {
-                throw new IllegalArgumentException("Output path is not a directory");
-            }
+        if (outputFile.isDirectory()) {
+            throw new IllegalArgumentException("OutputFile should not be a directory");
         } else {
-            outputDir.mkdirs();
+            Files.createDirectories(outputFile.toPath().getParent());
         }
         registerGenericsType(source);
 
@@ -129,9 +127,8 @@ public class SourceTranslator {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        File out = new File(outputDir, "out.ts");
-        FileUtil.writeToFile(out, globalBuilder.toString().getBytes());
-        System.out.println("Transpile Java2TypeScript ended to " + out.getAbsolutePath());
+        FileUtil.writeToFile(outputFile, globalBuilder.toString().getBytes());
+        System.out.println("Transpile Java2TypeScript ended to " + outputFile.getAbsolutePath());
     }
 
     private void prefix(StringBuilder builder, int deep) {
@@ -234,43 +231,6 @@ public class SourceTranslator {
             }
         }
     }
-
-    /*
-    private void translateSourceDir(File sourceDirectory, File outputDir) {
-        File[] sourceFiles = sourceDirectory.listFiles(JAVA_SOURCE_FILE_FILTER);
-        Arrays.sort(sourceFiles, FILE_NAME_COMPARATOR);
-        for (File sourceFile : sourceFiles) {
-            translateSourceFile(sourceFile, outputDir);
-        }
-
-        File[] sourceSubDirs = sourceDirectory.listFiles(DIRECTORY_FILTER);
-        Arrays.sort(sourceSubDirs, FILE_NAME_COMPARATOR);
-        for (File sourceSubDirectory : sourceSubDirs) {
-            translateSourceDir(sourceSubDirectory, new File(outputDir, sourceSubDirectory.getName()));
-        }
-    }
-
-    private void translateSourceFile(File sourceFile, File outputDir) {
-        try {
-            FileASTNode node = parseJavaSource(sourceFile, psiFileFactory);
-            TypeScriptTranslator translator = new TypeScriptTranslator();
-            translator.getCtx().setTranslatedFile(sourceFile);
-            translator.getCtx().setGenerics(genericsCounts);
-            node.getPsi().accept(translator);
-            if (!outputDir.exists()) {
-                outputDir.mkdirs();
-            }
-            String fileName = sourceFile.getName();
-            int extensionPosition = sourceFile.getName().lastIndexOf(".java");
-            FileUtil.writeToFile(new File(outputDir, fileName.substring(0, extensionPosition).concat(".ts")), translator.getCtx().getText().getBytes());
-            System.out.printf("Successfully translated %s\n", sourceFile.getAbsolutePath());
-        } catch (IOException e) {
-            System.err.printf("Failed to parse %s: %s\n", sourceFile.getAbsolutePath(), e.getMessage());
-        } catch (Exception e) {
-            System.err.printf("Failed to translate %s: %s\n", sourceFile.getAbsolutePath(), e.getMessage());
-            throw new RuntimeException(e);
-        }
-    }*/
 
     private PsiFileFactory createPsiFactory() {
         MockProject mockProject = createProject();

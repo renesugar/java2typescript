@@ -29,6 +29,7 @@ public class ReferenceExpressionTranslator extends Translator<PsiReferenceExpres
                 }
             }
         }
+                
         String translatedType = ctx.getClassImports().get(element.getReferenceName());
         if(translatedType != null) {
             ctx.append(translatedType);
