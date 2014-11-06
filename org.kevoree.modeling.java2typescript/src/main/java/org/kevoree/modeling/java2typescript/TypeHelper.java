@@ -31,10 +31,6 @@ public class TypeHelper {
             return "boolean";
         }
 
-        if(element.toString().contains("Long")) {
-            System.out.println();
-        }
-
         if (element instanceof PsiPrimitiveType) {
             if (result == null || result.equals("null")) {
                 System.err.println("TypeHelper::printType -> Result null with elem:" + element.toString());
@@ -143,6 +139,7 @@ public class TypeHelper {
         javaTypes.put("Double", "java.lang.Double");
         javaTypes.put("Float", "java.lang.Float");
         javaTypes.put("Integer", "java.lang.Integer");
+        javaTypes.put("Short", "java.lang.Short");
         javaTypes.put("StringBuilder", "java.lang.StringBuilder");
 
         javaTypes.put("Throwable", "java.lang.Throwable");
