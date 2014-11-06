@@ -31,7 +31,7 @@ public class ReferenceExpressionTranslator {
                 } else if (resolution instanceof PsiMethod) {
                     PsiMethod method = (PsiMethod) resolution;
                     if (method.getModifierList().hasModifierProperty("static")) {
-                        qualifier = method.getContainingClass().getName();
+                        qualifier = method.getContainingClass().getQualifiedName();
                     }
                     ctx.append(qualifier).append('.');
                 } else if (resolution instanceof PsiClass) {
@@ -46,6 +46,12 @@ public class ReferenceExpressionTranslator {
                 ctx.append(element.getReferenceName());
             }
         } else {
+
+            if(element.toString().contains("Arrays")){
+                System.err.println("type:"+element.getType());
+                System.err.println("ref:"+element.getReferenceName()+"----"+element.toString());
+            }
+
             ctx.append(element.getReferenceName());
         }
     }
