@@ -1,27 +1,23 @@
 
-package org.kevoree.modeling.java2typescript.translator;
+package org.kevoree.modeling.java2typescript.translators.statement;
 
 import com.intellij.psi.*;
 import org.kevoree.modeling.java2typescript.TranslationContext;
+import org.kevoree.modeling.java2typescript.translators.expression.ExpressionTranslator;
 
-public class ExpressionStatementTranslator extends Translator<PsiExpressionStatement> {
+public class ExpressionStatementTranslator {
 
-  @Override
-  public void translate(PsiElementVisitor visitor, PsiExpressionStatement element, TranslationContext ctx) {
+  public static void translate(PsiExpressionStatement element, TranslationContext ctx) {
 
     boolean loopDeclaration = false;
-
     PsiElement parent = element.getParent();
     if (parent instanceof PsiLoopStatement && !((PsiLoopStatement)parent).getBody().equals(element)) {
       loopDeclaration = true;
     }
-
     if (!loopDeclaration) {
       ctx.print("");
     }
-
-    element.getExpression().accept(visitor);
-
+    ExpressionTranslator.translate(element.getExpression(),ctx);
     if (!loopDeclaration) {
       ctx.append(";\n");
     }

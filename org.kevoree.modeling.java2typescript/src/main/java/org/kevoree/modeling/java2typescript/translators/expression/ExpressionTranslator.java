@@ -19,6 +19,16 @@ public class ExpressionTranslator {
             ReferenceExpressionTranslator.translate((PsiReferenceExpression) expression, ctx);
         } else if (expression instanceof PsiPrefixExpression) {
             PrefixExpressionTranslator.translate((PsiPrefixExpression) expression, ctx);
+        } else if (expression instanceof PsiTypeCastExpression) {
+            TypeCastExpressionTranslator.translate((PsiTypeCastExpression) expression, ctx);
+        } else if (expression instanceof PsiAssignmentExpression) {
+            AssignmentExpressionTranslator.translate((PsiAssignmentExpression) expression, ctx);
+        } else if (expression instanceof PsiMethodCallExpression) {
+            MethodCallExpressionTranslator.translate((PsiMethodCallExpression) expression, ctx);
+        } else if(expression instanceof PsiThisExpression){
+            ThisExpressionTranslator.translate((PsiThisExpression) expression, ctx);
+        }else if(expression instanceof PsiPolyadicExpression){
+            PolyadicExpressionTranslator.translate((PsiPolyadicExpression) expression,ctx);
         } else {
             System.err.println("EXPR " + expression);
         }

@@ -1,19 +1,18 @@
 
-package org.kevoree.modeling.java2typescript.translator;
+package org.kevoree.modeling.java2typescript.translators.expression;
 
 import com.intellij.psi.*;
 import org.kevoree.modeling.java2typescript.TranslationContext;
 
-public class MethodCallExpressionTranslator extends Translator<PsiMethodCallExpression> {
+public class MethodCallExpressionTranslator {
 
-    @Override
-    public void translate(PsiElementVisitor visitor, PsiMethodCallExpression element, TranslationContext ctx) {
-        element.getMethodExpression().accept(visitor);
+    public static void translate(PsiMethodCallExpression element, TranslationContext ctx) {
+        ReferenceExpressionTranslator.translate(element.getMethodExpression(), ctx);
         if (!element.getMethodExpression().toString().endsWith(".length")) {
             ctx.append('(');
             PsiExpression[] arguments = element.getArgumentList().getExpressions();
             for (int i = 0; i < arguments.length; i++) {
-                arguments[i].accept(visitor);
+                ExpressionTranslator.translate(arguments[i],ctx);
                 if (i != arguments.length - 1) {
                     ctx.append(", ");
                 }
