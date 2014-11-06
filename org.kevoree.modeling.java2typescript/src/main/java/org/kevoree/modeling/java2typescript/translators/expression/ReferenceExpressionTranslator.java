@@ -33,7 +33,9 @@ public class ReferenceExpressionTranslator {
                     if (method.getModifierList().hasModifierProperty("static")) {
                         qualifier = method.getContainingClass().getQualifiedName();
                     }
-                    ctx.append(qualifier).append('.');
+                    if (!element.getReferenceName().equals("super")) {
+                        ctx.append(qualifier).append('.');
+                    }
                 } else if (resolution instanceof PsiClass) {
                     PsiClass resolClazz = (PsiClass) resolution;
                     ctx.append(resolClazz.getQualifiedName().substring(0, resolClazz.getQualifiedName().lastIndexOf(".") + 1));

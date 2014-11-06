@@ -16,7 +16,7 @@ import java.util.Set;
 public class TypeHelper {
 
     public static String printType(PsiType element, TranslationContext ctx) {
-        return printType(element, ctx, true,false);
+        return printType(element, ctx, true, false);
     }
 
     public static String printType(PsiType element, TranslationContext ctx, boolean withGenericParams, boolean explicitType) {
@@ -52,16 +52,16 @@ public class TypeHelper {
                     String[] methodParameters = new String[parameters.length];
                     for (int i = 0; i < methodParameters.length; i++) {
                         PsiType parameterType = parameters[i].getType();
-                        for(int j = 0; j < resolvedClass.getTypeParameters().length; j++) {
-                            if(resolvedClass.getTypeParameters()[j].getNameIdentifier().getText().equals(parameterType.getPresentableText())) {
-                                if(((PsiClassReferenceType) element).getParameters().length <= j) {
+                        for (int j = 0; j < resolvedClass.getTypeParameters().length; j++) {
+                            if (resolvedClass.getTypeParameters()[j].getNameIdentifier().getText().equals(parameterType.getPresentableText())) {
+                                if (((PsiClassReferenceType) element).getParameters().length <= j) {
                                     parameterType = null;
                                 } else {
                                     parameterType = ((PsiClassReferenceType) element).getParameters()[j];
                                 }
                             }
                         }
-                        if(parameterType == null) {
+                        if (parameterType == null) {
                             methodParameters[i] = parameters[i].getName() + " : any";
                         } else {
                             methodParameters[i] = parameters[i].getName() + " : " + printType(parameterType, ctx);
@@ -78,7 +78,7 @@ public class TypeHelper {
                     if (resolvedClass.getTypeParameters().length > 0) {
                         String[] generics = new String[resolvedClass.getTypeParameters().length];
                         Arrays.fill(generics, "any");
-                        if(withGenericParams){
+                        if (withGenericParams) {
                             result += "<" + String.join(", ", generics) + ">";
                         }
                     }
@@ -94,7 +94,7 @@ public class TypeHelper {
                     for (int i = 0; i < genericTypes.length; i++) {
                         generics[i] = printType(genericTypes[i], ctx);
                     }
-                    if(withGenericParams){
+                    if (withGenericParams) {
                         result += "<" + String.join(", ", generics) + ">";
                     }
                 }
@@ -116,7 +116,7 @@ public class TypeHelper {
 
     public static String primitiveStaticCall(String clazz) {
         String result = javaTypes.get(clazz);
-        if(result != null) {
+        if (result != null) {
             return result;
         }
         return clazz;
@@ -134,6 +134,9 @@ public class TypeHelper {
         javaTypes.put("Set", "java.util.Set");
         javaTypes.put("HashSet", "java.util.HashSet");
         javaTypes.put("ArrayList", "java.util.ArrayList");
+        javaTypes.put("LinkedList", "java.util.LinkedList");
+        javaTypes.put("Assert", "org.junit.Assert");
+        javaTypes.put("Random", "java.util.Random");
 
         javaTypes.put("Long", "java.lang.Long");
         javaTypes.put("Double", "java.lang.Double");
