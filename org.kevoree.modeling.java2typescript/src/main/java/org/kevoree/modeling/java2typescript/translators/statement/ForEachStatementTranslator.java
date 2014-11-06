@@ -15,7 +15,7 @@ public class ForEachStatementTranslator {
         ctx.print("var ");
         ctx.append(parameter.getName());
         ctx.append(": ");
-        ctx.append(TypeHelper.getParameterType(parameter, ctx));
+        ctx.append(TypeHelper.printType(parameter.getType(), ctx));
         ctx.append(";\n");
         ctx.print("for (");
         ctx.append(parameter.getName());

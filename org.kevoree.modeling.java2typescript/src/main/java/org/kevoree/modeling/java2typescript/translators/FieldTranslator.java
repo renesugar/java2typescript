@@ -50,11 +50,12 @@ public class FieldTranslator {
             ExpressionTranslator.translate(element.getInitializer(), ctx);
             ctx.append(";\n");
         } else {
+            /*
             if (TypeHelper.isPrimitiveField(element)) {
                 ctx.append(" = 0");
             } else {
                 ctx.append(" = null");
-            }
+            }*/
             ctx.append(";\n");
         }
     }

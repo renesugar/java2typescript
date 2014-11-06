@@ -23,7 +23,7 @@ public class LocalVariableTranslator {
         }
         ctx.append(element.getName());
         ctx.append(": ");
-        ctx.append(TypeHelper.getVariableType(element, ctx));
+        ctx.append(TypeHelper.printType(element.getType(), ctx));
         if (element.hasInitializer()) {
             ctx.append(" = ");
             ExpressionTranslator.translate(element.getInitializer(), ctx);
