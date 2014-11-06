@@ -19,23 +19,58 @@ import java.util.Set;
 public class TypeHelper {
 
 
-    public static String printType(PsiType element,TranslationContext ctx){
+    public static String printType(PsiType element, TranslationContext ctx){
         String result = element.getPresentableText();
+
+        if (objects.contains(result)) {
+            return "any";
+        } else if (primitiveNumbers.contains(result) || objectNumbers.contains(result)) {
+            return "number";
+        } else if (strings.contains(result)) {
+            return "string";
+        } else if (booleans.contains(result)) {
+            return "boolean";
+        }
+
+
         if(element instanceof PsiClassReferenceType) {
             PsiClass resolvedClass = ((PsiClassReferenceType) element).resolve();
             if(resolvedClass != null) {
-                result = resolvedClass.getQualifiedName();
-                if(resolvedClass.getTypeParameters().length > 0) {
-                    result += "<";
+                String qualifiedName = resolvedClass.getQualifiedName();
+                if(qualifiedName != null) {
+                    result = resolvedClass.getQualifiedName();
+                }
+                if (resolvedClass.getTypeParameters().length > 0) {
                     String[] generics = new String[resolvedClass.getTypeParameters().length];
                     Arrays.fill(generics, "any");
-                    result += String.join(",", generics);
-                    result += ">";
+                    result += "<" + String.join(", ", generics) + ">";
+                }
+            } else {
+                String tryJavaUtil = javaUtilsTypes.get(((PsiClassReferenceType) element).getClassName());
+                if(tryJavaUtil != null) {
+                    result = tryJavaUtil;
+                }
+                if(((PsiClassReferenceType) element).getParameterCount() > 0) {
+                    String[] generics = new String[((PsiClassReferenceType) element).getParameterCount()];
+                    PsiType[] genericTypes = ((PsiClassReferenceType) element).getParameters();
+                    for(int i = 0; i < genericTypes.length; i++) {
+                        generics[i] = printType(genericTypes[i], ctx);
+                    }
+                    result += "<" + String.join(", ", generics) + ">";
                 }
             }
+        } else {
+            System.err.println("TypeHelper: InstanceOf:" + element.getClass());
         }
+
+        if(result == null || result.equals("null")) {
+            System.err.println("TypeHelper::printType -> Result null with elem:" + element.toString());
+        }
+
         return result;
     }
+
+
 
     /* Remove above */
 
@@ -201,6 +236,15 @@ public class TypeHelper {
         return Joiner.on(", ").join(paramStrings);
         */
         return null;
+    }
+
+    public static final HashMap<String, String> javaUtilsTypes = new HashMap<String, String>();
+    static {
+        javaUtilsTypes.put("Map", "java.util.Map");
+        javaUtilsTypes.put("HashMap", "java.util.HashMap");
+        javaUtilsTypes.put("List", "java.util.List");
+        javaUtilsTypes.put("Set", "java.util.Set");
+        javaUtilsTypes.put("HashSet", "java.util.HashSet");
     }
 
     public static final Set<String> primitiveNumbers = ImmutableSet.of("byte", "short", "int", "long", "float", "double");
