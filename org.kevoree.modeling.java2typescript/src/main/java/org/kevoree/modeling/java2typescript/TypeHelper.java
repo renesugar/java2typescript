@@ -43,10 +43,6 @@ public class TypeHelper {
             PsiClass resolvedClass = ((PsiClassReferenceType) element).resolve();
             if (resolvedClass != null) {
                 if (isCallbackClass(resolvedClass) && !explicitType) {
-
-                    //PsiType[] implemParameters = ((PsiClassReferenceType) element).getParameters();
-                    //Map<PsiTypeParameter, PsiType> resolvedGenerics = ((PsiClassReferenceType) element).resolveGenerics().getSubstitutor().getSubstitutionMap();
-
                     PsiMethod method = resolvedClass.getAllMethods()[0];
                     PsiParameter[] parameters = method.getParameterList().getParameters();
                     String[] methodParameters = new String[parameters.length];
