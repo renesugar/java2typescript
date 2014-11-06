@@ -17,9 +17,6 @@ public class SourceTranslator {
     //private static final String baseDir = "/Users/gregory.nain/Sources/KevoreeRepos/kevoree-modeling-framework/org.kevoree.modeling.microframework/src/main/java";
     private static final String outputFile = new File("target/out.ts").getAbsolutePath();
 
-    private HashMap<String, Integer> genericsCounts;
-    private HashMap<String, HashMap<String, String>> fqns;
-
     public static void main(String[] args) throws IOException {
         SourceTranslator sourceTranslator = new SourceTranslator();
         sourceTranslator.translateSources(baseDir, outputFile);
@@ -42,6 +39,8 @@ public class SourceTranslator {
         }
         TranslationContext ctx = new TranslationContext();
         //copy default library
+
+        /*
         InputStreamReader is = new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("java.ts"));
         BufferedReader br = new BufferedReader(is);
         String read = br.readLine();
@@ -49,7 +48,9 @@ public class SourceTranslator {
             ctx.append(read);
             ctx.append("\n");
             read = br.readLine();
-        }
+        }*/
+
+
         JavaAnalyzer analyzer = new JavaAnalyzer();
         PsiDirectory root = analyzer.analyze(source);
         root.acceptChildren(new PsiElementVisitor() {
