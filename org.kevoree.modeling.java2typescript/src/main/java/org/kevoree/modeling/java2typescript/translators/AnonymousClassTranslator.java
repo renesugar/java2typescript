@@ -19,7 +19,7 @@ public class AnonymousClassTranslator {
             PsiParameter[] parameters = method.getParameterList().getParameters();
             String[] methodParameters = new String[parameters.length];
             for (int i = 0; i < methodParameters.length; i++) {
-                methodParameters[i] = parameters[i].getName() + " : " + TypeHelper.printType(parameters[i].getType(), ctx);
+                methodParameters[i] = parameters[i].getName() + " : " + TypeHelper.printType(parameters[i].getTypeElement().getType(), ctx);
             }
             ctx.append("function(){\n");
             ctx.increaseIdent();

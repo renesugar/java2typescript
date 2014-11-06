@@ -4,11 +4,13 @@ package org.kevoree.modeling.java2typescript;
 import com.google.common.collect.ImmutableSet;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
+import com.intellij.psi.util.PsiUtil;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 
 public class TypeHelper {
@@ -28,6 +30,11 @@ public class TypeHelper {
         } else if (booleans.contains(result)) {
             return "boolean";
         }
+
+        if(element.toString().contains("Callback<String>")) {
+            System.out.println();
+        }
+
         if (element instanceof PsiPrimitiveType) {
             if (result == null || result.equals("null")) {
                 System.err.println("TypeHelper::printType -> Result null with elem:" + element.toString());
@@ -40,11 +47,30 @@ public class TypeHelper {
             PsiClass resolvedClass = ((PsiClassReferenceType) element).resolve();
             if (resolvedClass != null) {
                 if (isCallbackClass(resolvedClass) && !explicitType) {
+
+                    //PsiType[] implemParameters = ((PsiClassReferenceType) element).getParameters();
+                    //Map<PsiTypeParameter, PsiType> resolvedGenerics = ((PsiClassReferenceType) element).resolveGenerics().getSubstitutor().getSubstitutionMap();
+
                     PsiMethod method = resolvedClass.getAllMethods()[0];
                     PsiParameter[] parameters = method.getParameterList().getParameters();
                     String[] methodParameters = new String[parameters.length];
                     for (int i = 0; i < methodParameters.length; i++) {
-                        methodParameters[i] = parameters[i].getName() + " : " + printType(parameters[i].getType(), ctx);
+                        PsiType parameterType = parameters[i].getType();
+                        for(int j = 0; j < resolvedClass.getTypeParameters().length; j++) {
+                            if(resolvedClass.getTypeParameters()[j].getNameIdentifier().getText().equals(parameterType.getPresentableText())) {
+                                if(((PsiClassReferenceType) element).getParameters().length <= j) {
+                                    parameterType = null;
+                                } else {
+                                    parameterType = ((PsiClassReferenceType) element).getParameters()[j];
+                                }
+                            }
+                        }
+                        if(parameterType == null) {
+                            methodParameters[i] = parameters[i].getName() + " : any";
+                        } else {
+                            methodParameters[i] = parameters[i].getName() + " : " + printType(parameterType, ctx);
+                        }
+
                     }
                     result = "(" + String.join(", ", methodParameters) + ") => " + printType(method.getReturnType(), ctx);
                     return result;
