@@ -63,7 +63,7 @@ public class TypeHelper {
                     }
                 }
             } else {
-                String tryJavaUtil = javaUtilsTypes.get(((PsiClassReferenceType) element).getClassName());
+                String tryJavaUtil = javaTypes.get(((PsiClassReferenceType) element).getClassName());
                 if (tryJavaUtil != null) {
                     result = tryJavaUtil;
                 }
@@ -91,14 +91,24 @@ public class TypeHelper {
         return clazz.isInterface() && clazz.getAllMethods().length == 1;
     }
 
-    public static final HashMap<String, String> javaUtilsTypes = new HashMap<String, String>();
+    public static final HashMap<String, String> javaTypes = new HashMap<String, String>();
 
     static {
-        javaUtilsTypes.put("Map", "java.util.Map");
-        javaUtilsTypes.put("HashMap", "java.util.HashMap");
-        javaUtilsTypes.put("List", "java.util.List");
-        javaUtilsTypes.put("Set", "java.util.Set");
-        javaUtilsTypes.put("HashSet", "java.util.HashSet");
+        javaTypes.put("Map", "java.util.Map");
+        javaTypes.put("HashMap", "java.util.HashMap");
+        javaTypes.put("List", "java.util.List");
+        javaTypes.put("Set", "java.util.Set");
+        javaTypes.put("HashSet", "java.util.HashSet");
+        javaTypes.put("StringBuilder", "java.util.StringBuilder");
+        javaTypes.put("ArrayList", "java.util.ArrayList");
+
+        javaTypes.put("Long", "java.lang.Long");
+        javaTypes.put("Double", "java.lang.Double");
+        javaTypes.put("Float", "java.lang.Float");
+        javaTypes.put("Integer", "java.lang.Integer");
+
+        javaTypes.put("Throwable", "java.lang.Throwable");
+        javaTypes.put("Exception", "java.lang.Exception");
     }
 
     public static final Set<String> primitiveNumbers = ImmutableSet.of("byte", "short", "int", "long", "float", "double");
@@ -139,21 +149,6 @@ public class TypeHelper {
     public static final Set<String> objects = ImmutableSet.of(
             Object.class.getName(),
             Object.class.getSimpleName()
-    );
-
-    public static final Set<String> jUtilsExceptions = ImmutableSet.of(
-            List.class.getName(),
-            List.class.getSimpleName(),
-            ArrayList.class.getName(),
-            ArrayList.class.getSimpleName(),
-            Set.class.getName(),
-            Set.class.getSimpleName(),
-            HashSet.class.getName(),
-            HashSet.class.getSimpleName(),
-            Map.class.getName(),
-            Map.class.getSimpleName(),
-            HashMap.class.getName(),
-            HashMap.class.getSimpleName()
     );
 
 }
