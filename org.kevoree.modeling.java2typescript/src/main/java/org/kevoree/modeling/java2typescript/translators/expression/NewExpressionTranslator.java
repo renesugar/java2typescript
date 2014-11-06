@@ -9,39 +9,36 @@ import org.kevoree.modeling.java2typescript.translators.AnonymousClassTranslator
 public class NewExpressionTranslator {
 
     public static void translate(PsiNewExpression element, TranslationContext ctx) {
-
-        boolean arrayDefinition = false;
-        String className = "";
         PsiAnonymousClass anonymousClass = element.getAnonymousClass();
-        if(anonymousClass != null) {
-            AnonymousClassTranslator.translate(anonymousClass,ctx);
+        if (anonymousClass != null) {
+            AnonymousClassTranslator.translate(anonymousClass, ctx);
         } else {
+            boolean arrayDefinition = false;
             PsiJavaCodeReferenceElement classReference = element.getClassReference();
-
+            String className;
             if (classReference != null) {
-                className = TypeHelper.getType(classReference, ctx);
+                //PsiElement resolved = classReference.resolve();
+                className = TypeHelper.printType(element.getType(), ctx);
             } else {
-                className = TypeHelper.getType(element.getType().getDeepComponentType(), ctx);
+                className = TypeHelper.printType(element.getType().getDeepComponentType(), ctx);
                 arrayDefinition = true;
             }
 
             PsiExpression[] arrayDimensions = element.getArrayDimensions();
             PsiArrayInitializerExpression arrayInitializer = element.getArrayInitializer();
-            if (arrayDimensions != null && arrayDimensions.length > 0) {
+            if (arrayDimensions.length > 0) {
                 arrayDefinition = true;
             }
             if (arrayInitializer != null) {
                 arrayDefinition = true;
             }
-
-
             if (!arrayDefinition) {
                 if (anonymousClass == null) {
                     ctx.append("new ").append(className).append('(');
                     if (element.getArgumentList() != null) {
                         PsiExpression[] arguments = element.getArgumentList().getExpressions();
                         for (int i = 0; i < arguments.length; i++) {
-                            ExpressionTranslator.translate(arguments[i],ctx);
+                            ExpressionTranslator.translate(arguments[i], ctx);
                             if (i != arguments.length - 1) {
                                 ctx.append(", ");
                             }
@@ -54,7 +51,7 @@ public class NewExpressionTranslator {
                     ctx.append("[");
                     PsiExpression[] arrayInitializers = arrayInitializer.getInitializers();
                     for (int i = 0; i < arrayInitializers.length; i++) {
-                        ExpressionTranslator.translate(arrayInitializers[i],ctx);
+                        ExpressionTranslator.translate(arrayInitializers[i], ctx);
                         if (i != arrayInitializers.length - 1) {
                             ctx.append(", ");
                         }
