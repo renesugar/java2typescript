@@ -13,9 +13,28 @@ public class AnonymousClassTranslator {
     private static final Joiner joiner = Joiner.on(", ");
 
     public static void translate(PsiAnonymousClass element, TranslationContext ctx) {
-        ctx.append("{");
-        printClassMembers(element, ctx);
-        ctx.append("}");
+
+        if(TypeHelper.isCallbackClass(element.getBaseClassType().resolve())) {
+            PsiMethod method = element.getAllMethods()[0];
+            PsiParameter[] parameters = method.getParameterList().getParameters();
+            String[] methodParameters = new String[parameters.length];
+            for(int i = 0; i < methodParameters.length; i++) {
+                methodParameters[i] = parameters[i].getName() + " : " + TypeHelper.printType(parameters[i].getType(), ctx);
+            }
+            ctx.append("function(){\n");
+            ctx.increaseIdent();
+            ctx.print("return (" + String.join(", ", methodParameters) + ") => {\n");
+            if (method.getBody() != null) {
+                CodeBlockTranslator.translate(method.getBody(), ctx);
+            }
+            ctx.print("}\n");
+            ctx.decreaseIdent();
+            ctx.print("}()\n");
+        } else {
+            ctx.append("{");
+            printClassMembers(element, ctx);
+            ctx.append("}");
+        }
     }
 
     private static void printClassMembers(PsiClass element, TranslationContext ctx) {

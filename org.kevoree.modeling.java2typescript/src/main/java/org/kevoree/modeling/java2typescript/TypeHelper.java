@@ -33,6 +33,9 @@ public class TypeHelper {
         }
 
         if(element instanceof PsiPrimitiveType) {
+            if(result == null || result.equals("null")) {
+                System.err.println("TypeHelper::printType -> Result null with elem:" + element.toString());
+            }
             return result;
         } else if(element instanceof PsiArrayType) {
             result = printType(((PsiArrayType)element).getComponentType(), ctx) + "[]";
