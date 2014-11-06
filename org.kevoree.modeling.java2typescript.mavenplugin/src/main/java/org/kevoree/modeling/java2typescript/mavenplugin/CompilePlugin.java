@@ -1,6 +1,6 @@
 package org.kevoree.modeling.java2typescript.mavenplugin;
 
-import com.siliconmint.ts.SourceTranslator;
+import org.kevoree.modeling.java2typescript.SourceTranslator;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
@@ -11,8 +11,6 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 
 import java.io.*;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
 
 @Mojo(name = "generate", defaultPhase = LifecyclePhase.PROCESS_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE)
 public class CompilePlugin extends AbstractMojo {
