@@ -97,18 +97,37 @@ public class ClassTranslator {
             ctx.decreaseIdent();
             ctx.print("}\n");
             ctx.print("public static _" + clazz.getName() + "VALUES : " + clazz.getName() + "[] = [\n");
-            ArrayList<String> enumFileds = new ArrayList<String>();
+            ctx.increaseIdent();
+            boolean isFirst = true;
             for (int i = 0; i < clazz.getFields().length; i++) {
                 if (clazz.getFields()[i].hasModifierProperty("static")) {
-                    enumFileds.add(clazz.getName() + "." + clazz.getFields()[i].getName());
+                    if (!isFirst) {
+                        ctx.print(",");
+                    } else {
+                        ctx.print("");
+                    }
+                    ctx.append(clazz.getName());
+                    ctx.append(".");
+                    ctx.append(clazz.getFields()[i].getName());
+                    ctx.append("\n");
+                    isFirst = false;
                 }
             }
-            ctx.print(String.join(",\n", enumFileds));
-            ctx.print("];\n" +
-                    "\n" +
-                    "public static values():" + clazz.getName() + "[] {\n" +
-                    "   return " + clazz.getName() + "._" + clazz.getName() + "VALUES;\n" +
-                    "}\n");
+            ctx.decreaseIdent();
+            ctx.print("];\n");
+
+            ctx.print("public static values():");
+            ctx.append(clazz.getName());
+            ctx.append("[]{\n");
+            ctx.increaseIdent();
+            ctx.print("return ");
+            ctx.append(clazz.getName());
+            ctx.append("._");
+            ctx.append(clazz.getName());
+            ctx.append("VALUES;\n");
+            ctx.decreaseIdent();
+            ctx.print("}\n");
+
         }
         ctx.decreaseIdent();
     }
