@@ -31,7 +31,7 @@ public class TypeHelper {
             return "boolean";
         }
 
-        if(element.toString().contains("Callback<String>")) {
+        if(element.toString().contains("Long")) {
             System.out.println();
         }
 
@@ -118,9 +118,20 @@ public class TypeHelper {
         return clazz.isInterface() && clazz.getAllMethods().length == 1;
     }
 
+    public static String primitiveStaticCall(String clazz) {
+        String result = javaTypes.get(clazz);
+        if(result != null) {
+            return result;
+        }
+        return clazz;
+    }
+
+
     public static final HashMap<String, String> javaTypes = new HashMap<String, String>();
 
     static {
+        javaTypes.put("Arrays", "java.util.Arrays");
+        javaTypes.put("Collections", "java.util.Collections");
         javaTypes.put("Map", "java.util.Map");
         javaTypes.put("HashMap", "java.util.HashMap");
         javaTypes.put("List", "java.util.List");
