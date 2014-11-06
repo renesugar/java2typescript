@@ -32,8 +32,12 @@ public class TypeHelper {
             return "boolean";
         }
 
-
-        if(element instanceof PsiClassReferenceType) {
+        if(element instanceof PsiPrimitiveType) {
+            return result;
+        } else if(element instanceof PsiArrayType) {
+            result = printType(((PsiArrayType)element).getComponentType(), ctx) + "[]";
+            return result;
+        } else if(element instanceof PsiClassReferenceType) {
             PsiClass resolvedClass = ((PsiClassReferenceType) element).resolve();
             if(resolvedClass != null) {
                 String qualifiedName = resolvedClass.getQualifiedName();
