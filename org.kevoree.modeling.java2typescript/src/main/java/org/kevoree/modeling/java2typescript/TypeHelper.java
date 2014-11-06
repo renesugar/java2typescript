@@ -3,11 +3,13 @@ package org.kevoree.modeling.java2typescript;
 
 import com.google.common.collect.ImmutableSet;
 import com.intellij.psi.*;
+import com.intellij.psi.impl.source.PsiClassReferenceType;
 import org.kevoree.modeling.java2typescript.TranslationContext;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -18,8 +20,21 @@ public class TypeHelper {
 
 
     public static String printType(PsiType element,TranslationContext ctx){
-
-        return null;
+        String result = element.getPresentableText();
+        if(element instanceof PsiClassReferenceType) {
+            PsiClass resolvedClass = ((PsiClassReferenceType) element).resolve();
+            if(resolvedClass != null) {
+                result = resolvedClass.getQualifiedName();
+                if(resolvedClass.getTypeParameters().length > 0) {
+                    result += "<";
+                    String[] generics = new String[resolvedClass.getTypeParameters().length];
+                    Arrays.fill(generics, "any");
+                    result += String.join(",", generics);
+                    result += ">";
+                }
+            }
+        }
+        return result;
     }
 
     /* Remove above */
