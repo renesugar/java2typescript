@@ -7,20 +7,18 @@ import com.intellij.psi.impl.source.PsiClassReferenceType;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class TypeHelper {
 
-
     public static String printType(PsiType element, TranslationContext ctx) {
-        String result = element.getPresentableText();
+        return printType(element, ctx, true,false);
+    }
 
+    public static String printType(PsiType element, TranslationContext ctx, boolean withGenericParams, boolean explicitType) {
+        String result = element.getPresentableText();
         if (objects.contains(result)) {
             return "any";
         } else if (primitiveNumbers.contains(result) || objectNumbers.contains(result)) {
@@ -30,7 +28,6 @@ public class TypeHelper {
         } else if (booleans.contains(result)) {
             return "boolean";
         }
-
         if (element instanceof PsiPrimitiveType) {
             if (result == null || result.equals("null")) {
                 System.err.println("TypeHelper::printType -> Result null with elem:" + element.toString());
@@ -42,7 +39,7 @@ public class TypeHelper {
         } else if (element instanceof PsiClassReferenceType) {
             PsiClass resolvedClass = ((PsiClassReferenceType) element).resolve();
             if (resolvedClass != null) {
-                if (isCallbackClass(resolvedClass)) {
+                if (isCallbackClass(resolvedClass) && !explicitType) {
                     PsiMethod method = resolvedClass.getAllMethods()[0];
                     PsiParameter[] parameters = method.getParameterList().getParameters();
                     String[] methodParameters = new String[parameters.length];
@@ -59,7 +56,9 @@ public class TypeHelper {
                     if (resolvedClass.getTypeParameters().length > 0) {
                         String[] generics = new String[resolvedClass.getTypeParameters().length];
                         Arrays.fill(generics, "any");
-                        result += "<" + String.join(", ", generics) + ">";
+                        if(withGenericParams){
+                            result += "<" + String.join(", ", generics) + ">";
+                        }
                     }
                 }
             } else {
@@ -73,7 +72,9 @@ public class TypeHelper {
                     for (int i = 0; i < genericTypes.length; i++) {
                         generics[i] = printType(genericTypes[i], ctx);
                     }
-                    result += "<" + String.join(", ", generics) + ">";
+                    if(withGenericParams){
+                        result += "<" + String.join(", ", generics) + ">";
+                    }
                 }
             }
         } else {

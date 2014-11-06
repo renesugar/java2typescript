@@ -135,7 +135,7 @@ public class ClassTranslator {
     private static void writeTypeList(TranslationContext ctx, PsiClassType[] typeList) {
         for (int i = 0; i < typeList.length; i++) {
             PsiClassType type = typeList[i];
-            ctx.append(TypeHelper.printType(type, ctx));
+            ctx.append(TypeHelper.printType(type, ctx,true,true));
             if (i != typeList.length - 1) {
                 ctx.append(", ");
             }
