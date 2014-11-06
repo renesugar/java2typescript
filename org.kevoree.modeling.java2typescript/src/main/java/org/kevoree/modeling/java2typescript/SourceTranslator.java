@@ -40,7 +40,6 @@ public class SourceTranslator {
         TranslationContext ctx = new TranslationContext();
         //copy default library
 
-        /*
         InputStreamReader is = new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("java.ts"));
         BufferedReader br = new BufferedReader(is);
         String read = br.readLine();
@@ -48,8 +47,7 @@ public class SourceTranslator {
             ctx.append(read);
             ctx.append("\n");
             read = br.readLine();
-        }*/
-
+        }
 
         JavaAnalyzer analyzer = new JavaAnalyzer();
         PsiDirectory root = analyzer.analyze(source);

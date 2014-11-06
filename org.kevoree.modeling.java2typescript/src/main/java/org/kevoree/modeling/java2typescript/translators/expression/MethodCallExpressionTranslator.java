@@ -12,7 +12,7 @@ public class MethodCallExpressionTranslator {
             ctx.append('(');
             PsiExpression[] arguments = element.getArgumentList().getExpressions();
             for (int i = 0; i < arguments.length; i++) {
-                ExpressionTranslator.translate(arguments[i],ctx);
+                ExpressionTranslator.translate(arguments[i], ctx);
                 if (i != arguments.length - 1) {
                     ctx.append(", ");
                 }
