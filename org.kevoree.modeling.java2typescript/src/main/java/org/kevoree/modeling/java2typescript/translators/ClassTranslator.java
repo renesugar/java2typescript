@@ -3,9 +3,7 @@ package org.kevoree.modeling.java2typescript.translators;
 
 import com.intellij.psi.*;
 import org.kevoree.modeling.java2typescript.TranslationContext;
-import org.kevoree.modeling.java2typescript.translator.TypeHelper;
-
-import java.util.ArrayList;
+import org.kevoree.modeling.java2typescript.TypeHelper;
 
 public class ClassTranslator {
 

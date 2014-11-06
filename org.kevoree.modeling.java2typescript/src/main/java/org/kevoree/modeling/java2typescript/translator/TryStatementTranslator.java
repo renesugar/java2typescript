@@ -5,6 +5,7 @@ import com.intellij.psi.PsiCatchSection;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiTryStatement;
 import org.kevoree.modeling.java2typescript.TranslationContext;
+import org.kevoree.modeling.java2typescript.TypeHelper;
 
 public class TryStatementTranslator extends Translator<PsiTryStatement> {
 

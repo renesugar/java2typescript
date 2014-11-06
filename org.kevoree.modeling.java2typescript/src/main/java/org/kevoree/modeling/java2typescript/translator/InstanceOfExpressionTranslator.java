@@ -4,6 +4,7 @@ package org.kevoree.modeling.java2typescript.translator;
 import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiInstanceOfExpression;
 import org.kevoree.modeling.java2typescript.TranslationContext;
+import org.kevoree.modeling.java2typescript.TypeHelper;
 
 public class InstanceOfExpressionTranslator extends Translator<PsiInstanceOfExpression> {
 

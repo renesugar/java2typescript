@@ -4,6 +4,7 @@ package org.kevoree.modeling.java2typescript.translator;
 import com.google.common.base.*;
 import com.intellij.psi.*;
 import org.kevoree.modeling.java2typescript.TranslationContext;
+import org.kevoree.modeling.java2typescript.TypeHelper;
 
 import java.util.*;
 

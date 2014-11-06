@@ -5,6 +5,7 @@ import com.intellij.psi.PsiElementVisitor;
 import com.intellij.psi.PsiForeachStatement;
 import com.intellij.psi.PsiParameter;
 import org.kevoree.modeling.java2typescript.TranslationContext;
+import org.kevoree.modeling.java2typescript.TypeHelper;
 
 public class ForEachStatementTranslator extends Translator<PsiForeachStatement> {
 

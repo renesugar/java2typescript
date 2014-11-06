@@ -1,5 +1,5 @@
 
-package org.kevoree.modeling.java2typescript.translator;
+package org.kevoree.modeling.java2typescript;
 
 import com.google.common.collect.ImmutableSet;
 import com.intellij.psi.*;
