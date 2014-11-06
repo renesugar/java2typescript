@@ -29,6 +29,10 @@ var TSSet = Set;
 
 interface Number {
     equals : (other:Number) => boolean;
+    longValue() : number;
+    floatValue() : number;
+    intValue() : number;
+    shortValue() : number;
 }
 
 Number.prototype.equals = function (other) {
@@ -40,10 +44,11 @@ interface String {
     startsWith : (other:String) => boolean;
     endsWith : (other:String) => boolean;
     matches :  (regEx:String) => boolean;
-    getBytes : () => number[];
+    //getBytes : () => number[];
     isEmpty : () => boolean;
 }
 
+/*
 String.prototype.getBytes = function () {
     var res:number[] = new Number[this.length];
     for (var i = 0; i < this.length; i++) {
@@ -51,6 +56,7 @@ String.prototype.getBytes = function () {
     }
     return res;
 };
+*/
 
 String.prototype.matches = function (regEx) {
     return this.match(regEx).length > 0;
@@ -89,31 +95,31 @@ module java {
 
         export class Double {
             public static parseDouble(val:string):number {
-                return Number(val);
+                return +(val);
             }
         }
 
         export class Float {
             public static parseFloat(val:string):number {
-                return Number(val);
+                return +(val);
             }
         }
 
         export class Integer {
             public static parseInt(val:string):number {
-                return Number(val);
+                return +(val);
             }
         }
 
         export class Long {
             public static parseLong(val:string):number {
-                return Number(val);
+                return +(val);
             }
         }
 
         export class Short {
             public static parseShort(val:string):number {
-                return Number(val);
+                return +(val);
             }
         }
 
