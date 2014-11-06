@@ -99,13 +99,13 @@ public class TypeHelper {
         javaTypes.put("List", "java.util.List");
         javaTypes.put("Set", "java.util.Set");
         javaTypes.put("HashSet", "java.util.HashSet");
-        javaTypes.put("StringBuilder", "java.util.StringBuilder");
         javaTypes.put("ArrayList", "java.util.ArrayList");
 
         javaTypes.put("Long", "java.lang.Long");
         javaTypes.put("Double", "java.lang.Double");
         javaTypes.put("Float", "java.lang.Float");
         javaTypes.put("Integer", "java.lang.Integer");
+        javaTypes.put("StringBuilder", "java.lang.StringBuilder");
 
         javaTypes.put("Throwable", "java.lang.Throwable");
         javaTypes.put("Exception", "java.lang.Exception");
