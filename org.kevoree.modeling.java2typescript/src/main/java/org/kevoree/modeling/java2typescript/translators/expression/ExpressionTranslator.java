@@ -31,8 +31,20 @@ public class ExpressionTranslator {
             PolyadicExpressionTranslator.translate((PsiPolyadicExpression) expression, ctx);
         } else if (expression instanceof PsiParenthesizedExpression) {
             ParenthesizedExpressionTranslator.translate((PsiParenthesizedExpression) expression, ctx);
-        }else if (expression instanceof PsiPostfixExpression) {
+        } else if (expression instanceof PsiPostfixExpression) {
             PostfixExpressionTranslator.translate((PsiPostfixExpression) expression, ctx);
+        } else if (expression instanceof PsiArrayAccessExpression) {
+            ArrayAccessExpressionTranslator.translate((PsiArrayAccessExpression) expression, ctx);
+        } else if (expression instanceof PsiArrayInitializerExpression) {
+            ArrayInitializerExpressionTranslator.translate((PsiArrayInitializerExpression) expression, ctx);
+        } else if (expression instanceof PsiConditionalExpression) {
+            ConditionalExpressionTranslator.translate((PsiConditionalExpression) expression, ctx);
+        } else if (expression instanceof PsiInstanceOfExpression) {
+            InstanceOfExpressionTranslator.translate((PsiInstanceOfExpression) expression, ctx);
+        } else if (expression instanceof PsiSuperExpression) {
+            SuperExpressionTranslator.translate((PsiSuperExpression) expression, ctx);
+        } else if (expression instanceof PsiClassObjectAccessExpression) {
+            ClassObjectAccessExpressionTranslator.translate((PsiClassObjectAccessExpression) expression, ctx);
         } else {
             System.err.println("EXPR " + expression);
         }

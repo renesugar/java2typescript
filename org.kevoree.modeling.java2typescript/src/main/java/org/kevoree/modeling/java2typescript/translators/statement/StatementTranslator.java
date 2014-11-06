@@ -22,17 +22,24 @@ public class StatementTranslator {
             CodeBlockTranslator.translate(((PsiBlockStatement) statement).getCodeBlock(), ctx);
         } else if (statement instanceof PsiForStatement) {
             ForStatementTranslator.translate((PsiForStatement) statement, ctx);
-        }else if (statement instanceof PsiThrowStatement) {
+        } else if (statement instanceof PsiThrowStatement) {
             ThrowStatementTranslator.translate((PsiThrowStatement) statement, ctx);
-        }else if (statement instanceof PsiDoWhileStatement) {
+        } else if (statement instanceof PsiDoWhileStatement) {
             DoWhileStatementTranslator.translate((PsiDoWhileStatement) statement, ctx);
-        }else if (statement instanceof PsiBreakStatement) {
+        } else if (statement instanceof PsiBreakStatement) {
             BreakStatementTranslator.translate((PsiBreakStatement) statement, ctx);
-        }
-
-
-        else {
-            System.err.println("STMT " + statement);
+        } else if (statement instanceof PsiTryStatement) {
+            TryStatementTranslator.translate((PsiTryStatement) statement, ctx);
+        } else if (statement instanceof PsiContinueStatement) {
+            ContinueStatementTranslator.translate((PsiContinueStatement) statement, ctx);
+        } else if (statement instanceof PsiSwitchStatement) {
+            SwitchStatementTranslator.translate((PsiSwitchStatement) statement, ctx);
+        } else if (statement instanceof PsiForeachStatement) {
+            ForEachStatementTranslator.translate((PsiForeachStatement) statement, ctx);
+        } else if (statement instanceof PsiSwitchLabelStatement) {
+            SwitchLabelStatementTranslator.translate((PsiSwitchLabelStatement) statement, ctx);
+        } else if (statement instanceof PsiDeclarationStatement) {
+            DeclarationStatementTranslator.translate((PsiDeclarationStatement) statement, ctx);
         }
     }
 
