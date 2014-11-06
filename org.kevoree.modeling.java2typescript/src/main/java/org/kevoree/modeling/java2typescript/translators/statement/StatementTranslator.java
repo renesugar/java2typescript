@@ -24,7 +24,14 @@ public class StatementTranslator {
             ForStatementTranslator.translate((PsiForStatement) statement, ctx);
         }else if (statement instanceof PsiThrowStatement) {
             ThrowStatementTranslator.translate((PsiThrowStatement) statement, ctx);
-        } else {
+        }else if (statement instanceof PsiDoWhileStatement) {
+            DoWhileStatementTranslator.translate((PsiDoWhileStatement) statement, ctx);
+        }else if (statement instanceof PsiBreakStatement) {
+            BreakStatementTranslator.translate((PsiBreakStatement) statement, ctx);
+        }
+
+
+        else {
             System.err.println("STMT " + statement);
         }
     }

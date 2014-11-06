@@ -25,10 +25,14 @@ public class ExpressionTranslator {
             AssignmentExpressionTranslator.translate((PsiAssignmentExpression) expression, ctx);
         } else if (expression instanceof PsiMethodCallExpression) {
             MethodCallExpressionTranslator.translate((PsiMethodCallExpression) expression, ctx);
-        } else if(expression instanceof PsiThisExpression){
+        } else if (expression instanceof PsiThisExpression) {
             ThisExpressionTranslator.translate((PsiThisExpression) expression, ctx);
-        }else if(expression instanceof PsiPolyadicExpression){
-            PolyadicExpressionTranslator.translate((PsiPolyadicExpression) expression,ctx);
+        } else if (expression instanceof PsiPolyadicExpression) {
+            PolyadicExpressionTranslator.translate((PsiPolyadicExpression) expression, ctx);
+        } else if (expression instanceof PsiParenthesizedExpression) {
+            ParenthesizedExpressionTranslator.translate((PsiParenthesizedExpression) expression, ctx);
+        }else if (expression instanceof PsiPostfixExpression) {
+            PostfixExpressionTranslator.translate((PsiPostfixExpression) expression, ctx);
         } else {
             System.err.println("EXPR " + expression);
         }
