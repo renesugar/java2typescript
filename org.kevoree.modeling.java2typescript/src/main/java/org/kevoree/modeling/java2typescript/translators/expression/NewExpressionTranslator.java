@@ -1,22 +1,20 @@
 
-package org.kevoree.modeling.java2typescript.translator;
+package org.kevoree.modeling.java2typescript.translators.expression;
 
 import com.intellij.psi.*;
 import org.kevoree.modeling.java2typescript.TranslationContext;
 import org.kevoree.modeling.java2typescript.TypeHelper;
+import org.kevoree.modeling.java2typescript.translators.AnonymousClassTranslator;
 
-public class NewExpressionTranslator extends Translator<PsiNewExpression> {
+public class NewExpressionTranslator {
 
-    @Override
-    public void translate(PsiElementVisitor visitor, PsiNewExpression element, TranslationContext ctx) {
+    public static void translate(PsiNewExpression element, TranslationContext ctx) {
 
         boolean arrayDefinition = false;
         String className = "";
-
         PsiAnonymousClass anonymousClass = element.getAnonymousClass();
-
         if(anonymousClass != null) {
-            anonymousClass.accept(visitor);
+            AnonymousClassTranslator.translate(anonymousClass,ctx);
         } else {
             PsiJavaCodeReferenceElement classReference = element.getClassReference();
 
@@ -43,7 +41,7 @@ public class NewExpressionTranslator extends Translator<PsiNewExpression> {
                     if (element.getArgumentList() != null) {
                         PsiExpression[] arguments = element.getArgumentList().getExpressions();
                         for (int i = 0; i < arguments.length; i++) {
-                            arguments[i].accept(visitor);
+                            ExpressionTranslator.translate(arguments[i],ctx);
                             if (i != arguments.length - 1) {
                                 ctx.append(", ");
                             }
@@ -56,7 +54,7 @@ public class NewExpressionTranslator extends Translator<PsiNewExpression> {
                     ctx.append("[");
                     PsiExpression[] arrayInitializers = arrayInitializer.getInitializers();
                     for (int i = 0; i < arrayInitializers.length; i++) {
-                        arrayInitializers[i].accept(visitor);
+                        ExpressionTranslator.translate(arrayInitializers[i],ctx);
                         if (i != arrayInitializers.length - 1) {
                             ctx.append(", ");
                         }

@@ -4,6 +4,7 @@ package org.kevoree.modeling.java2typescript.translators;
 import com.intellij.psi.*;
 import org.kevoree.modeling.java2typescript.TranslationContext;
 import org.kevoree.modeling.java2typescript.TypeHelper;
+import org.kevoree.modeling.java2typescript.translators.expression.ExpressionTranslator;
 
 public class FieldTranslator {
 

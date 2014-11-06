@@ -1,5 +1,5 @@
 
-package org.kevoree.modeling.java2typescript.translator;
+package org.kevoree.modeling.java2typescript.translators;
 
 import com.google.common.base.*;
 import com.intellij.psi.*;
@@ -8,19 +8,17 @@ import org.kevoree.modeling.java2typescript.TypeHelper;
 
 import java.util.*;
 
-public class AnonymousClassTranslator<T extends PsiAnonymousClass> extends Translator<T> {
+public class AnonymousClassTranslator {
 
     private static final Joiner joiner = Joiner.on(", ");
 
-    @Override
-    public void translate(PsiElementVisitor visitor, T element, TranslationContext ctx) {
+    public static void translate(PsiAnonymousClass element, TranslationContext ctx) {
         ctx.append("{");
-        printClassMembers(visitor, element, ctx);
+        printClassMembers(element, ctx);
         ctx.append("}");
     }
 
-
-    private void printClassMembers(PsiElementVisitor visitor, T element, TranslationContext ctx) {
+    private static void printClassMembers(PsiClass element, TranslationContext ctx) {
         PsiMethod[] methods = element.getMethods();
         for (int i = 0; i < methods.length; i++) {
             PsiMethod method = methods[i];
@@ -29,7 +27,7 @@ public class AnonymousClassTranslator<T extends PsiAnonymousClass> extends Trans
             printParameterList(method, ctx);
             ctx.append("){\n");
             if (method.getBody() != null) {
-                method.getBody().accept(visitor);
+                CodeBlockTranslator.translate(method.getBody(), ctx);
             }
             ctx.append("}");
             if (i < methods.length - 1) {
@@ -38,7 +36,7 @@ public class AnonymousClassTranslator<T extends PsiAnonymousClass> extends Trans
         }
     }
 
-    private void printParameterList(PsiMethod element, TranslationContext ctx) {
+    private static void printParameterList(PsiMethod element, TranslationContext ctx) {
         List<String> params = new ArrayList<String>();
         StringBuilder paramSB = new StringBuilder();
 

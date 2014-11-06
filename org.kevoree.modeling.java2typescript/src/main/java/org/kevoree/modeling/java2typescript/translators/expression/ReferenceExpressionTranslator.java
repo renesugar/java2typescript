@@ -1,16 +1,15 @@
 
-package org.kevoree.modeling.java2typescript.translator;
+package org.kevoree.modeling.java2typescript.translators.expression;
 
 import com.intellij.psi.*;
 import org.kevoree.modeling.java2typescript.TranslationContext;
 
-public class ReferenceExpressionTranslator extends Translator<PsiReferenceExpression> {
+public class ReferenceExpressionTranslator {
 
-    @Override
-    public void translate(PsiElementVisitor visitor, PsiReferenceExpression element, TranslationContext ctx) {
-        /*
+    public static void translate(PsiReferenceExpression element, TranslationContext ctx) {
+
         if (element.getQualifierExpression() != null) {
-            element.getQualifierExpression().accept(visitor);
+            ExpressionTranslator.translate(element.getQualifierExpression(), ctx);
             ctx.append('.');
         } else {
             PsiElement resolution = element.resolve();
@@ -18,7 +17,7 @@ public class ReferenceExpressionTranslator extends Translator<PsiReferenceExpres
                 String qualifier = "this";
                 if (resolution instanceof PsiField) {
                     PsiField field = (PsiField) resolution;
-                    if (field.getModifierList().hasModifierProperty("static")) {
+                    if (field.getModifierList() != null && field.getModifierList().hasModifierProperty("static")) {
                         qualifier = field.getContainingClass().getName();
                     }
                     ctx.append(qualifier).append('.');
@@ -31,14 +30,7 @@ public class ReferenceExpressionTranslator extends Translator<PsiReferenceExpres
                 }
             }
         }
-                
-        String translatedType = ctx.getClassImports().get(element.getReferenceName());
-        if(translatedType != null) {
-            ctx.append(translatedType);
-        } else {
-            ctx.append(element.getReferenceName());
-        }
-*/
+        ctx.append(element.getReferenceName());
     }
 
 }
