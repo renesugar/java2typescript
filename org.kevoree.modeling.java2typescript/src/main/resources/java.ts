@@ -95,31 +95,31 @@ module java {
 
         export class Double {
             public static parseDouble(val:string):number {
-                return +(val);
+                return +val;
             }
         }
 
         export class Float {
             public static parseFloat(val:string):number {
-                return +(val);
+                return +val;
             }
         }
 
         export class Integer {
             public static parseInt(val:string):number {
-                return +(val);
+                return +val;
             }
         }
 
         export class Long {
             public static parseLong(val:string):number {
-                return +(val);
+                return +val;
             }
         }
 
         export class Short {
             public static parseShort(val:string):number {
-                return +(val);
+                return +val;
             }
         }
 
