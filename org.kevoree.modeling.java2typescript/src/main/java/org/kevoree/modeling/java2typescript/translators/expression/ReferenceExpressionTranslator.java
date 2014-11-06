@@ -46,13 +46,7 @@ public class ReferenceExpressionTranslator {
                 ctx.append(element.getReferenceName());
             }
         } else {
-
-            if(element.toString().contains("Arrays")){
-                System.err.println("type:"+element.getType());
-                System.err.println("ref:"+element.getReferenceName()+"----"+element.toString());
-            }
-
-            ctx.append(element.getReferenceName());
+            ctx.append(TypeHelper.primitiveStaticCall(element.getReferenceName()));
         }
     }
 
