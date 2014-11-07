@@ -47,7 +47,7 @@ public class TypeHelper {
                     for (int i = 0; i < methodParameters.length; i++) {
                         PsiType parameterType = parameters[i].getType();
                         for (int j = 0; j < resolvedClass.getTypeParameters().length; j++) {
-                            if (resolvedClass.getTypeParameters()[j].getNameIdentifier().getText().equals(parameterType.getPresentableText())) {
+                            if (resolvedClass.getTypeParameters()[j].getName().equals(parameterType.getPresentableText())) {
                                 if (((PsiClassReferenceType) element).getParameters().length <= j) {
                                     parameterType = null;
                                 } else {
@@ -105,6 +105,9 @@ public class TypeHelper {
     }
 
     public static boolean isCallbackClass(PsiClass clazz) {
+        if(clazz == null){
+            return false;
+        }
         return clazz.isInterface() && clazz.getAllMethods().length == 1;
     }
 
@@ -129,7 +132,7 @@ public class TypeHelper {
         javaTypes.put("HashSet", "java.util.HashSet");
         javaTypes.put("ArrayList", "java.util.ArrayList");
         javaTypes.put("LinkedList", "java.util.LinkedList");
-        javaTypes.put("Assert", "org.junit.Assert");
+     //   javaTypes.put("Assert", "org.junit.Assert");
         javaTypes.put("Random", "java.util.Random");
 
         javaTypes.put("Long", "java.lang.Long");

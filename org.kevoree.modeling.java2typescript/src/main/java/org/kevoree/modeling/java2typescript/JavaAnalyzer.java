@@ -19,16 +19,10 @@ import java.nio.file.attribute.BasicFileAttributes;
  */
 public class JavaAnalyzer {
 
-    private static final String baseDir = "/Users/duke/Documents/dev/dukeboard/kevoree-modeling-framework/org.kevoree.modeling.microframework/src/main/java";
+    private JavaCoreProjectEnvironment environment;
 
-    public static void main(String[] args) {
-        JavaAnalyzer analyzer = new JavaAnalyzer();
-        analyzer.analyze(new File(baseDir));
-    }
-
-
-    public PsiDirectory analyze(File srcDir) {
-        JavaCoreProjectEnvironment environment = new JavaCoreProjectEnvironment(new Disposable() {
+    public JavaAnalyzer() {
+        environment = new JavaCoreProjectEnvironment(new Disposable() {
             @Override
             public void dispose() {
             }
@@ -37,9 +31,13 @@ public class JavaAnalyzer {
             public void dispose() {
             }
         }));
+    }
 
-        environment.addJarToClassPath(new File("/Users/duke/.m2/repository/org/kevoree/modeling/org.kevoree.modeling.microframework/4.0.0-SNAPSHOT/org.kevoree.modeling.microframework-4.0.0-SNAPSHOT.jar"));
+    public void addClasspath(String filePath) {
+        environment.addJarToClassPath(new File(filePath));
+    }
 
+    public PsiDirectory analyze(File srcDir) {
         PsiFileFactory psiFileFactory = PsiFileFactory.getInstance(environment.getProject());
         VirtualFile root_vf = environment.getEnvironment().getLocalFileSystem().findFileByIoFile(srcDir);
         environment.addSourcesToClasspath(root_vf);

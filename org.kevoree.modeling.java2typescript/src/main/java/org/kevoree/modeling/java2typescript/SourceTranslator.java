@@ -4,54 +4,64 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.psi.*;
 import org.kevoree.modeling.java2typescript.translators.ClassTranslator;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 
 public class SourceTranslator {
     //private static final String baseDir = "/Users/duke/Documents/dev/dukeboard/kevoree-modeling-framework/org.kevoree.modeling.microframework/src/main/java";
     //private static final String baseDir = "/Users/duke/Documents/dev/dukeboard/kevoree-modeling-framework/org.kevoree.modeling.microframework.typescript/target/sources";
-    private static final String baseDir = "/Users/duke/Documents/dev/dukeboard/kevoree-modeling-framework/test/org.kevoree.modeling.test.cloud/target/generated-sources/kmf";
-
+    private static final String baseDir = "/Users/duke/Documents/dev/dukeboard/kevoree-modeling-framework/org.kevoree.modeling.microframework/src/test/java";
     //private static final String baseDir = "/Users/gregory.nain/Sources/KevoreeRepos/kevoree-modeling-framework/org.kevoree.modeling.microframework/src/main/java";
-    private static final String outputFile = new File("target/out.ts").getAbsolutePath();
 
     public static void main(String[] args) throws IOException {
         SourceTranslator sourceTranslator = new SourceTranslator();
-        sourceTranslator.translateSources(baseDir, outputFile);
+        sourceTranslator.getAnalyzer().addClasspath("/Users/duke/.m2/repository/org/kevoree/modeling/org.kevoree.modeling.microframework/4.0.0-SNAPSHOT/org.kevoree.modeling.microframework-4.0.0-SNAPSHOT.jar");
+        sourceTranslator.getAnalyzer().addClasspath("/Users/duke/.m2/repository/junit/junit/4.11/junit-4.11.jar");
+        sourceTranslator.translateSources(baseDir, "target", "out");
     }
 
-    public void translateSources(String sourcePath, String outputPath) throws IOException {
-        File source = new File(sourcePath);
-        File outputFile = new File(outputPath);
-        if (source.exists()) {
-            if (source.isFile()) {
+    private JavaAnalyzer analyzer;
+
+    public JavaAnalyzer getAnalyzer() {
+        return analyzer;
+    }
+
+    public SourceTranslator() {
+        analyzer = new JavaAnalyzer();
+    }
+
+    private static final String JAVA_D_TS = "java.d.ts";
+    private static final String JAVA_JS = "java.js";
+
+
+    public void translateSources(String sourcePath, String outputPath, String name) throws IOException {
+        File sourceFolder = new File(sourcePath);
+        File targetFolder = new File(outputPath);
+        if (sourceFolder.exists()) {
+            if (sourceFolder.isFile()) {
                 throw new IllegalArgumentException("Source path is not a directory");
             }
         } else {
-            source.mkdirs();
+            sourceFolder.mkdirs();
         }
-        if (outputFile.isDirectory()) {
-            throw new IllegalArgumentException("OutputFile should not be a directory");
+        if (targetFolder.exists()) {
+            if (targetFolder.isFile()) {
+                throw new IllegalArgumentException("Target path is not a directory");
+            }
         } else {
-            Files.createDirectories(outputFile.toPath().getParent());
+            targetFolder.mkdirs();
         }
-        TranslationContext ctx = new TranslationContext();
         //copy default library
+        File javaDTS = new File(targetFolder, JAVA_D_TS);
+        File javaJS = new File(targetFolder, JAVA_JS);
+        Files.copy(this.getClass().getClassLoader().getResourceAsStream(JAVA_D_TS), javaDTS.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(this.getClass().getClassLoader().getResourceAsStream(JAVA_JS), javaJS.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-        InputStreamReader is = new InputStreamReader(this.getClass().getClassLoader().getResourceAsStream("java.ts"));
-        BufferedReader br = new BufferedReader(is);
-        String read = br.readLine();
-        while (read != null) {
-            ctx.append(read);
-            ctx.append("\n");
-            read = br.readLine();
-        }
 
-        JavaAnalyzer analyzer = new JavaAnalyzer();
-        PsiDirectory root = analyzer.analyze(source);
+        TranslationContext ctx = new TranslationContext();
+        PsiDirectory root = analyzer.analyze(sourceFolder);
         root.acceptChildren(new PsiElementVisitor() {
             @Override
             public void visitElement(PsiElement element) {
@@ -77,8 +87,9 @@ public class SourceTranslator {
                 }
             }
         });
-        FileUtil.writeToFile(outputFile, ctx.toString().getBytes());
-        System.out.println("Transpile Java2TypeScript ended to " + outputFile.getAbsolutePath());
+        File generatedTS = new File(targetFolder, name + ".ts");
+        FileUtil.writeToFile(generatedTS, ctx.toString().getBytes());
+        System.out.println("Transpile Java2TypeScript ended to " + generatedTS.getAbsolutePath());
     }
 
 }

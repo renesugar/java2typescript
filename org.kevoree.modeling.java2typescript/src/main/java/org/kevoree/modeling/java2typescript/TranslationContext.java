@@ -4,7 +4,7 @@ package org.kevoree.modeling.java2typescript;
 public class TranslationContext {
 
     private StringBuilder sb = new StringBuilder();
-    private static final int identSize = 2;
+    private static final int identSize = 4;
     private int ident = 0;
 
     public void increaseIdent() {

@@ -1,5 +1,6 @@
 package org.kevoree.modeling.java2typescript.mavenplugin;
 
+import org.apache.maven.artifact.Artifact;
 import org.kevoree.modeling.java2typescript.SourceTranslator;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
@@ -12,7 +13,7 @@ import org.apache.maven.project.MavenProject;
 
 import java.io.*;
 
-@Mojo(name = "generate", defaultPhase = LifecyclePhase.PROCESS_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE)
+@Mojo(name = "generate", defaultPhase = LifecyclePhase.PROCESS_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class CompilePlugin extends AbstractMojo {
 
     /**
@@ -30,8 +31,8 @@ public class CompilePlugin extends AbstractMojo {
     /**
      * Target directory
      */
-    @Parameter(defaultValue = "${project.artifactId}.ts")
-    private String outputFileName;
+    @Parameter(defaultValue = "${project.artifactId}")
+    private String projectName;
 
     /**
      * The maven project.
@@ -44,8 +45,15 @@ public class CompilePlugin extends AbstractMojo {
         source.mkdirs();
         target.mkdirs();
         SourceTranslator sourceTranslator = new SourceTranslator();
+        for (Artifact a : project.getDependencyArtifacts()) {
+            File file = a.getFile();
+            if (file != null) {
+                sourceTranslator.getAnalyzer().addClasspath(file.getAbsolutePath());
+                getLog().info("Add to classpath " + file.getAbsolutePath());
+            }
+        }
         try {
-            sourceTranslator.translateSources(source.getPath(), target.getPath() + File.separator + outputFileName);
+            sourceTranslator.translateSources(source.getPath(), target.getPath(), projectName);
         } catch (IOException e) {
             e.printStackTrace();
             throw new MojoExecutionException(e.getMessage());
