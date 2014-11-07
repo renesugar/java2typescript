@@ -12,7 +12,9 @@ import java.nio.file.Files;
 
 public class SourceTranslator {
     //private static final String baseDir = "/Users/duke/Documents/dev/dukeboard/kevoree-modeling-framework/org.kevoree.modeling.microframework/src/main/java";
-    private static final String baseDir = "/Users/duke/Documents/dev/dukeboard/kevoree-modeling-framework/org.kevoree.modeling.microframework.typescript/target/sources";
+    //private static final String baseDir = "/Users/duke/Documents/dev/dukeboard/kevoree-modeling-framework/org.kevoree.modeling.microframework.typescript/target/sources";
+    private static final String baseDir = "/Users/duke/Documents/dev/dukeboard/kevoree-modeling-framework/test/org.kevoree.modeling.test.cloud/target/generated-sources/kmf";
+
     //private static final String baseDir = "/Users/gregory.nain/Sources/KevoreeRepos/kevoree-modeling-framework/org.kevoree.modeling.microframework/src/main/java";
     private static final String outputFile = new File("target/out.ts").getAbsolutePath();
 
@@ -78,5 +80,5 @@ public class SourceTranslator {
         FileUtil.writeToFile(outputFile, ctx.toString().getBytes());
         System.out.println("Transpile Java2TypeScript ended to " + outputFile.getAbsolutePath());
     }
-    
+
 }

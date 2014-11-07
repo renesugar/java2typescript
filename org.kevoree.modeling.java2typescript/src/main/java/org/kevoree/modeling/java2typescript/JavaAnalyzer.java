@@ -37,6 +37,9 @@ public class JavaAnalyzer {
             public void dispose() {
             }
         }));
+
+        environment.addJarToClassPath(new File("/Users/duke/.m2/repository/org/kevoree/modeling/org.kevoree.modeling.microframework/4.0.0-SNAPSHOT/org.kevoree.modeling.microframework-4.0.0-SNAPSHOT.jar"));
+
         PsiFileFactory psiFileFactory = PsiFileFactory.getInstance(environment.getProject());
         VirtualFile root_vf = environment.getEnvironment().getLocalFileSystem().findFileByIoFile(srcDir);
         environment.addSourcesToClasspath(root_vf);
@@ -68,41 +71,6 @@ public class JavaAnalyzer {
         }
         PsiDirectory rootDirectory = PsiManager.getInstance(environment.getProject()).findDirectory(root_vf);
         return rootDirectory;
-
-        /*
-        assert rootDirectory != null;
-        rootDirectory.accept(new PsiElementVisitor() {
-            @Override
-            public void visitElement(PsiElement element) {
-                if (element instanceof PsiJavaFile) {
-                    PsiJavaFile file = (PsiJavaFile) element;
-                    file.accept(new PsiElementVisitor() {
-                        @Override
-                        public void visitElement(PsiElement element) {
-                            if (element instanceof PsiClass) {
-                                for (PsiType type : ((PsiClass) element).getSuperTypes()) {
-                                    if (type instanceof PsiClassReferenceType) {
-                                        PsiClass superType = ((PsiClassReferenceType) type).resolve();
-                                        if (superType != null) {
-                                            System.err.println(((PsiClass) element).getName() + "-" + superType);
-                                        } else {
-                                            System.err.println(((PsiClass) element).getName() + "$" + ((PsiClassReferenceType) type).getClassName());
-                                        }
-                                    }
-                                }
-                            } else {
-                                element.acceptChildren(this);
-                            }
-                        }
-                    });
-
-                } else {
-                    element.acceptChildren(this);
-                }
-            }
-        });
-        */
-
     }
 
 }

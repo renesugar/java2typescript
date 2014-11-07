@@ -4,13 +4,11 @@ package org.kevoree.modeling.java2typescript;
 import com.google.common.collect.ImmutableSet;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
-import com.intellij.psi.util.PsiUtil;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Set;
 
 public class TypeHelper {
