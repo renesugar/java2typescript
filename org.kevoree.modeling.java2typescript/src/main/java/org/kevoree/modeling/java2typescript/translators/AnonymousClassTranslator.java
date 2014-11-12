@@ -21,14 +21,14 @@ public class AnonymousClassTranslator {
             for (int i = 0; i < methodParameters.length; i++) {
                 methodParameters[i] = parameters[i].getName() + " : " + TypeHelper.printType(parameters[i].getTypeElement().getType(), ctx);
             }
-           // ctx.append("function(){\n");
-            //ctx.increaseIdent();
-            ctx.print(" (" + String.join(", ", methodParameters) + ") => {\n");
+            // ctx.append("function(){\n");
+            ctx.append(" (" + String.join(", ", methodParameters) + ") => {\n");
             if (method.getBody() != null) {
+                ctx.increaseIdent();
                 CodeBlockTranslator.translate(method.getBody(), ctx);
+                ctx.decreaseIdent();
             }
-            ctx.print("}\n");
-            //ctx.decreaseIdent();
+            ctx.print("}");
             //ctx.print("}()\n");
         } else {
             ctx.append("{");
