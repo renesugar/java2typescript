@@ -306,8 +306,10 @@ module java {
                 return this.internalMap.has(key);
             }
 
-            remove(key:K):void {
-                return this.remove(key);
+            remove(key:K) : V {
+                var tmp = this.internalMap.get(key);
+                this.internalMap.delete(key);
+                return tmp;
             }
 
             keySet():Set<K> {
