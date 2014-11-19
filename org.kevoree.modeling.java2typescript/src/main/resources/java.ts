@@ -7,7 +7,7 @@ class System {
             console.log(obj);
         }
     };
-    
+
     static err = {
         println(obj?:any) {
             console.log(obj);
@@ -49,14 +49,14 @@ interface String {
 }
 
 /*
-String.prototype.getBytes = function () {
-    var res:number[] = new Number[this.length];
-    for (var i = 0; i < this.length; i++) {
-        res[i] = Number(this.charAt(i));
-    }
-    return res;
-};
-*/
+ String.prototype.getBytes = function () {
+ var res:number[] = new Number[this.length];
+ for (var i = 0; i < this.length; i++) {
+ res[i] = Number(this.charAt(i));
+ }
+ return res;
+ };
+ */
 
 String.prototype.matches = function (regEx) {
     return this.match(regEx).length > 0;
@@ -165,7 +165,7 @@ module java {
     export module util {
 
         export class Random {
-            public nextInt(max:number):number{
+            public nextInt(max:number):number {
                 return Math.random() * max;
             }
         }
@@ -190,6 +190,10 @@ module java {
                 for (var i = temp.size() - 1; i >= 0; i--) {
                     p.add(temp.get(i));
                 }
+            }
+
+            public static sort<A>(p:List<A>):void {
+                p.sort();
             }
 
         }
@@ -229,6 +233,21 @@ module java {
         }
 
         export class List<T> extends Collection<T> {
+
+            sort() {
+                this.internalArray = this.internalArray.sort((a, b)=> {
+                    if (a == b) {
+                        return 0;
+                    } else {
+                        if (a < b) {
+                            return -1;
+                        } else {
+                            return 1;
+                        }
+                    }
+                });
+            }
+
             private internalArray:Array<T> = [];
 
             addAll(vals:Collection<T>) {
@@ -242,7 +261,7 @@ module java {
                 this.internalArray = [];
             }
 
-            public poll():T{
+            public poll():T {
                 return this.internalArray.shift();
             }
 
@@ -306,7 +325,7 @@ module java {
                 return this.internalMap.has(key);
             }
 
-            remove(key:K) : V {
+            remove(key:K):V {
                 var tmp = this.internalMap.get(key);
                 this.internalMap.delete(key);
                 return tmp;

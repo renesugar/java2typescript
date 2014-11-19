@@ -12,7 +12,7 @@ import java.nio.file.StandardCopyOption;
 public class SourceTranslator {
     //private static final String baseDir = "/Users/duke/Documents/dev/dukeboard/kevoree-modeling-framework/org.kevoree.modeling.microframework/src/main/java";
     //private static final String baseDir = "/Users/duke/Documents/dev/dukeboard/kevoree-modeling-framework/org.kevoree.modeling.microframework.typescript/target/sources";
-    private static final String baseDir = "/Users/duke/Documents/dev/dukeboard/kevoree-modeling-framework/org.kevoree.modeling.microframework/src/test/java";
+    private static final String baseDir = "/Users/duke/IdeaProjects/kmf_mini/src/gen/java";
     //private static final String baseDir = "/Users/gregory.nain/Sources/KevoreeRepos/kevoree-modeling-framework/org.kevoree.modeling.microframework/src/main/java";
 
     public static void main(String[] args) throws IOException {
