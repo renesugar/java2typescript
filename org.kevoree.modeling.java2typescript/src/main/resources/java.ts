@@ -124,23 +124,25 @@ module java {
         }
 
         export class Throwable {
-            printStackTrace() {
-                throw new Exception("Abstract implementation");
-            }
-        }
-
-        export class Exception extends Throwable {
 
             private message:string;
 
             constructor(message:string) {
-                super();
                 this.message = message;
             }
 
             printStackTrace() {
                 console.error(this.message);
             }
+        }
+
+
+        export class Exception extends Throwable {
+
+        }
+
+        export class RuntimeException extends Exception {
+
         }
 
         export class StringBuilder {
