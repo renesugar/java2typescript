@@ -426,31 +426,43 @@ module org {
         export class Assert {
             public static assertNotNull(p:any):void {
                 if (p == null) {
-                    throw new java.lang.Exception("Assert Error " + p + " must be null");
+                    throw "Assert Error " + p + " must not be null";
                 }
             }
 
             public static assertNull(p:any):void {
                 if (p != null) {
-                    throw new java.lang.Exception("Assert Error " + p + " must be null");
+                    throw "Assert Error " + p + " must be null";
                 }
             }
 
             public static assertEquals(p:any, p2:any):void {
-                if (p != p2) {
-                    throw new java.lang.Exception("Assert Error " + p + " must be equals to " + p2);
+                if(p.equals !== undefined) {
+                    if(!p.equals(p2)) {
+                        throw "Assert Error \n" + p + "\n must be equal to \n" + p2 + "\n";
+                    }
+                } else {
+                    if (p != p2) {
+                        throw "Assert Error \n" + p + "\n must be equal to \n" + p2 + "\n";
+                    }
                 }
             }
 
             public static assertNotEquals(p:any, p2:any):void {
-                if (p == p2) {
-                    throw new java.lang.Exception("Assert Error " + p + " must be equals to " + p2);
+                if(p.equals !== undefined) {
+                    if(p.equals(p2)) {
+                        throw "Assert Error \n" + p + "\n must not be equal to \n" + p2 + "\n";
+                    }
+                } else {
+                    if (p == p2) {
+                        throw "Assert Error \n" + p + "\n must not be equal to \n" + p2 + "\n";
+                    }
                 }
             }
 
             public static assertTrue(b:boolean):void {
                 if (!b) {
-                    throw new java.lang.Exception("Assert Error " + b + " must be true");
+                    throw "Assert Error " + b + " must be true";
                 }
             }
         }

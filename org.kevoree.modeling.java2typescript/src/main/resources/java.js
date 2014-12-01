@@ -426,27 +426,41 @@ var org;
             }
             Assert.assertNotNull = function (p) {
                 if (p == null) {
-                    throw new java.lang.Exception("Assert Error " + p + " must be null");
+                    throw "Assert Error " + p + " must not be null";
                 }
             };
             Assert.assertNull = function (p) {
                 if (p != null) {
-                    throw new java.lang.Exception("Assert Error " + p + " must be null");
+                    throw "Assert Error " + p + " must be null";
                 }
             };
             Assert.assertEquals = function (p, p2) {
-                if (p != p2) {
-                    throw new java.lang.Exception("Assert Error " + p + " must be equals to " + p2);
+                if (p.equals !== undefined) {
+                    if (!p.equals(p2)) {
+                        throw "Assert Error \n" + p + "\n must be equal to \n" + p2 + "\n";
+                    }
+                }
+                else {
+                    if (p != p2) {
+                        throw "Assert Error \n" + p + "\n must be equal to \n" + p2 + "\n";
+                    }
                 }
             };
             Assert.assertNotEquals = function (p, p2) {
-                if (p == p2) {
-                    throw new java.lang.Exception("Assert Error " + p + " must be equals to " + p2);
+                if (p.equals !== undefined) {
+                    if (p.equals(p2)) {
+                        throw "Assert Error \n" + p + "\n must not be equal to \n" + p2 + "\n";
+                    }
+                }
+                else {
+                    if (p == p2) {
+                        throw "Assert Error \n" + p + "\n must not be equal to \n" + p2 + "\n";
+                    }
                 }
             };
             Assert.assertTrue = function (b) {
                 if (!b) {
-                    throw new java.lang.Exception("Assert Error " + b + " must be true");
+                    throw "Assert Error " + b + " must be true";
                 }
             };
             return Assert;
