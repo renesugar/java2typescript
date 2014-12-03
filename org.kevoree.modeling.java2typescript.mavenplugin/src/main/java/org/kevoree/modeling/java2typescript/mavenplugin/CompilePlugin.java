@@ -57,7 +57,7 @@ public class CompilePlugin extends AbstractMojo {
         if(flatJUnit) {
             flatJunitGenDir = Paths.get(Paths.get(project.getBuild().getOutputDirectory()).getParent().toString(), "gen-jstest").toString();
             FlatJUnitGenerator testGenerator = new FlatJUnitGenerator();
-            testGenerator.generate(source, new File(flatJunitGenDir));
+            testGenerator.generate(source, new File(flatJunitGenDir + File.separator + "gentest"));
         }
 
 

@@ -128,13 +128,15 @@ module java {
         export class Throwable {
 
             private message:string;
+            private error:Error;
 
             constructor(message:string) {
                 this.message = message;
+                this.error = new Error(message);
             }
 
             printStackTrace() {
-                console.error(this.message);
+                console.error(this.error['stack']);
             }
         }
 
@@ -404,6 +406,7 @@ module java {
             toArray(other:Array<T>):T[] {
                 var result = new Array<T>(this.internalSet.size);
                 var i = 0;
+
                 this.internalSet.forEach((value:T, index:T, origin)=> {
                     result[i] = value;
                     i++;

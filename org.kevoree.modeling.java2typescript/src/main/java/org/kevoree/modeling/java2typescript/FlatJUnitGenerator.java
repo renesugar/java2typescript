@@ -18,13 +18,12 @@ import java.nio.file.attribute.BasicFileAttributes;
  */
 public class FlatJUnitGenerator {
 
-
     public void generate(File sourceDir, File targetDir ) {
         try {
 
 
             StringBuilder sb = new StringBuilder();
-
+            sb.append("package gentest;\n\n");
             sb.append("public class FlatJUnitTest {\n\n");
             sb.append("public void run() {\n");
 
@@ -56,7 +55,8 @@ public class FlatJUnitGenerator {
     }
 
     private String instanciateClass(PsiClass clazz) {
-        return "\n" + clazz.getQualifiedName() + " p_" + clazz.getName().toLowerCase() + " = new " +  clazz.getQualifiedName() + "();\n";
+
+        return "try {\n" + clazz.getQualifiedName() + " p_" + clazz.getName().toLowerCase() + " = new " +  clazz.getQualifiedName() + "();\n";
     }
 
 
@@ -72,6 +72,9 @@ public class FlatJUnitGenerator {
                 }
                 sb.append("p_").append(clazz.getName().toLowerCase()).append(".").append(method.getName()).append("();\n");
             }
+        }
+        if(classInstanciated) {
+            sb.append("}catch(Exception e){\n e.printStackTrace();\n}\n");
         }
 
         return sb.toString();
