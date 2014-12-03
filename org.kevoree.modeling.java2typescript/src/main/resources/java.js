@@ -35,15 +35,18 @@ var TSSet = Set;
 Number.prototype.equals = function (other) {
     return this == other;
 };
-/*
- String.prototype.getBytes = function () {
- var res:number[] = new Number[this.length];
- for (var i = 0; i < this.length; i++) {
- res[i] = Number(this.charAt(i));
- }
- return res;
- };
- */
+var StringUtils = (function () {
+    function StringUtils() {
+    }
+    StringUtils.copyValueOf = function (data, offset, count) {
+        var result = "";
+        for (var i = offset; i < offset + count; i++) {
+            result += data[i];
+        }
+        return result;
+    };
+    return StringUtils;
+})();
 String.prototype.matches = function (regEx) {
     return this.match(regEx).length > 0;
 };
@@ -68,13 +71,6 @@ String.prototype.endsWith = function (other) {
         }
     }
     return true;
-};
-String.prototype.copyValueOf = function (data, offset, count) {
-    var result = "";
-    for (var i = offset; i < offset + count; i++) {
-        result += data[i];
-    }
-    return result;
 };
 var java;
 (function (java) {

@@ -24,7 +24,9 @@ interface String {
     endsWith: (other: String) => boolean;
     matches: (regEx: String) => boolean;
     isEmpty: () => boolean;
-    copyValueOf: (data: string[], offset: number, count: number) => string;
+}
+declare class StringUtils {
+    static copyValueOf(data: string[], offset: number, count: number): string;
 }
 declare module java {
     module lang {

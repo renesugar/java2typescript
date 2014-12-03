@@ -112,6 +112,9 @@ public class TypeHelper {
     }
 
     public static String primitiveStaticCall(String clazz) {
+        if(clazz.equals("String")) {
+            return "StringUtils";
+        }
         String result = javaTypes.get(clazz);
         if (result != null) {
             return result;

@@ -46,18 +46,17 @@ interface String {
     matches :  (regEx:String) => boolean;
     //getBytes : () => number[];
     isEmpty : () => boolean;
-    copyValueOf : (data:string[], offset:number, count:number) => string;
 }
 
-/*
- String.prototype.getBytes = function () {
- var res:number[] = new Number[this.length];
- for (var i = 0; i < this.length; i++) {
- res[i] = Number(this.charAt(i));
- }
- return res;
- };
- */
+class StringUtils {
+    static copyValueOf (data:string[], offset:number, count:number) : string {
+        var result : string = "";
+        for(var i = offset; i < offset+count;i++) {
+            result += data[i];
+        }
+        return result;
+    }
+}
 
 String.prototype.matches = function (regEx) {
     return this.match(regEx).length > 0;
@@ -88,14 +87,6 @@ String.prototype.endsWith = function (other) {
         }
     }
     return true;
-};
-
-String.prototype.copyValueOf = function(data:string[], offset:number, count:number){
-    var result : string = "";
-    for(var i = offset; i < offset+count;i++) {
-        result += data[i];
-    }
-    return result;
 };
 
 module java {
