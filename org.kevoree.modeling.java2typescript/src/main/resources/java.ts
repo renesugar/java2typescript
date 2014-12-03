@@ -46,6 +46,7 @@ interface String {
     matches :  (regEx:String) => boolean;
     //getBytes : () => number[];
     isEmpty : () => boolean;
+    copyValueOf : (data:string[], offset:number, count:number) => string;
 }
 
 /*
@@ -89,6 +90,14 @@ String.prototype.endsWith = function (other) {
     return true;
 };
 
+String.prototype.copyValueOf = function(data:string[], offset:number, count:number){
+    var result : string = "";
+    for(var i = offset; i < offset+count;i++) {
+        result += data[i];
+    }
+    return result;
+};
+
 module java {
 
     export module lang {
@@ -118,6 +127,8 @@ module java {
         }
 
         export class Short {
+            public static MIN_VALUE = -0x8000;
+            public static MAX_VALUE = 0x7FFF;
             public static parseShort(val:string):number {
                 return +val;
             }

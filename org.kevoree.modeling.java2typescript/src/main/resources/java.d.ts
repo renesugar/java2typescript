@@ -24,6 +24,7 @@ interface String {
     endsWith: (other: String) => boolean;
     matches: (regEx: String) => boolean;
     isEmpty: () => boolean;
+    copyValueOf: (data: string[], offset: number, count: number) => string;
 }
 declare module java {
     module lang {
@@ -40,6 +41,8 @@ declare module java {
             static parseLong(val: string): number;
         }
         class Short {
+            static MIN_VALUE: number;
+            static MAX_VALUE: number;
             static parseShort(val: string): number;
         }
         class Throwable {

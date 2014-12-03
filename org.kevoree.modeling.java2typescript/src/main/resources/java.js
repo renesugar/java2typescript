@@ -69,6 +69,13 @@ String.prototype.endsWith = function (other) {
     }
     return true;
 };
+String.prototype.copyValueOf = function (data, offset, count) {
+    var result = "";
+    for (var i = offset; i < offset + count; i++) {
+        result += data[i];
+    }
+    return result;
+};
 var java;
 (function (java) {
     var lang;
@@ -115,6 +122,8 @@ var java;
             Short.parseShort = function (val) {
                 return +val;
             };
+            Short.MIN_VALUE = -0x8000;
+            Short.MAX_VALUE = 0x7FFF;
             return Short;
         })();
         lang.Short = Short;
