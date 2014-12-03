@@ -145,6 +145,7 @@ public class TypeHelper {
         javaTypes.put("Throwable", "java.lang.Throwable");
         javaTypes.put("Exception", "java.lang.Exception");
         javaTypes.put("RuntimeException", "java.lang.RuntimeException");
+        javaTypes.put("IndexOutOfBoundsException", "java.lang.IndexOutOfBoundsException");
     }
 
     public static final Set<String> primitiveNumbers = ImmutableSet.of("byte", "short", "int", "long", "float", "double");

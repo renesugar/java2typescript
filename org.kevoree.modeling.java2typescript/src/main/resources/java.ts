@@ -137,13 +137,12 @@ module java {
         }
 
 
-        export class Exception extends Throwable {
+        export class Exception extends Throwable {}
 
-        }
+        export class RuntimeException extends Exception {}
 
-        export class RuntimeException extends Exception {
+        export class IndexOutOfBoundsException extends Exception {}
 
-        }
 
         export class StringBuilder {
 

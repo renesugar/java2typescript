@@ -144,6 +144,14 @@ var java;
             return RuntimeException;
         })(Exception);
         lang.RuntimeException = RuntimeException;
+        var IndexOutOfBoundsException = (function (_super) {
+            __extends(IndexOutOfBoundsException, _super);
+            function IndexOutOfBoundsException() {
+                _super.apply(this, arguments);
+            }
+            return IndexOutOfBoundsException;
+        })(Exception);
+        lang.IndexOutOfBoundsException = IndexOutOfBoundsException;
         var StringBuilder = (function () {
             function StringBuilder() {
                 this.buffer = "";

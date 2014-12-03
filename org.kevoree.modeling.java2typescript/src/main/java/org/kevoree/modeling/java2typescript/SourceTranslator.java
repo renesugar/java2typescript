@@ -81,7 +81,9 @@ public class SourceTranslator {
                     ctx.print("}");
                     ctx.append("\n");
                 } else if (element instanceof PsiClass) {
-                    ClassTranslator.translate((PsiClass) element, ctx);
+                    if(!((PsiClass) element).getName().startsWith("NoJs_")) {
+                        ClassTranslator.translate((PsiClass) element, ctx);
+                    }
                 } else {
                     element.acceptChildren(this);
                 }
