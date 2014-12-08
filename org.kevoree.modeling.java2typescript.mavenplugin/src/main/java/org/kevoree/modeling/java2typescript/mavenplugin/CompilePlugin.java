@@ -1,6 +1,7 @@
 package org.kevoree.modeling.java2typescript.mavenplugin;
 
 import org.apache.maven.artifact.Artifact;
+import org.apache.maven.plugin.MojoExecution;
 import org.kevoree.modeling.java2typescript.FlatJUnitGenerator;
 import org.kevoree.modeling.java2typescript.SourceTranslator;
 import org.apache.maven.plugin.AbstractMojo;
@@ -43,23 +44,31 @@ public class CompilePlugin extends AbstractMojo {
     @Parameter(defaultValue = "${project}", required = true, readonly = true)
     private MavenProject project;
 
+    /**
+     * Target js directory
+     */
+    @Parameter
+    private File targetJS;
 
     @Parameter
     private boolean flatJUnit = false;
-
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         source.mkdirs();
         target.mkdirs();
+        if(targetJS!=null){
+            targetJS.mkdirs();
+        }
+
+
         String flatJunitGenDir = null;
 
-        if(flatJUnit) {
+        if (flatJUnit) {
             flatJunitGenDir = Paths.get(Paths.get(project.getBuild().getOutputDirectory()).getParent().toString(), "gen-jstest").toString();
             FlatJUnitGenerator testGenerator = new FlatJUnitGenerator();
             testGenerator.generate(source, new File(flatJunitGenDir + File.separator + "gentest"));
         }
-
 
         SourceTranslator sourceTranslator = new SourceTranslator();
         for (Artifact a : project.getDependencyArtifacts()) {
@@ -71,13 +80,22 @@ public class CompilePlugin extends AbstractMojo {
         }
         try {
             sourceTranslator.translateSources(source.getPath(), target.getPath(), projectName);
-            if(flatJUnit) {
+            if (flatJUnit) {
                 sourceTranslator.translateSources(new File(flatJunitGenDir).getPath(), target.getPath(), "TestRunner");
             }
         } catch (IOException e) {
             e.printStackTrace();
             throw new MojoExecutionException(e.getMessage());
         }
+
+        if (targetJS != null) {
+            try {
+                TSCRunner.run(target, targetJS);
+            } catch (IOException e) {
+                throw new MojoExecutionException("tsc compilation failed !",e);
+            }
+        }
+
     }
 
 }
