@@ -62,6 +62,20 @@ public class SourceTranslator {
 
         TranslationContext ctx = new TranslationContext();
         PsiDirectory root = analyzer.analyze(sourceFolder);
+
+
+        PsiElementVisitor localDirectoryGenerator = new PsiElementVisitor() {
+            @Override
+            public void visitElement(PsiElement element) {
+                if(element instanceof PsiJavaFile){
+                    element.acceptChildren(this);
+                } else if (element instanceof PsiClass) {
+                    if (!((PsiClass) element).getName().startsWith("NoJs_")) {
+                        ClassTranslator.translate((PsiClass) element, ctx);
+                    }
+                }
+            }
+        };
         root.acceptChildren(new PsiElementVisitor() {
             @Override
             public void visitElement(PsiElement element) {
@@ -76,14 +90,11 @@ public class SourceTranslator {
                     ctx.append(" {");
                     ctx.append("\n");
                     ctx.increaseIdent();
+                    element.acceptChildren(localDirectoryGenerator);
                     element.acceptChildren(this);
                     ctx.decreaseIdent();
                     ctx.print("}");
                     ctx.append("\n");
-                } else if (element instanceof PsiClass) {
-                    if(!((PsiClass) element).getName().startsWith("NoJs_")) {
-                        ClassTranslator.translate((PsiClass) element, ctx);
-                    }
                 } else {
                     element.acceptChildren(this);
                 }
