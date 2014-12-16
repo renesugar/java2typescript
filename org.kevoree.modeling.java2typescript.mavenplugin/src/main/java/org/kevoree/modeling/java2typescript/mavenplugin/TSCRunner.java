@@ -54,9 +54,6 @@ public class TSCRunner {
 
         paramsCol.add("-d");
 
-
-        System.out.println("Command line:" + String.join("; ", paramsCol));
-
         NodejsConfig nodejsConfig = new NodejsConfig(NodejsVersion.Main.V0_10, targetTSCBIN.getAbsolutePath(), paramsCol, target.getAbsolutePath());
         NodejsStarter runtime = new NodejsStarter(runtimeConfig);
         try {
