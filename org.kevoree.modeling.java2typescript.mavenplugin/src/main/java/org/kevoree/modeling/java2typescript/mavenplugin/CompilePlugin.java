@@ -53,6 +53,14 @@ public class CompilePlugin extends AbstractMojo {
     @Parameter
     private boolean flatJUnit = false;
 
+    @Parameter
+    private File[] libraries;
+
+    @Parameter
+    private boolean copyLibDTs = true;
+
+
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         source.mkdirs();
@@ -90,9 +98,9 @@ public class CompilePlugin extends AbstractMojo {
 
         if (targetJS != null) {
             try {
-                TSCRunner.run(target, targetJS);
-            } catch (IOException e) {
-                throw new MojoExecutionException("tsc compilation failed !",e);
+                TSCRunner.run(target, targetJS, libraries, copyLibDTs);
+            } catch (Exception e) {
+                throw new MojoExecutionException("TypeScript compilation failed !",e);
             }
         }
 

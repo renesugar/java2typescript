@@ -35,7 +35,20 @@ public class TypeHelper {
             }
             return result;
         } else if (element instanceof PsiArrayType) {
-            result = printType(((PsiArrayType) element).getComponentType(), ctx) + "[]";
+            PsiArrayType typedElement = (PsiArrayType) element;
+            String partialResult = printType(typedElement.getComponentType(), ctx);
+
+            if(typedElement.getComponentType() instanceof PsiClassReferenceType) {
+                PsiClass resolvedClass = ((PsiClassReferenceType)typedElement.getComponentType()).resolve();
+                if (resolvedClass != null) {
+                    if (isCallbackClass(resolvedClass) && !explicitType) {
+                        //'{ (p: KEvent): void; }[]' is not assignable to type '(p: KEvent) => void[]'.
+                        result = "{" + partialResult.replace("=>", ":") + ";}[]";
+                        return result;
+                    }
+                }
+            }
+            result = partialResult + "[]";
             return result;
         } else if (element instanceof PsiClassReferenceType) {
             PsiClass resolvedClass = ((PsiClassReferenceType) element).resolve();
