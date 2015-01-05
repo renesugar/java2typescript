@@ -8,6 +8,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class SourceTranslator {
     //private static final String baseDir = "/Users/duke/Documents/dev/dukeboard/kevoree-modeling-framework/org.kevoree.modeling.microframework/src/main/java";
@@ -63,19 +67,6 @@ public class SourceTranslator {
         TranslationContext ctx = new TranslationContext();
         PsiDirectory root = analyzer.analyze(sourceFolder);
 
-
-        PsiElementVisitor localDirectoryGenerator = new PsiElementVisitor() {
-            @Override
-            public void visitElement(PsiElement element) {
-                if(element instanceof PsiJavaFile){
-                    element.acceptChildren(this);
-                } else if (element instanceof PsiClass) {
-                    if (!((PsiClass) element).getName().startsWith("NoJs_")) {
-                        ClassTranslator.translate((PsiClass) element, ctx);
-                    }
-                }
-            }
-        };
         root.acceptChildren(new PsiElementVisitor() {
             @Override
             public void visitElement(PsiElement element) {
@@ -90,7 +81,28 @@ public class SourceTranslator {
                     ctx.append(" {");
                     ctx.append("\n");
                     ctx.increaseIdent();
-                    element.acceptChildren(localDirectoryGenerator);
+                    List<PsiClass> toTranslate = new ArrayList<PsiClass>();
+                    element.acceptChildren(new PsiElementVisitor() {
+                        @Override
+                        public void visitElement(PsiElement element) {
+                            if (element instanceof PsiJavaFile) {
+                                element.acceptChildren(this);
+                            } else if (element instanceof PsiClass) {
+                                if (!((PsiClass) element).getName().startsWith("NoJs_")) {
+                                    toTranslate.add((PsiClass) element);
+                                }
+                            }
+                        }
+                    });
+                    Collections.sort(toTranslate, new Comparator<PsiClass>() {
+                        @Override
+                        public int compare(PsiClass o1, PsiClass o2) {
+                            return o1.getName().compareTo(o2.getName());
+                        }
+                    });
+                    for (PsiClass clazz : toTranslate) {
+                        ClassTranslator.translate(clazz, ctx);
+                    }
                     element.acceptChildren(this);
                     ctx.decreaseIdent();
                     ctx.print("}");
