@@ -1,6 +1,9 @@
 package org.kevoree.modeling.java2typescript.translators;
 
 import com.intellij.psi.*;
+import com.intellij.psi.javadoc.PsiDocComment;
+import com.intellij.psi.javadoc.PsiDocTag;
+import com.intellij.psi.javadoc.PsiDocTagValue;
 import org.kevoree.modeling.java2typescript.TranslationContext;
 import org.kevoree.modeling.java2typescript.TypeHelper;
 
@@ -13,6 +16,9 @@ import java.util.List;
 public class MethodTranslator {
 
     public static void translate(PsiMethod method, TranslationContext ctx) {
+
+        boolean nativeActivated = false;
+
         PsiModifierList modifierList = method.getModifierList();
         if (method.isConstructor()) {
             ctx.print("constructor");
@@ -73,10 +79,26 @@ public class MethodTranslator {
         if (!containingClass.isInterface()) {
             ctx.append(" {\n");
             ctx.increaseIdent();
-            if (modifierList.hasModifierProperty("abstract") || method.getBody() == null) {
-                ctx.print("throw \"Abstract method\";\n");
-            } else {
-                CodeBlockTranslator.translate(method.getBody(), ctx);
+
+            //Check for native code
+            PsiDocComment comment = method.getDocComment();
+            if(comment != null) {
+                PsiDocTag[] tags = comment.getTags();
+                if(tags != null) {
+                    for(PsiDocTag tag : tags) {
+                        if(tag.getName().equals(NativeTsTranslator.TAG)) {
+                            nativeActivated = true;
+                            NativeTsTranslator.translate(comment, ctx);
+                        }
+                    }
+                }
+            }
+            if(!nativeActivated) {
+                if (modifierList.hasModifierProperty("abstract") || method.getBody() == null) {
+                    ctx.print("throw \"Abstract method\";\n");
+                } else {
+                    CodeBlockTranslator.translate(method.getBody(), ctx);
+                }
             }
             ctx.decreaseIdent();
             ctx.print("}\n");

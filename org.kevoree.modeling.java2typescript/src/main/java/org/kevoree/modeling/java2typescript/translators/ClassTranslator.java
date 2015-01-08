@@ -2,6 +2,8 @@
 package org.kevoree.modeling.java2typescript.translators;
 
 import com.intellij.psi.*;
+import com.intellij.psi.javadoc.PsiDocComment;
+import com.intellij.psi.javadoc.PsiDocTag;
 import org.kevoree.modeling.java2typescript.TranslationContext;
 import org.kevoree.modeling.java2typescript.TypeHelper;
 
@@ -46,7 +48,24 @@ public class ClassTranslator {
             writeTypeList(ctx, implementsList);
         }
         ctx.append(" {\n\n");
-        printClassMembers(clazz, ctx);
+
+        //Check for native code
+        boolean nativeActivated = false;
+        PsiDocComment comment = clazz.getDocComment();
+        if(comment != null) {
+            PsiDocTag[] tags = comment.getTags();
+            if(tags != null) {
+                for(PsiDocTag tag : tags) {
+                    if(tag.getName().equals(NativeTsTranslator.TAG)) {
+                        nativeActivated = true;
+                        NativeTsTranslator.translate(comment, ctx);
+                    }
+                }
+            }
+        }
+        if(!nativeActivated) {
+            printClassMembers(clazz, ctx);
+        }
         ctx.print("}\n");
         ctx.append("\n");
         printInnerClasses(clazz, ctx);

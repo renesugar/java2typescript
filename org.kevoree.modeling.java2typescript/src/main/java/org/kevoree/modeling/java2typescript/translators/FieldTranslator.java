@@ -2,6 +2,8 @@
 package org.kevoree.modeling.java2typescript.translators;
 
 import com.intellij.psi.*;
+import com.intellij.psi.javadoc.PsiDocComment;
+import com.intellij.psi.javadoc.PsiDocTag;
 import org.kevoree.modeling.java2typescript.TranslationContext;
 import org.kevoree.modeling.java2typescript.TypeHelper;
 import org.kevoree.modeling.java2typescript.translators.expression.ExpressionTranslator;
@@ -9,10 +11,26 @@ import org.kevoree.modeling.java2typescript.translators.expression.ExpressionTra
 public class FieldTranslator {
 
     public static void translate(PsiField element, TranslationContext ctx) {
-        if (element instanceof PsiEnumConstant) {
-            translateEnumConstant((PsiEnumConstant) element, ctx);
-        } else {
-            translateClassField(element, ctx);
+        //Check for native code
+        boolean nativeActivated = false;
+        PsiDocComment comment = element.getDocComment();
+        if(comment != null) {
+            PsiDocTag[] tags = comment.getTags();
+            if(tags != null) {
+                for(PsiDocTag tag : tags) {
+                    if(tag.getName().equals(NativeTsTranslator.TAG)) {
+                        nativeActivated = true;
+                        NativeTsTranslator.translate(comment, ctx);
+                    }
+                }
+            }
+        }
+        if(!nativeActivated) {
+            if (element instanceof PsiEnumConstant) {
+                translateEnumConstant((PsiEnumConstant) element, ctx);
+            } else {
+                translateClassField(element, ctx);
+            }
         }
     }
 
