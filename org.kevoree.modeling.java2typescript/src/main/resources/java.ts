@@ -70,7 +70,6 @@ String.prototype.equals = function (other) {
     return this == other;
 };
 
-
 String.prototype.startsWith = function (other) {
     for (var i = 0; i < other.length; i++) {
         if (other.charAt(i) != this.charAt(i)) {
@@ -87,6 +86,10 @@ String.prototype.endsWith = function (other) {
         }
     }
     return true;
+};
+
+Boolean.prototype.equals = function (other) {
+    return this == other;
 };
 
 module java {
