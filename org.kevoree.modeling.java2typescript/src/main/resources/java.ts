@@ -88,6 +88,9 @@ String.prototype.endsWith = function (other) {
     return true;
 };
 
+interface Boolean {
+    equals : (other:String) => boolean;
+}
 Boolean.prototype.equals = function (other) {
     return this == other;
 };

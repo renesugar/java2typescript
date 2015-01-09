@@ -72,6 +72,9 @@ String.prototype.endsWith = function (other) {
     }
     return true;
 };
+Boolean.prototype.equals = function (other) {
+    return this == other;
+};
 var java;
 (function (java) {
     var lang;
