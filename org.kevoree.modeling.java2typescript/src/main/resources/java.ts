@@ -49,9 +49,9 @@ interface String {
 }
 
 class StringUtils {
-    static copyValueOf (data:string[], offset:number, count:number) : string {
-        var result : string = "";
-        for(var i = offset; i < offset+count;i++) {
+    static copyValueOf(data:string[], offset:number, count:number):string {
+        var result:string = "";
+        for (var i = offset; i < offset + count; i++) {
             result += data[i];
         }
         return result;
@@ -59,7 +59,12 @@ class StringUtils {
 }
 
 String.prototype.matches = function (regEx) {
-    return this.match(regEx).length > 0;
+    if (regEx == null) {
+        return false;
+    } else {
+        var m = this.match(regEx);
+        return m != null && m.length > 0;
+    }
 };
 
 String.prototype.isEmpty = function () {
@@ -126,6 +131,7 @@ module java {
         export class Short {
             public static MIN_VALUE = -0x8000;
             public static MAX_VALUE = 0x7FFF;
+
             public static parseShort(val:string):number {
                 return +val;
             }
@@ -147,11 +153,14 @@ module java {
         }
 
 
-        export class Exception extends Throwable {}
+        export class Exception extends Throwable {
+        }
 
-        export class RuntimeException extends Exception {}
+        export class RuntimeException extends Exception {
+        }
 
-        export class IndexOutOfBoundsException extends Exception {}
+        export class IndexOutOfBoundsException extends Exception {
+        }
 
 
         export class StringBuilder {
@@ -447,8 +456,8 @@ module org {
             }
 
             public static assertEquals(p:any, p2:any):void {
-                if(p.equals !== undefined) {
-                    if(!p.equals(p2)) {
+                if (p.equals !== undefined) {
+                    if (!p.equals(p2)) {
                         throw "Assert Error \n" + p + "\n must be equal to \n" + p2 + "\n";
                     }
                 } else {
@@ -459,8 +468,8 @@ module org {
             }
 
             public static assertNotEquals(p:any, p2:any):void {
-                if(p.equals !== undefined) {
-                    if(p.equals(p2)) {
+                if (p.equals !== undefined) {
+                    if (p.equals(p2)) {
                         throw "Assert Error \n" + p + "\n must not be equal to \n" + p2 + "\n";
                     }
                 } else {
