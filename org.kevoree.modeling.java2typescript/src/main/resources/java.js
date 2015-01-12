@@ -48,7 +48,13 @@ var StringUtils = (function () {
     return StringUtils;
 })();
 String.prototype.matches = function (regEx) {
-    return this.match(regEx).length > 0;
+    if (regEx == null) {
+        return false;
+    }
+    else {
+        var m = this.match(regEx);
+        return m != null && m.length > 0;
+    }
 };
 String.prototype.isEmpty = function () {
     return this.length == 0;
