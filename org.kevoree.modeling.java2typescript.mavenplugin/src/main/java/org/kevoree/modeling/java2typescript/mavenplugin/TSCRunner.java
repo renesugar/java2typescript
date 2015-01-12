@@ -27,7 +27,7 @@ public class TSCRunner {
                 paramsCol.add(files[i].getAbsolutePath());
             }
         }
-        if(libraries != null) {
+        if (libraries != null) {
             for (int i = 0; i < libraries.length; i++) {
                 File[] lib = libraries[i].listFiles();
                 for (int j = 0; j < lib.length; j++) {
@@ -42,11 +42,19 @@ public class TSCRunner {
         targetTSCBIN.deleteOnExit();
         Files.copy(TSCRunner.class.getClassLoader().getResourceAsStream("tsc.js"), targetTSCBIN.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-        if(copyLibDTs) {
+        if (copyLibDTs) {
             File targetLIBD = new File(target, "lib.d.ts");
             targetLIBD.deleteOnExit();
             Files.copy(TSCRunner.class.getClassLoader().getResourceAsStream("lib.d.ts"), targetLIBD.toPath(), StandardCopyOption.REPLACE_EXISTING);
-            paramsCol.add(targetLIBD.getAbsolutePath());
+            boolean founded = false;
+            for (String alreadyAdded : paramsCol) {
+                if (alreadyAdded.endsWith("lib.d.ts")) {
+                    founded = true;
+                }
+            }
+            if (!founded) {
+                paramsCol.add(targetLIBD.getAbsolutePath());
+            }
         }
 
         paramsCol.add("--outDir");
@@ -57,10 +65,10 @@ public class TSCRunner {
         NodejsConfig nodejsConfig = new NodejsConfig(NodejsVersion.Main.V0_10, targetTSCBIN.getAbsolutePath(), paramsCol, target.getAbsolutePath());
         NodejsStarter runtime = new NodejsStarter(runtimeConfig);
         try {
-            NodejsExecutable e = (NodejsExecutable) runtime.prepare(nodejsConfig);
-            node = (NodejsProcess) e.start();
+            NodejsExecutable e = runtime.prepare(nodejsConfig);
+            node = e.start();
             int retVal = node.waitFor();
-            if(retVal != 0) {
+            if (retVal != 0) {
                 throw new Exception("There were TypeScript compilation errors.");
             }
         } catch (InterruptedException var11) {

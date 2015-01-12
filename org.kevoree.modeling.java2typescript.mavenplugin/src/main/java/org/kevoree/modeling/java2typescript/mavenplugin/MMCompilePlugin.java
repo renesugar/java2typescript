@@ -1,7 +1,6 @@
 package org.kevoree.modeling.java2typescript.mavenplugin;
 
 import org.apache.maven.artifact.Artifact;
-import org.apache.maven.plugin.MojoExecution;
 import org.kevoree.modeling.java2typescript.FlatJUnitGenerator;
 import org.kevoree.modeling.java2typescript.SourceTranslator;
 import org.apache.maven.plugin.AbstractMojo;
@@ -14,11 +13,10 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 
 import java.io.*;
-import java.nio.file.Path;
 import java.nio.file.Paths;
 
 @Mojo(name = "generate", defaultPhase = LifecyclePhase.PROCESS_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME)
-public class CompilePlugin extends AbstractMojo {
+public class MMCompilePlugin extends AbstractMojo {
 
     /**
      * Src file
@@ -59,19 +57,14 @@ public class CompilePlugin extends AbstractMojo {
     @Parameter
     private boolean copyLibDTs = true;
 
-
-
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         source.mkdirs();
         target.mkdirs();
-        if(targetJS!=null){
+        if (targetJS != null) {
             targetJS.mkdirs();
         }
-
-
         String flatJunitGenDir = null;
-
         if (flatJUnit) {
             flatJunitGenDir = Paths.get(Paths.get(project.getBuild().getOutputDirectory()).getParent().toString(), "gen-jstest").toString();
             FlatJUnitGenerator testGenerator = new FlatJUnitGenerator();
@@ -95,12 +88,11 @@ public class CompilePlugin extends AbstractMojo {
             e.printStackTrace();
             throw new MojoExecutionException(e.getMessage());
         }
-
         if (targetJS != null) {
             try {
                 TSCRunner.run(target, targetJS, libraries, copyLibDTs);
             } catch (Exception e) {
-                throw new MojoExecutionException("TypeScript compilation failed !",e);
+                throw new MojoExecutionException("TypeScript compilation failed !", e);
             }
         }
 

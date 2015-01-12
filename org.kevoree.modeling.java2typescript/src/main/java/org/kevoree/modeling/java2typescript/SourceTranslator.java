@@ -39,6 +39,64 @@ public class SourceTranslator {
     private static final String JAVA_D_TS = "java.d.ts";
     private static final String JAVA_JS = "java.js";
 
+    public void processPsiDirectory(boolean isRoot, PsiDirectory currentDir, TranslationContext ctx) {
+        if (!isRoot) {
+            ctx.print("export module ");
+        } else {
+            ctx.print("module ");
+        }
+        ctx.append(currentDir.getName());
+        ctx.append(" {");
+        ctx.append("\n");
+        ctx.increaseIdent();
+        List<PsiClass> toTranslate = new ArrayList<PsiClass>();
+        currentDir.acceptChildren(new PsiElementVisitor() {
+            @Override
+            public void visitElement(PsiElement element) {
+                if (element instanceof PsiJavaFile) {
+                    element.acceptChildren(this);
+                } else if (element instanceof PsiClass) {
+                    if (!((PsiClass) element).getName().startsWith("NoJs_")) {
+                        toTranslate.add((PsiClass) element);
+                    }
+                }
+            }
+        });
+        Collections.sort(toTranslate, new Comparator<PsiClass>() {
+            @Override
+            public int compare(PsiClass o1, PsiClass o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
+        for (PsiClass clazz : toTranslate) {
+            ClassTranslator.translate(clazz, ctx);
+        }
+
+        List<PsiDirectory> subDirectories = new ArrayList<PsiDirectory>();
+        currentDir.acceptChildren(new PsiElementVisitor() {
+            @Override
+            public void visitElement(PsiElement element) {
+                if (element instanceof PsiDirectory) {
+                    subDirectories.add((PsiDirectory) element);
+                } else {
+                    element.acceptChildren(this);
+                }
+            }
+        });
+        Collections.sort(subDirectories, new Comparator<PsiDirectory>() {
+            @Override
+            public int compare(PsiDirectory o1, PsiDirectory o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
+        for (PsiDirectory subDir : subDirectories) {
+            processPsiDirectory(false, subDir, ctx);
+        }
+
+        ctx.decreaseIdent();
+        ctx.print("}");
+        ctx.append("\n");
+    }
 
     public void translateSources(String sourcePath, String outputPath, String name) throws IOException {
         File sourceFolder = new File(sourcePath);
@@ -63,55 +121,29 @@ public class SourceTranslator {
         Files.copy(this.getClass().getClassLoader().getResourceAsStream(JAVA_D_TS), javaDTS.toPath(), StandardCopyOption.REPLACE_EXISTING);
         Files.copy(this.getClass().getClassLoader().getResourceAsStream(JAVA_JS), javaJS.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
-
         TranslationContext ctx = new TranslationContext();
         PsiDirectory root = analyzer.analyze(sourceFolder);
-
+        List<PsiDirectory> subDirectories = new ArrayList<PsiDirectory>();
         root.acceptChildren(new PsiElementVisitor() {
             @Override
             public void visitElement(PsiElement element) {
                 if (element instanceof PsiDirectory) {
-                    PsiDirectory currentDir = (PsiDirectory) element;
-                    if (root != currentDir.getParent()) {
-                        ctx.print("export module ");
-                    } else {
-                        ctx.print("module ");
-                    }
-                    ctx.append(currentDir.getName());
-                    ctx.append(" {");
-                    ctx.append("\n");
-                    ctx.increaseIdent();
-                    List<PsiClass> toTranslate = new ArrayList<PsiClass>();
-                    element.acceptChildren(new PsiElementVisitor() {
-                        @Override
-                        public void visitElement(PsiElement element) {
-                            if (element instanceof PsiJavaFile) {
-                                element.acceptChildren(this);
-                            } else if (element instanceof PsiClass) {
-                                if (!((PsiClass) element).getName().startsWith("NoJs_")) {
-                                    toTranslate.add((PsiClass) element);
-                                }
-                            }
-                        }
-                    });
-                    Collections.sort(toTranslate, new Comparator<PsiClass>() {
-                        @Override
-                        public int compare(PsiClass o1, PsiClass o2) {
-                            return o1.getName().compareTo(o2.getName());
-                        }
-                    });
-                    for (PsiClass clazz : toTranslate) {
-                        ClassTranslator.translate(clazz, ctx);
-                    }
-                    element.acceptChildren(this);
-                    ctx.decreaseIdent();
-                    ctx.print("}");
-                    ctx.append("\n");
+                    subDirectories.add((PsiDirectory) element);
                 } else {
                     element.acceptChildren(this);
                 }
             }
         });
+        Collections.sort(subDirectories, new Comparator<PsiDirectory>() {
+            @Override
+            public int compare(PsiDirectory o1, PsiDirectory o2) {
+                return o1.getName().compareTo(o2.getName());
+            }
+        });
+        for (PsiDirectory subDir : subDirectories) {
+            processPsiDirectory(true, subDir, ctx);
+        }
+
         File generatedTS = new File(targetFolder, name + ".ts");
         FileUtil.writeToFile(generatedTS, ctx.toString().getBytes());
         System.out.println("Transpile Java2TypeScript ended to " + generatedTS.getAbsolutePath());
