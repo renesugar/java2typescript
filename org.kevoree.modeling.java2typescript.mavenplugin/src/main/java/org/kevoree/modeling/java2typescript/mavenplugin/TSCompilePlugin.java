@@ -38,7 +38,7 @@ public class TSCompilePlugin extends AbstractMojo {
     @Parameter(defaultValue = "${project.basedir}/src/main/js")
     protected File inputJS;
 
-    @Parameter(defaultValue = "${project.build.directory}/generated-sources/ts")
+    @Parameter(defaultValue = "${project.build.directory}/js")
     protected File outputTempJS;
 
     @Parameter
