@@ -80,6 +80,8 @@ public class MethodTranslator {
             ctx.append(" {\n");
             ctx.increaseIdent();
 
+            //Crazy cost !!!!!
+            /*
             if(!modifierList.hasModifierProperty("abstract") && method.getBody() != null && method.getParameterList().getParameters().length > 0) {
                 List<String> paramsConditions = new ArrayList<String>();
                 for (PsiParameter parameter : method.getParameterList().getParameters()) {
@@ -90,7 +92,7 @@ public class MethodTranslator {
                 ctx.print("throw new java.lang.RuntimeException(\"At least one parameter is undefined. They can be null, but they are all mandatory. Please check.\");\n");
                 ctx.decreaseIdent();
                 ctx.print("}\n\n");
-            }
+            }*/
 
             //Check for native code
             PsiDocComment comment = method.getDocComment();
