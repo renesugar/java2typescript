@@ -160,6 +160,7 @@ public class TypeHelper {
 
         javaTypes.put("Throwable", "java.lang.Throwable");
         javaTypes.put("Exception", "java.lang.Exception");
+        javaTypes.put("Runnable", "java.lang.Runnable");
         javaTypes.put("RuntimeException", "java.lang.RuntimeException");
         javaTypes.put("IndexOutOfBoundsException", "java.lang.IndexOutOfBoundsException");
     }

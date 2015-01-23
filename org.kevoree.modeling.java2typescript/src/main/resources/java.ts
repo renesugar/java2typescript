@@ -162,6 +162,9 @@ module java {
         export class IndexOutOfBoundsException extends Exception {
         }
 
+        export interface Runnable {
+            run():void;
+        }
 
         export class StringBuilder {
 
