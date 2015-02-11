@@ -203,6 +203,9 @@ module java {
             public nextInt(max:number):number {
                 return Math.random() * max;
             }
+            public nextDouble():number {
+                return Math.random();
+            }
         }
 
         export class Arrays {

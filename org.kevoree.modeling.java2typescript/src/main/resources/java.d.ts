@@ -76,6 +76,7 @@ declare module java {
     module util {
         class Random {
             nextInt(max: number): number;
+            nextDouble(): number;
         }
         class Arrays {
             static fill(data: Number[], begin: number, nbElem: number, param: number): void;
