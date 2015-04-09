@@ -1,4 +1,9 @@
 class System {
+
+    static gc(){
+
+    }
+
     static out = {
         println(obj?:any) {
             console.log(obj);
@@ -23,9 +28,6 @@ class System {
         }
     }
 }
-
-var TSMap = Map;
-var TSSet = Set;
 
 interface Number {
     equals : (other:Number) => boolean;
@@ -195,6 +197,15 @@ module java {
             }
 
         }
+
+        export module ref {
+
+            export class WeakReference<A> {
+
+            }
+
+        }
+
     }
 
     export module util {
@@ -351,48 +362,59 @@ module java {
         }
 
         export class Map<K, V> {
+
             get(key:K):V {
-                return this.internalMap.get(key);
+                return this.internalMap[<any>key];
             }
 
             put(key:K, value:V):void {
-                this.internalMap.set(key, value);
+                this.internalMap[<any>key] = value;
             }
 
             containsKey(key:K):boolean {
-                return this.internalMap.has(key);
+                return this.internalMap.hasOwnProperty(<any>key);
             }
 
             remove(key:K):V {
-                var tmp = this.internalMap.get(key);
-                this.internalMap.delete(key);
+                var tmp = this.internalMap[<any>key];
+                delete this.internalMap[<any>key];
                 return tmp;
             }
 
             keySet():Set<K> {
                 var result = new HashSet<K>();
-                this.internalMap.forEach((value:V, index:K, p1)=> {
-                    result.add(index);
-                });
+                for(var p in this.internalMap){
+                    if(this.internalMap.hasOwnProperty(p)){
+                        result.add(p);
+                    }
+                }
                 return result;
             }
 
             isEmpty():boolean {
-                return this.internalMap.size == 0;
+                var c= 0;
+                for(var p in this.internalMap){
+                    if(this.internalMap.hasOwnProperty(p)){
+                        c++;
+                    }
+                }
+                return c == 0;
             }
 
             values():Set<V> {
                 var result = new HashSet<V>();
-                this.internalMap.forEach((value:V, index:K, p1)=> {
-                    result.add(value);
-                });
+                for(var p in this.internalMap){
+                    if(this.internalMap.hasOwnProperty(p)){
+                        result.add(this.internalMap[p]);
+                    }
+                }
                 return result;
             }
 
-            private internalMap = new TSMap<K,V>();
+            private internalMap = {};
 
             clear():void {
-                this.internalMap = new TSMap<K,V>();
+                this.internalMap = {};
             }
 
         }
@@ -403,49 +425,45 @@ module java {
 
         export class Set<T> extends Collection<T> {
 
-            private internalSet = new TSSet<T>();
+            private internalSet = {};
 
             add(val:T) {
-                this.internalSet.add(val);
+                this.internalSet[<any>val] = val;
             }
 
             clear() {
-                this.internalSet = new TSSet<T>();
+                this.internalSet = {};
             }
 
             contains(val:T):boolean {
-                return this.internalSet.has(val);
+                return this.internalSet.hasOwnProperty(<any>val);
             }
 
             addAll(vals:Collection<T>) {
                 var tempArray = vals.toArray(null);
                 for (var i = 0; i < tempArray.length; i++) {
-                    this.internalSet.add(tempArray[i]);
+                    this.internalSet[<any>tempArray[i]]=tempArray[i];
                 }
             }
 
             remove(val:T) {
-                this.internalSet.delete(val);
+                delete this.internalSet[<any>val];
             }
 
             size():number {
-                return this.internalSet.size;
+                var c= 0;
+                for(var p in this.internalSet){
+                    if(this.internalSet.hasOwnProperty(p)){
+                        c++;
+                    }
+                }
+                return c;
             }
 
             isEmpty():boolean {
-                return this.internalSet.size == 0;
+                return this.size() == 0;
             }
 
-            toArray(other:Array<T>):T[] {
-                var result = new Array<T>(this.internalSet.size);
-                var i = 0;
-
-                this.internalSet.forEach((value:T, index:T, origin)=> {
-                    result[i] = value;
-                    i++;
-                });
-                return result;
-            }
         }
 
         export class HashSet<T> extends Set<T> {
