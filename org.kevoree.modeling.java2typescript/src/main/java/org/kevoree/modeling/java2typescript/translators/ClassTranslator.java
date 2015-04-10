@@ -12,6 +12,27 @@ import java.util.ArrayList;
 public class ClassTranslator {
 
     public static void translate(PsiClass clazz, TranslationContext ctx) {
+
+        boolean ignoreClass = false;
+        boolean nativeActivated = false;
+        PsiDocComment comment = clazz.getDocComment();
+        if (comment != null) {
+            PsiDocTag[] tags = comment.getTags();
+            if (tags != null) {
+                for (PsiDocTag tag : tags) {
+                    if (tag.getName().equals(NativeTsTranslator.TAG_IGNORE) && tag.getValueElement()!=null && tag.getValueElement().getText().equals(NativeTsTranslator.TAG_VAL_TS)) {
+                        ignoreClass = true;
+                    }
+                    if (tag.getName().equals(NativeTsTranslator.TAG) && tag.getValueElement()!=null && tag.getValueElement().getText().equals(NativeTsTranslator.TAG_VAL_TS)) {
+                        nativeActivated = true;
+                    }
+                }
+            }
+        }
+        if (ignoreClass) {
+            //we skip the class
+            return;
+        }
         if (clazz.isInterface()) {
             ctx.print("export interface ");
         } else {
@@ -49,23 +70,14 @@ public class ClassTranslator {
         }
         ctx.append(" {\n\n");
 
-        //Check for native code
-        boolean nativeActivated = false;
-        PsiDocComment comment = clazz.getDocComment();
-        if(comment != null) {
-            PsiDocTag[] tags = comment.getTags();
-            if(tags != null) {
-                for(PsiDocTag tag : tags) {
-                    if(tag.getName().equals(NativeTsTranslator.TAG)) {
-                        nativeActivated = true;
-                        NativeTsTranslator.translate(comment, ctx);
-                    }
-                }
-            }
-        }
-        if(!nativeActivated) {
+        if (!nativeActivated) {
             printClassMembers(clazz, ctx);
+        } else {
+            ctx.increaseIdent();
+            NativeTsTranslator.translate(comment, ctx);
+            ctx.decreaseIdent();
         }
+
         ctx.print("}\n");
         ctx.append("\n");
         printInnerClasses(clazz, ctx);
@@ -73,7 +85,27 @@ public class ClassTranslator {
 
     private static void printInnerClasses(PsiClass element, TranslationContext ctx) {
         PsiClass[] innerClasses = element.getInnerClasses();
-        if (innerClasses.length > 0) {
+
+        boolean atLeastOne = false;
+        for(PsiClass loopClass : innerClasses){
+            boolean ignoreClass = false;
+            PsiDocComment comment = loopClass.getDocComment();
+            if (comment != null) {
+                PsiDocTag[] tags = comment.getTags();
+                if (tags != null) {
+                    for (PsiDocTag tag : tags) {
+                        if (tag.getName().equals(NativeTsTranslator.TAG_IGNORE) && tag.getValueElement()!=null && tag.getValueElement().getText().equals(NativeTsTranslator.TAG_VAL_TS)) {
+                            ignoreClass = true;
+                        }
+                    }
+                }
+            }
+            if(!ignoreClass){
+                atLeastOne = true;
+            }
+        }
+
+        if (innerClasses.length > 0 && atLeastOne) {
             ctx.print("export module ").append(element.getName()).append(" { \n");
             ctx.increaseIdent();
             for (PsiClass innerClass : innerClasses) {
@@ -154,7 +186,7 @@ public class ClassTranslator {
     private static void writeTypeList(TranslationContext ctx, PsiClassType[] typeList) {
         for (int i = 0; i < typeList.length; i++) {
             PsiClassType type = typeList[i];
-            ctx.append(TypeHelper.printType(type, ctx,true,true));
+            ctx.append(TypeHelper.printType(type, ctx, true, true));
             if (i != typeList.length - 1) {
                 ctx.append(", ");
             }

@@ -100,7 +100,7 @@ public class MethodTranslator {
                 PsiDocTag[] tags = comment.getTags();
                 if(tags != null) {
                     for(PsiDocTag tag : tags) {
-                        if(tag.getName().equals(NativeTsTranslator.TAG)) {
+                        if (tag.getName().equals(NativeTsTranslator.TAG) && tag.getValueElement()!=null && tag.getValueElement().getText().equals(NativeTsTranslator.TAG_VAL_TS)) {
                             nativeActivated = true;
                             NativeTsTranslator.translate(comment, ctx);
                         }

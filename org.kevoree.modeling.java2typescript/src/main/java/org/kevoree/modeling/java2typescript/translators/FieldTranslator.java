@@ -13,17 +13,23 @@ public class FieldTranslator {
     public static void translate(PsiField element, TranslationContext ctx) {
         //Check for native code
         boolean nativeActivated = false;
+        boolean ignored = false;
         PsiDocComment comment = element.getDocComment();
         if(comment != null) {
             PsiDocTag[] tags = comment.getTags();
             if(tags != null) {
                 for(PsiDocTag tag : tags) {
-                    if(tag.getName().equals(NativeTsTranslator.TAG)) {
+                    if (tag.getName().equals(NativeTsTranslator.TAG) && tag.getValueElement()!=null && tag.getValueElement().getText().equals(NativeTsTranslator.TAG_VAL_TS)) {
                         nativeActivated = true;
-                        NativeTsTranslator.translate(comment, ctx);
+                    }
+                    if (tag.getName().equals(NativeTsTranslator.TAG_IGNORE) && tag.getValueElement()!=null && tag.getValueElement().getText().equals(NativeTsTranslator.TAG_VAL_TS)) {
+                        ignored = true;
                     }
                 }
             }
+        }
+        if(ignored){
+            return;
         }
         if(!nativeActivated) {
             if (element instanceof PsiEnumConstant) {
@@ -31,6 +37,8 @@ public class FieldTranslator {
             } else {
                 translateClassField(element, ctx);
             }
+        } else {
+            NativeTsTranslator.translate(comment, ctx);
         }
     }
 

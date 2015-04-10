@@ -364,27 +364,29 @@ module java {
         export class Map<K, V> {
 
             get(key:K):V {
-                return this.internalMap[<any>key];
+                return this[<any>key];
             }
 
-            put(key:K, value:V):void {
-                this.internalMap[<any>key] = value;
+            put(key:K, value:V):V {
+                var previous_val = this[<any>key];
+                this[<any>key] = value;
+                return previous_val;
             }
 
             containsKey(key:K):boolean {
-                return this.internalMap.hasOwnProperty(<any>key);
+                return this.hasOwnProperty(<any>key);
             }
 
             remove(key:K):V {
-                var tmp = this.internalMap[<any>key];
-                delete this.internalMap[<any>key];
+                var tmp = this[<any>key];
+                delete this[<any>key];
                 return tmp;
             }
 
             keySet():Set<K> {
                 var result = new HashSet<K>();
-                for(var p in this.internalMap){
-                    if(this.internalMap.hasOwnProperty(p)){
+                for(var p in this){
+                    if(this.hasOwnProperty(p)){
                         result.add(p);
                     }
                 }
@@ -392,29 +394,23 @@ module java {
             }
 
             isEmpty():boolean {
-                var c= 0;
-                for(var p in this.internalMap){
-                    if(this.internalMap.hasOwnProperty(p)){
-                        c++;
-                    }
-                }
-                return c == 0;
+                return Object.keys(this).length == 0;
             }
 
             values():Set<V> {
                 var result = new HashSet<V>();
-                for(var p in this.internalMap){
-                    if(this.internalMap.hasOwnProperty(p)){
-                        result.add(this.internalMap[p]);
+                for(var p in this){
+                    if(this.hasOwnProperty(p)){
+                        result.add(this[p]);
                     }
                 }
                 return result;
             }
 
-            private internalMap = {};
-
             clear():void {
-                this.internalMap = {};
+                for(var p in this){
+                    delete this[p];
+                }
             }
 
         }
@@ -425,39 +421,33 @@ module java {
 
         export class Set<T> extends Collection<T> {
 
-            private internalSet = {};
-
             add(val:T) {
-                this.internalSet[<any>val] = val;
+                this[<any>val] = val;
             }
 
             clear() {
-                this.internalSet = {};
+                for(var p in this){
+                    delete this[p];
+                }
             }
 
             contains(val:T):boolean {
-                return this.internalSet.hasOwnProperty(<any>val);
+                return this.hasOwnProperty(<any>val);
             }
 
             addAll(vals:Collection<T>) {
                 var tempArray = vals.toArray(null);
                 for (var i = 0; i < tempArray.length; i++) {
-                    this.internalSet[<any>tempArray[i]]=tempArray[i];
+                    this[<any>tempArray[i]]=tempArray[i];
                 }
             }
 
             remove(val:T) {
-                delete this.internalSet[<any>val];
+                delete this[<any>val];
             }
 
             size():number {
-                var c= 0;
-                for(var p in this.internalSet){
-                    if(this.internalSet.hasOwnProperty(p)){
-                        c++;
-                    }
-                }
-                return c;
+                return Object.keys(this).length;
             }
 
             isEmpty():boolean {
