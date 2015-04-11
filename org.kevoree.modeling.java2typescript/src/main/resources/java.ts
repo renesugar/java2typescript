@@ -409,7 +409,9 @@ module java {
 
             clear():void {
                 for(var p in this){
-                    delete this[p];
+                    if(this.hasOwnProperty(p)){
+                        delete this[p];
+                    }
                 }
             }
 
@@ -427,7 +429,9 @@ module java {
 
             clear() {
                 for(var p in this){
-                    delete this[p];
+                    if(this.hasOwnProperty(p)){
+                        delete this[p];
+                    }
                 }
             }
 
