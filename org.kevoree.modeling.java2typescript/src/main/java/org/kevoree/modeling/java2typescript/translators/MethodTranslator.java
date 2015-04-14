@@ -18,7 +18,25 @@ public class MethodTranslator {
     public static void translate(PsiMethod method, TranslationContext ctx) {
 
         boolean nativeActivated = false;
-
+        boolean ignore = false;
+        //Check for native code
+        PsiDocComment comment = method.getDocComment();
+        if(comment != null) {
+            PsiDocTag[] tags = comment.getTags();
+            if(tags != null) {
+                for(PsiDocTag tag : tags) {
+                    if (tag.getName().equals(NativeTsTranslator.TAG) && tag.getValueElement()!=null && tag.getValueElement().getText().equals(NativeTsTranslator.TAG_VAL_TS)) {
+                        nativeActivated = true;
+                    }
+                    if (tag.getName().equals(NativeTsTranslator.TAG_IGNORE) && tag.getValueElement()!=null && tag.getValueElement().getText().equals(NativeTsTranslator.TAG_VAL_TS)) {
+                        ignore = true;
+                    }
+                }
+            }
+        }
+        if(ignore){
+            return;
+        }
         PsiModifierList modifierList = method.getModifierList();
         if (method.isConstructor()) {
             ctx.print("constructor");
@@ -79,40 +97,14 @@ public class MethodTranslator {
         if (!containingClass.isInterface()) {
             ctx.append(" {\n");
             ctx.increaseIdent();
-
-            //Crazy cost !!!!!
-            /*
-            if(!modifierList.hasModifierProperty("abstract") && method.getBody() != null && method.getParameterList().getParameters().length > 0) {
-                List<String> paramsConditions = new ArrayList<String>();
-                for (PsiParameter parameter : method.getParameterList().getParameters()) {
-                    paramsConditions.add(parameter.getName() + " === undefined");
-                }
-                ctx.print("if(").append(String.join(" || ", paramsConditions)).append(") {\n");
-                ctx.increaseIdent();
-                ctx.print("throw new java.lang.RuntimeException(\"At least one parameter is undefined. They can be null, but they are all mandatory. Please check.\");\n");
-                ctx.decreaseIdent();
-                ctx.print("}\n\n");
-            }*/
-
-            //Check for native code
-            PsiDocComment comment = method.getDocComment();
-            if(comment != null) {
-                PsiDocTag[] tags = comment.getTags();
-                if(tags != null) {
-                    for(PsiDocTag tag : tags) {
-                        if (tag.getName().equals(NativeTsTranslator.TAG) && tag.getValueElement()!=null && tag.getValueElement().getText().equals(NativeTsTranslator.TAG_VAL_TS)) {
-                            nativeActivated = true;
-                            NativeTsTranslator.translate(comment, ctx);
-                        }
-                    }
-                }
-            }
             if(!nativeActivated) {
                 if (modifierList.hasModifierProperty("abstract") || method.getBody() == null) {
                     ctx.print("throw \"Abstract method\";\n");
                 } else {
                     CodeBlockTranslator.translate(method.getBody(), ctx);
                 }
+            } else {
+                NativeTsTranslator.translate(comment, ctx);
             }
             ctx.decreaseIdent();
             ctx.print("}\n");
