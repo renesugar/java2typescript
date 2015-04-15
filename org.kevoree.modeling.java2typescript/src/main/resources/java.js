@@ -269,20 +269,6 @@ var java;
             function List() {
                 _super.apply(this, arguments);
             }
-            /*
-                        sort() {
-                            var sorted = this.sort((a, b)=> {
-                                if (a == b) {
-                                    return 0;
-                                } else {
-                                    if (a < b) {
-                                        return -1;
-                                    } else {
-                                        return 1;
-                                    }
-                                }
-                            });
-                        }*/
             List.prototype.addAll = function (vals) {
                 var tempArray = vals.toArray(null);
                 for (var i = 0; i < tempArray.length; i++) {
@@ -501,4 +487,3 @@ var org;
         junit.Assert = Assert;
     })(junit = org.junit || (org.junit = {}));
 })(org || (org = {}));
-//# sourceMappingURL=java.js.map

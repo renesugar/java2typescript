@@ -190,7 +190,6 @@ module java {
         export module ref {
 
             export class WeakReference<A> {
-
             }
 
         }
@@ -253,32 +252,34 @@ module java {
                 Array.apply(this, arguments);
                 return new Array();
             }
-            pop(): any { return "" }
-            push(val): number { return 0; }
-            splice(newS,arrL) {}
-            length: number;
-            indexOf(val):number {return 0}
-            shift(): any{ return "";}
-            sort(){}
+
+            pop():any {
+                return ""
+            }
+
+            push(val):number {
+                return 0;
+            }
+
+            splice(newS, arrL) {
+            }
+
+            length:number;
+
+            indexOf(val):number {
+                return 0
+            }
+
+            shift():any {
+                return "";
+            }
+
+            sort() {
+            }
         }
         XArray["prototype"] = new Array();
 
         export class List<T> extends XArray implements Collection<T> {
-
-/*
-            sort() {
-                var sorted = this.sort((a, b)=> {
-                    if (a == b) {
-                        return 0;
-                    } else {
-                        if (a < b) {
-                            return -1;
-                        } else {
-                            return 1;
-                        }
-                    }
-                });
-            }*/
 
             addAll(vals:Collection<T>) {
                 var tempArray = vals.toArray(null);
@@ -300,7 +301,7 @@ module java {
             }
 
             toArray(a:Array<T>):T[] {
-                for(var ik in this){
+                for (var ik in this) {
                     a.push(this[ik]);
                 }
                 return a;
@@ -430,7 +431,7 @@ module java {
             }
 
             toArray(a:Array<T>):T[] {
-                for(var ik in this){
+                for (var ik in this) {
                     a.push(this[ik]);
                 }
                 return a;
