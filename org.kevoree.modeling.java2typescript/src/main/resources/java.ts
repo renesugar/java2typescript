@@ -131,6 +131,12 @@ module java {
             }
         }
 
+        export class Boolean {
+            public static parseBoolean(val:string):boolean{
+               return val == "true";
+            }
+        }
+
         export class Short {
             public static MIN_VALUE = -0x8000;
             public static MAX_VALUE = 0x7FFF;
@@ -292,7 +298,7 @@ module java {
                 this.length = 0;
             }
 
-            public poll():T {
+            poll():T {
                 return this.shift();
             }
 

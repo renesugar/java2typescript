@@ -148,7 +148,6 @@ public class TypeHelper {
         javaTypes.put("HashSet", "java.util.HashSet");
         javaTypes.put("ArrayList", "java.util.ArrayList");
         javaTypes.put("LinkedList", "java.util.LinkedList");
-     //   javaTypes.put("Assert", "org.junit.Assert");
         javaTypes.put("Random", "java.util.Random");
 
         javaTypes.put("Long", "java.lang.Long");
@@ -156,6 +155,7 @@ public class TypeHelper {
         javaTypes.put("Float", "java.lang.Float");
         javaTypes.put("Integer", "java.lang.Integer");
         javaTypes.put("Short", "java.lang.Short");
+        javaTypes.put("Boolean", "java.lang.Boolean");
         javaTypes.put("StringBuilder", "java.lang.StringBuilder");
 
         javaTypes.put("Throwable", "java.lang.Throwable");
