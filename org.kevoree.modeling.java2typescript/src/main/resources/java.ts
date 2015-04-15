@@ -1,7 +1,6 @@
 class System {
 
-    static gc(){
-
+    static gc() {
     }
 
     static out = {
@@ -78,33 +77,23 @@ String.prototype.equals = function (other) {
     return this == other;
 };
 
-String.prototype.hashCode = function() {
+String.prototype.hashCode = function () {
     var hash = 0, i, chr, len;
     if (this.length == 0) return hash;
     for (i = 0, len = this.length; i < len; i++) {
-        chr   = this.charCodeAt(i);
-        hash  = ((hash << 5) - hash) + chr;
+        chr = this.charCodeAt(i);
+        hash = ((hash << 5) - hash) + chr;
         hash |= 0; // Convert to 32bit integer
     }
     return hash;
 };
 
 String.prototype.startsWith = function (other) {
-    for (var i = 0; i < other.length; i++) {
-        if (other.charAt(i) != this.charAt(i)) {
-            return false;
-        }
-    }
-    return true;
+    return this.slice(0, other.length) == other;
 };
 
 String.prototype.endsWith = function (other) {
-    for (var i = other.length - 1; i >= 0; i--) {
-        if (other.charAt(i) != this.charAt(i)) {
-            return false;
-        }
-    }
-    return true;
+    return this.slice(-other.length) == other;
 };
 
 interface Boolean {
@@ -214,6 +203,7 @@ module java {
             public nextInt(max:number):number {
                 return Math.random() * max;
             }
+
             public nextDouble():number {
                 return Math.random();
             }
@@ -247,44 +237,37 @@ module java {
 
         }
 
-        export class Collection<T> {
-            add(val:T):void {
-                throw new java.lang.Exception("Abstract implementation");
-            }
-
-            addAll(vals:Collection<T>):void {
-                throw new java.lang.Exception("Abstract implementation");
-            }
-
-            remove(val:T):void {
-                throw new java.lang.Exception("Abstract implementation");
-            }
-
-            clear():void {
-                throw new java.lang.Exception("Abstract implementation");
-            }
-
-            isEmpty():boolean {
-                throw new java.lang.Exception("Abstract implementation");
-            }
-
-            size():number {
-                throw new java.lang.Exception("Abstract implementation");
-            }
-
-            contains(val:T):boolean {
-                throw new java.lang.Exception("Abstract implementation");
-            }
-
-            toArray(a:Array<T>):T[] {
-                throw new java.lang.Exception("Abstract implementation");
-            }
+        export interface Collection<T> {
+            add(val:T):void
+            addAll(vals:Collection<T>)
+            remove(val:T)
+            clear()
+            isEmpty():boolean
+            size():number
+            contains(val:T):boolean
+            toArray(a:Array<T>):T[]
         }
 
-        export class List<T> extends Collection<T> {
+        export class XArray {
+            constructor() {
+                Array.apply(this, arguments);
+                return new Array();
+            }
+            pop(): any { return "" }
+            push(val): number { return 0; }
+            splice(newS,arrL) {}
+            length: number;
+            indexOf(val):number {return 0}
+            shift(): any{ return "";}
+            sort(){}
+        }
+        XArray["prototype"] = new Array();
 
+        export class List<T> extends XArray implements Collection<T> {
+
+/*
             sort() {
-                this.internalArray = this.internalArray.sort((a, b)=> {
+                var sorted = this.sort((a, b)=> {
                     if (a == b) {
                         return 0;
                     } else {
@@ -295,70 +278,59 @@ module java {
                         }
                     }
                 });
-            }
-
-            private internalArray:Array<T> = [];
+            }*/
 
             addAll(vals:Collection<T>) {
                 var tempArray = vals.toArray(null);
                 for (var i = 0; i < tempArray.length; i++) {
-                    this.internalArray.push(tempArray[i]);
+                    this.push(tempArray[i]);
                 }
             }
 
             clear() {
-                this.internalArray = [];
+                this.length = 0;
             }
 
             public poll():T {
-                return this.internalArray.shift();
+                return this.shift();
             }
 
             remove(val:T) {
-                //TODO with filter
+
             }
 
             toArray(a:Array<T>):T[] {
-                //TODO
-                var result = new Array<T>(this.internalArray.length);
-                this.internalArray.forEach((value:T, index:number, p1:T[])=> {
-                    result[index] = value;
-                });
-                return result;
+                for(var ik in this){
+                    a.push(this[ik]);
+                }
+                return a;
             }
 
             size():number {
-                return this.internalArray.length;
+                return this.length;
             }
 
             add(val:T):void {
-                this.internalArray.push(val);
+                this.push(val);
             }
 
             get(index:number):T {
-                return this.internalArray[index];
+                return this[index];
             }
 
             contains(val:T):boolean {
-                for (var i = 0; i < this.internalArray.length; i++) {
-                    if (this.internalArray[i] == val) {
-                        return true;
-                    }
-                }
-                return false;
+                return this.indexOf(val) != -1;
             }
 
             isEmpty():boolean {
-                return this.internalArray.length == 0;
+                return this.length == 0;
             }
         }
 
         export class ArrayList<T> extends List<T> {
-
         }
 
         export class LinkedList<T> extends List<T> {
-
         }
 
         export class Map<K, V> {
@@ -385,8 +357,8 @@ module java {
 
             keySet():Set<K> {
                 var result = new HashSet<K>();
-                for(var p in this){
-                    if(this.hasOwnProperty(p)){
+                for (var p in this) {
+                    if (this.hasOwnProperty(p)) {
                         result.add(p);
                     }
                 }
@@ -399,8 +371,8 @@ module java {
 
             values():Set<V> {
                 var result = new HashSet<V>();
-                for(var p in this){
-                    if(this.hasOwnProperty(p)){
+                for (var p in this) {
+                    if (this.hasOwnProperty(p)) {
                         result.add(this[p]);
                     }
                 }
@@ -408,8 +380,8 @@ module java {
             }
 
             clear():void {
-                for(var p in this){
-                    if(this.hasOwnProperty(p)){
+                for (var p in this) {
+                    if (this.hasOwnProperty(p)) {
                         delete this[p];
                     }
                 }
@@ -418,18 +390,17 @@ module java {
         }
 
         export class HashMap<K, V> extends Map<K,V> {
-
         }
 
-        export class Set<T> extends Collection<T> {
+        export class Set<T> implements Collection<T> {
 
             add(val:T) {
                 this[<any>val] = val;
             }
 
             clear() {
-                for(var p in this){
-                    if(this.hasOwnProperty(p)){
+                for (var p in this) {
+                    if (this.hasOwnProperty(p)) {
                         delete this[p];
                     }
                 }
@@ -442,7 +413,7 @@ module java {
             addAll(vals:Collection<T>) {
                 var tempArray = vals.toArray(null);
                 for (var i = 0; i < tempArray.length; i++) {
-                    this[<any>tempArray[i]]=tempArray[i];
+                    this[<any>tempArray[i]] = tempArray[i];
                 }
             }
 
@@ -458,12 +429,17 @@ module java {
                 return this.size() == 0;
             }
 
+            toArray(a:Array<T>):T[] {
+                for(var ik in this){
+                    a.push(this[ik]);
+                }
+                return a;
+            }
         }
 
         export class HashSet<T> extends Set<T> {
 
         }
-
     }
 
 }
@@ -514,9 +490,14 @@ module org {
                     throw "Assert Error " + b + " must be true";
                 }
             }
+
+            public static assertFalse(b:boolean):void {
+                if (b) {
+                    throw "Assert Error " + b + " must be false";
+                }
+            }
+
         }
-
     }
-
 }
 
