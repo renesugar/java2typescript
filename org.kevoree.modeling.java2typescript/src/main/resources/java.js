@@ -293,10 +293,7 @@ var java;
             List.prototype.remove = function (val) {
             };
             List.prototype.toArray = function (a) {
-                for (var ik in this) {
-                    a.push(this[ik]);
-                }
-                return a;
+                return this;
             };
             List.prototype.size = function () {
                 return this.length;
@@ -496,3 +493,4 @@ var org;
         junit.Assert = Assert;
     })(junit = org.junit || (org.junit = {}));
 })(org || (org = {}));
+//# sourceMappingURL=java.js.map

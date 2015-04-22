@@ -282,6 +282,7 @@ module java {
 
             sort() {
             }
+
         }
         XArray["prototype"] = new Array();
 
@@ -307,10 +308,7 @@ module java {
             }
 
             toArray(a:Array<T>):T[] {
-                for (var ik in this) {
-                    a.push(this[ik]);
-                }
-                return a;
+                return <T[]><any>this;
             }
 
             size():number {
