@@ -94,6 +94,8 @@ public class TypeHelper {
                 String tryJavaUtil = javaTypes.get(((PsiClassReferenceType) element).getClassName());
                 if (tryJavaUtil != null) {
                     result = tryJavaUtil;
+                } else {
+                    result = ((PsiClassReferenceType) element).getReference().getQualifiedName();
                 }
                 if (((PsiClassReferenceType) element).getParameterCount() > 0) {
                     String[] generics = new String[((PsiClassReferenceType) element).getParameterCount()];
