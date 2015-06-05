@@ -14,10 +14,10 @@ class System {
 
     static err = {
         println(obj?:any) {
-            console.log(obj);
+            console.error(obj);
         },
         print(obj:any) {
-            console.log(obj);
+            console.error(obj);
         }
     };
 
@@ -157,7 +157,8 @@ module java {
             }
 
             printStackTrace() {
-                console.error(this.error['stack']);
+                //console.error(this.error['stack']);
+                console.error(this.error);
             }
         }
 

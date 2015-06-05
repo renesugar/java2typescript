@@ -24,10 +24,10 @@ var System = (function () {
     };
     System.err = {
         println: function (obj) {
-            console.log(obj);
+            console.error(obj);
         },
         print: function (obj) {
-            console.log(obj);
+            console.error(obj);
         }
     };
     return System;
@@ -148,7 +148,8 @@ var java;
                 this.error = new Error(message);
             }
             Throwable.prototype.printStackTrace = function () {
-                console.error(this.error['stack']);
+                //console.error(this.error['stack']);
+                console.error(this.error);
             };
             return Throwable;
         })();

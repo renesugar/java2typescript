@@ -30,12 +30,15 @@ public class TryStatementTranslator {
                 ctx.append(": ").append(exceptionType).append(" = <").append(exceptionType).append(">").append(EXCEPTION_VAR).append(";\n");
                 CodeBlockTranslator.translate(catchSection.getCatchBlock(), ctx);
                 ctx.decreaseIdent();
-                if (i != catchSections.length - 1) {
-                    ctx.print("} else ");
-                } else {
-                    ctx.print("}\n ");
-                }
+                ctx.print("} else ");
             }
+
+            ctx.append("{\n");
+            ctx.increaseIdent();
+            ctx.print("throw ").append(EXCEPTION_VAR).append(";\n");
+            ctx.decreaseIdent();
+            ctx.print("}\n");
+
             ctx.decreaseIdent();
             ctx.print("}");
         }
