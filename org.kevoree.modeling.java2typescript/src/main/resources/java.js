@@ -445,6 +445,16 @@ var org;
         var Assert = (function () {
             function Assert() {
             }
+            Assert.assertArrayEquals = function (p, p2) {
+                if (p.length != p2.length) {
+                    throw "Assert Error " + p + " and " + p2 + " must be equals";
+                }
+                for (var i = 0; i < p.length; i++) {
+                    if (p[i] != p2[i]) {
+                        throw "Assert Error " + p + " and " + p2 + " must be equals";
+                    }
+                }
+            };
             Assert.assertNotNull = function (p) {
                 if (p == null) {
                     throw "Assert Error " + p + " must not be null";

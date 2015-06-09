@@ -455,6 +455,18 @@ module org {
     export module junit {
 
         export class Assert {
+
+            public static assertArrayEquals(p: Array<any>, p2 : Array<any>){
+                if(p.length != p2.length){
+                    throw "Assert Error "+p+" and "+p2+ " must be equals"
+                }
+                for(var i=0;i<p.length;i++){
+                    if(p[i] != p2[i]){
+                        throw "Assert Error "+p+" and "+p2+ " must be equals"
+                    }
+                }
+            }
+
             public static assertNotNull(p:any):void {
                 if (p == null) {
                     throw "Assert Error " + p + " must not be null";
