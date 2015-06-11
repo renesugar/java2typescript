@@ -446,6 +446,22 @@ var org;
             function Assert() {
             }
             Assert.assertArrayEquals = function (p, p2) {
+                if (p == null || p == undefined) {
+                    if (p2 == null || p2 == undefined) {
+                        return;
+                    }
+                    else {
+                        throw "Assert Error " + p + " and " + p2 + " must be equals";
+                    }
+                }
+                if (p2 == null || p2 == undefined) {
+                    if (p == null || p == undefined) {
+                        return;
+                    }
+                    else {
+                        throw "Assert Error " + p + " and " + p2 + " must be equals";
+                    }
+                }
                 if (p.length != p2.length) {
                     throw "Assert Error " + p + " and " + p2 + " must be equals";
                 }
@@ -466,6 +482,22 @@ var org;
                 }
             };
             Assert.assertEquals = function (p, p2) {
+                if (p == null) {
+                    if (p2 == null) {
+                        return;
+                    }
+                    else {
+                        throw "Assert Error \n" + p + "\n must be equal to \n" + p2 + "\n";
+                    }
+                }
+                if (p2 == null) {
+                    if (p == null) {
+                        return;
+                    }
+                    else {
+                        throw "Assert Error \n" + p + "\n must be equal to \n" + p2 + "\n";
+                    }
+                }
                 if (p.equals !== undefined) {
                     if (!p.equals(p2)) {
                         throw "Assert Error \n" + p + "\n must be equal to \n" + p2 + "\n";

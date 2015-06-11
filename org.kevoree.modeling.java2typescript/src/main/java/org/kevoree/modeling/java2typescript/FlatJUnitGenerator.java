@@ -18,7 +18,7 @@ import java.nio.file.attribute.BasicFileAttributes;
  */
 public class FlatJUnitGenerator {
 
-    public void generate(File sourceDir, File targetDir ) {
+    public void generate(File sourceDir, File targetDir) {
         try {
 
 
@@ -33,7 +33,10 @@ public class FlatJUnitGenerator {
                 @Override
                 public void visitElement(PsiElement element) {
                     if (element instanceof PsiClass) {
-                        sb.append(generateTestSuite((PsiClass) element));
+                        PsiClass clazz = (PsiClass) element;
+                        if (!clazz.isInterface() && !clazz.hasModifierProperty(PsiModifier.ABSTRACT)) {
+                            sb.append(generateTestSuite(clazz));
+                        }
                     } else {
                         element.acceptChildren(this);
                     }
@@ -56,24 +59,24 @@ public class FlatJUnitGenerator {
 
     private String instanciateClass(PsiClass clazz) {
 
-        return "try {\n" + clazz.getQualifiedName() + " p_" + clazz.getName().toLowerCase() + " = new " +  clazz.getQualifiedName() + "();\n";
+        return "try {\n" + clazz.getQualifiedName() + " p_" + clazz.getName().toLowerCase() + " = new " + clazz.getQualifiedName() + "();\n";
     }
 
 
     private String generateTestSuite(PsiClass clazz) {
         StringBuilder sb = new StringBuilder();
         boolean classInstanciated = false;
-        for(PsiMethod method : clazz.getAllMethods()) {
+        for (PsiMethod method : clazz.getAllMethods()) {
             PsiAnnotation testAnnot = method.getModifierList().findAnnotation("Test");
-            if(testAnnot != null) {
-                if(!classInstanciated) {
+            if (testAnnot != null) {
+                if (!classInstanciated) {
                     sb.append(instanciateClass(clazz));
                     classInstanciated = true;
                 }
                 sb.append("p_").append(clazz.getName().toLowerCase()).append(".").append(method.getName()).append("();\n");
             }
         }
-        if(classInstanciated) {
+        if (classInstanciated) {
             sb.append("}catch(Exception e){\n e.printStackTrace();\n}\n");
         }
 
