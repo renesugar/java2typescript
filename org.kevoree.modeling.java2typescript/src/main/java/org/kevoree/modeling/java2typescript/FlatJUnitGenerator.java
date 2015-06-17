@@ -2,8 +2,11 @@ package org.kevoree.modeling.java2typescript;
 
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.psi.*;
+import com.intellij.psi.javadoc.PsiDocComment;
+import com.intellij.psi.javadoc.PsiDocTag;
 import org.jetbrains.annotations.NotNull;
 import org.kevoree.modeling.java2typescript.translators.ClassTranslator;
+import org.kevoree.modeling.java2typescript.translators.NativeTsTranslator;
 
 import java.io.File;
 import java.io.IOException;
@@ -32,9 +35,24 @@ public class FlatJUnitGenerator {
             parsedDir.acceptChildren(new PsiElementVisitor() {
                 @Override
                 public void visitElement(PsiElement element) {
+                    boolean ignore = false;
                     if (element instanceof PsiClass) {
                         PsiClass clazz = (PsiClass) element;
-                        if (!clazz.isInterface() && !clazz.hasModifierProperty(PsiModifier.ABSTRACT)) {
+
+                        PsiDocComment comment = clazz.getDocComment();
+                        if(comment != null) {
+                            PsiDocTag[] tags = comment.getTags();
+                            if(tags != null) {
+                                for(PsiDocTag tag : tags) {
+                                    if (tag.getName().equals(NativeTsTranslator.TAG_IGNORE) && tag.getValueElement()!=null && tag.getValueElement().getText().equals(NativeTsTranslator.TAG_VAL_TS)) {
+                                        ignore = true;
+                                    }
+                                }
+                            }
+                        }
+
+
+                        if (!ignore && !clazz.isInterface() && !clazz.hasModifierProperty(PsiModifier.ABSTRACT)) {
                             sb.append(generateTestSuite(clazz));
                         }
                     } else {
@@ -67,13 +85,27 @@ public class FlatJUnitGenerator {
         StringBuilder sb = new StringBuilder();
         boolean classInstanciated = false;
         for (PsiMethod method : clazz.getAllMethods()) {
-            PsiAnnotation testAnnot = method.getModifierList().findAnnotation("Test");
-            if (testAnnot != null) {
-                if (!classInstanciated) {
-                    sb.append(instanciateClass(clazz));
-                    classInstanciated = true;
+            boolean ignore = false;
+            PsiDocComment comment = method.getDocComment();
+            if(comment != null) {
+                PsiDocTag[] tags = comment.getTags();
+                if(tags != null) {
+                    for(PsiDocTag tag : tags) {
+                        if (tag.getName().equals(NativeTsTranslator.TAG_IGNORE) && tag.getValueElement()!=null && tag.getValueElement().getText().equals(NativeTsTranslator.TAG_VAL_TS)) {
+                            ignore = true;
+                        }
+                    }
                 }
-                sb.append("p_").append(clazz.getName().toLowerCase()).append(".").append(method.getName()).append("();\n");
+            }
+            if(!ignore) {
+                PsiAnnotation testAnnot = method.getModifierList().findAnnotation("Test");
+                if (testAnnot != null) {
+                    if (!classInstanciated) {
+                        sb.append(instanciateClass(clazz));
+                        classInstanciated = true;
+                    }
+                    sb.append("p_").append(clazz.getName().toLowerCase()).append(".").append(method.getName()).append("();\n");
+                }
             }
         }
         if (classInstanciated) {
