@@ -5,20 +5,20 @@
     <packaging>pom</packaging>
     <version>32-SNAPSHOT</version>
     <name>Kevoree :: Modeling :: Java2TypeScript :: Root</name>
-    <url>https://github.com/kevoree/java2typescript</url>
+    <url>https://github.com/kevoree-modeling/java2typescript</url>
     <description>Kevoree Modeling Java2TypeScript</description>
 
     <licenses>
         <license>
-            <name>General Public License (GPL)</name>
-            <url>http://www.gnu.org/licenses/gpl.html</url>
+            <name>GNU GENERAL PUBLIC LICENSE</name>
+            <url>http://www.gnu.org/licenses/gpl-3.0.en.html</url>
         </license>
     </licenses>
 
     <scm>
-        <connection>scm:git:git@github.com:kevoree/java2typescript.git</connection>
-        <developerConnection>scm:git:git@github.com:kevoree/java2typescript.git</developerConnection>
-        <url>http://github.com/kevoree/java2typescript.git</url>
+        <connection>scm:git:git@github.com:kevoree-modeling/java2typescript.git</connection>
+        <developerConnection>scm:git:git@github.com:kevoree-modeling/java2typescript.git</developerConnection>
+        <url>http://github.com/kevoree-modeling/java2typescript.git</url>
     </scm>
 
     <parent>
@@ -50,12 +50,9 @@
         </developer>
     </developers>
 
-    <properties>
-        <kmf.plugin.version>10</kmf.plugin.version>
-    </properties>
-
     <modules>
-        <module>org.kevoree.modeling.java2typescript</module>
+        <module>org.kevoree.modeling.java2typescript.runtime</module>
+        <module>org.kevoree.modeling.java2typescript.transpiler</module>
         <module>org.kevoree.modeling.java2typescript.mavenplugin</module>
     </modules>
 
@@ -67,6 +64,10 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <properties>
+        <kmf.plugin.version>18</kmf.plugin.version>
+    </properties>
 
     <build>
         <plugins>

@@ -2,19 +2,12 @@ package org.kevoree.modeling.java2typescript.mavenplugin;
 
 import de.flapdoodle.embed.nodejs.*;
 import de.flapdoodle.embed.process.config.IRuntimeConfig;
-import org.apache.maven.plugin.MojoExecutionException;
-import org.apache.maven.plugin.logging.Log;
 
 import java.io.File;
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
-import java.util.Arrays;
 
-/**
- * Created by duke on 08/12/14.
- */
 public class TSCRunner {
 
     public static void run(File src, File target, File[] libraries, boolean copyLibDTs) throws Exception {
@@ -39,12 +32,11 @@ public class TSCRunner {
         }
 
         File targetTSCBIN = new File(target, "tsc.js");
-        targetTSCBIN.deleteOnExit();
         Files.copy(TSCRunner.class.getClassLoader().getResourceAsStream("tsc.js"), targetTSCBIN.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
+        File targetLIBD = null;
         if (copyLibDTs) {
-            File targetLIBD = new File(target, "lib.d.ts");
-            targetLIBD.deleteOnExit();
+            targetLIBD = new File(target, "lib.d.ts");
             Files.copy(TSCRunner.class.getClassLoader().getResourceAsStream("lib.d.ts"), targetLIBD.toPath(), StandardCopyOption.REPLACE_EXISTING);
             boolean founded = false;
             for (String alreadyAdded : paramsCol) {
@@ -76,6 +68,12 @@ public class TSCRunner {
         } finally {
             if (node != null) {
                 node.stop();
+            }
+            if (targetTSCBIN != null) {
+                targetTSCBIN.delete();
+            }
+            if (targetLIBD != null) {
+                targetLIBD.delete();
             }
         }
     }
