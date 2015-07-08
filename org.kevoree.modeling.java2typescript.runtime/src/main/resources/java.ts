@@ -339,6 +339,27 @@ module java {
         export class LinkedList<T> extends List<T> {
         }
 
+        export class Stack<T> {
+            content = new Array();
+
+            pop() : T {
+                return this.content.pop();
+            }
+
+            push(t : T):void {
+                this.content.push(t);
+            }
+
+            isEmpty():boolean {
+                return this.content.length == 0;
+            }
+
+            peek() : T {
+                return this.content.slice(-1)[0];
+            }
+
+        }
+
         export class Map<K, V> {
 
             get(key:K):V {

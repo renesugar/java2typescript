@@ -104,7 +104,9 @@ public class FlatJUnitGenerator {
                         sb.append(instanciateClass(clazz));
                         classInstanciated = true;
                     }
+                    sb.append("console.log(\"executing "+clazz.getName()+"."+method.getName()+"...\");");
                     sb.append("p_").append(clazz.getName().toLowerCase()).append(".").append(method.getName()).append("();\n");
+                    sb.append("console.log(\"done\")");
                 }
             }
         }

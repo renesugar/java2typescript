@@ -144,6 +144,7 @@ public class TypeHelper {
         javaTypes.put("Arrays", "java.util.Arrays");
         javaTypes.put("Collections", "java.util.Collections");
         javaTypes.put("Map", "java.util.Map");
+        javaTypes.put("Stack", "java.util.Stack");
         javaTypes.put("HashMap", "java.util.HashMap");
         javaTypes.put("List", "java.util.List");
         javaTypes.put("Set", "java.util.Set");
