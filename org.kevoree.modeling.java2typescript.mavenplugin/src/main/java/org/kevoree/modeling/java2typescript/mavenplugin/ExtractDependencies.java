@@ -62,7 +62,7 @@ public class ExtractDependencies extends AbstractMojo {
                 }
                 if(!isExclude){
                     getLog().info("Extracting " + entry.getName());
-                    if (entry.getName().endsWith(".js") || entry.getName().endsWith(".ts")) {
+                    if (entry.getName().endsWith(".js") || entry.getName().endsWith(".d.ts")) {
                         unzipEntry(zipfile, entry, outputDir);
                     }
                 }
