@@ -21,7 +21,7 @@ class System {
         }
     };
 
-    static arraycopy(src:Number[], srcPos:number, dest:Number[], destPos:number, numElements:number):void {
+    static arraycopy(src:any[], srcPos:number, dest:any[], destPos:number, numElements:number):void {
         for (var i = 0; i < numElements; i++) {
             dest[destPos + i] = src[srcPos + i];
         }
