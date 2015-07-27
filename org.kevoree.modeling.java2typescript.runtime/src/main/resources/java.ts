@@ -220,6 +220,10 @@ module java {
             public nextDouble():number {
                 return Math.random();
             }
+
+            public nextBoolean():boolean {
+                return Math.random() >= 0.5;
+            }
         }
 
         export class Arrays {
