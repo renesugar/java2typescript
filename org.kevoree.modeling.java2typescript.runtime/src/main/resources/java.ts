@@ -108,8 +108,15 @@ module java {
     export module lang {
 
         export class Double {
+
+            public static MIN_VALUE = Number.MIN_VALUE;
+            public static MAX_VALUE = Number.MAX_VALUE;
+
             public static parseDouble(val:string):number {
                 return +val;
+            }
+            public static isNaN(val:any):boolean {
+                return isNaN(val);
             }
         }
 
