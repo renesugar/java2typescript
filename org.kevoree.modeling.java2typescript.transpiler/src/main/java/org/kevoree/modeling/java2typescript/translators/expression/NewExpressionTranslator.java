@@ -23,7 +23,6 @@ public class NewExpressionTranslator {
                 className = TypeHelper.printType(element.getType().getDeepComponentType(), ctx);
                 arrayDefinition = true;
             }
-
             PsiExpression[] arrayDimensions = element.getArrayDimensions();
             PsiArrayInitializerExpression arrayInitializer = element.getArrayInitializer();
             if (arrayDimensions.length > 0) {
@@ -49,13 +48,13 @@ public class NewExpressionTranslator {
             } else {
                 if (arrayInitializer != null) {
                     boolean hasToBeClosed;
-                    if (element.getType().equalsToText("int[]")) {
+                    if (ctx.NATIVE_ARRAY && element.getType().equalsToText("int[]")) {
                         ctx.append("new Int32Array([");
                         hasToBeClosed = true;
-                    } else if (element.getType().equalsToText("double[]")) {
+                    } else if (ctx.NATIVE_ARRAY && element.getType().equalsToText("double[]")) {
                         ctx.append("new Float64Array([");
                         hasToBeClosed = true;
-                    } else if (element.getType().equalsToText("long[]")) {
+                    } else if (ctx.NATIVE_ARRAY && element.getType().equalsToText("long[]")) {
                         ctx.append("new Float64Array([");
                         hasToBeClosed = true;
                     } else {
@@ -75,7 +74,7 @@ public class NewExpressionTranslator {
                     }
                 } else {
                     int dimensionCount = arrayDimensions.length;
-                    if (dimensionCount == 1) {
+                    if (ctx.NATIVE_ARRAY && dimensionCount == 1) {
                         if (element.getType().equalsToText("int[]")) {
                             ctx.append("new Int32Array(");
                             ExpressionTranslator.translate(element.getArrayDimensions()[0], ctx);

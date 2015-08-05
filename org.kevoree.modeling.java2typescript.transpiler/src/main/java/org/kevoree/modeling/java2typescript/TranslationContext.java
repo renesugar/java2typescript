@@ -3,6 +3,8 @@ package org.kevoree.modeling.java2typescript;
 
 public class TranslationContext {
 
+    public boolean NATIVE_ARRAY = true;
+
     private StringBuilder sb = new StringBuilder();
     private static final int identSize = 4;
     private int ident = 0;

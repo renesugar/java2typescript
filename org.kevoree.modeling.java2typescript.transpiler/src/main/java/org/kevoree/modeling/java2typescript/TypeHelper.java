@@ -28,7 +28,7 @@ public class TypeHelper {
         } else if (booleans.contains(result)) {
             return "boolean";
         }
-        if (!avoidNativeOptim && element.getArrayDimensions() == 1) {
+        if (ctx.NATIVE_ARRAY && !avoidNativeOptim && element.getArrayDimensions() == 1) {
             if (element.equalsToText("int[]")) {
                 return "Int32Array";
             } else if (element.equalsToText("double[]")) {

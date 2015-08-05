@@ -8,13 +8,13 @@ public class ArrayInitializerExpressionTranslator {
 
     public static void translate(PsiArrayInitializerExpression element, TranslationContext ctx) {
         boolean hasToBeClosed;
-        if (element.getType()!= null && element.getType().equalsToText("int[]")) {
+        if (ctx.NATIVE_ARRAY && element.getType() != null && element.getType().equalsToText("int[]")) {
             ctx.append("new Int32Array([");
             hasToBeClosed = true;
-        } else if (element.getType()!= null && element.getType().equalsToText("double[]")) {
+        } else if (ctx.NATIVE_ARRAY && element.getType() != null && element.getType().equalsToText("double[]")) {
             ctx.append("new Float64Array([");
             hasToBeClosed = true;
-        } else if (element.getType()!= null && element.getType().equalsToText("long[]")) {
+        } else if (ctx.NATIVE_ARRAY && element.getType() != null && element.getType().equalsToText("long[]")) {
             ctx.append("new Float64Array([");
             hasToBeClosed = true;
         } else {
@@ -34,7 +34,5 @@ public class ArrayInitializerExpressionTranslator {
         if (hasToBeClosed) {
             ctx.append(")");
         }
-
     }
-
 }
