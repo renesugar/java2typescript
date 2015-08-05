@@ -338,7 +338,7 @@ module java {
         }
 
         export class Arrays {
-            static fill(data:Number[], begin:number, nbElem:number, param:number):void {
+            static fill(data:any, begin:number, nbElem:number, param:number):void {
                 var max = begin + nbElem;
                 for (var i = begin; i < max; i++) {
                     data[i] = param;
@@ -600,7 +600,7 @@ module org {
 
         export class Assert {
 
-            public static assertArrayEquals(p:Array<any>, p2:Array<any>) {
+            public static assertArrayEquals(p:any, p2:any) {
                 if (p == null || p == undefined) {
                     if (p2 == null || p2 == undefined) {
                         return;
