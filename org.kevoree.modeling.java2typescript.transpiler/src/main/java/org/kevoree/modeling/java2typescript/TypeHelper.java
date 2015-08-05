@@ -32,7 +32,7 @@ public class TypeHelper {
             if (element.equalsToText("int[]")) {
                 return "Int32Array";
             } else if (element.equalsToText("double[]")) {
-                return "Float32Array";
+                return "Float64Array";
             } else if (element.equalsToText("long[]")) {
                 return "Float64Array";
             }

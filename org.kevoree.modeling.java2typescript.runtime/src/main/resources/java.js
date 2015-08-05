@@ -10,13 +10,7 @@ var System = (function () {
     System.gc = function () {
     };
     System.arraycopy = function (src, srcPos, dest, destPos, numElements) {
-        if (src instanceof Float32Array && dest instanceof Float32Array) {
-            for (var i = 0; i < numElements; i++) {
-                dest[destPos + i] = src[srcPos + i];
-            }
-            return;
-        }
-        else if (src instanceof Float64Array && dest instanceof Float64Array) {
+        if (src instanceof Float64Array && dest instanceof Float64Array) {
             for (var i = 0; i < numElements; i++) {
                 dest[destPos + i] = src[srcPos + i];
             }
@@ -242,7 +236,7 @@ var java;
                     }
                     AtomicLong.prototype.compareAndSet = function (expect, update) {
                         if (this._internal == expect) {
-                            this._internal = expect;
+                            this._internal = update;
                             return true;
                         }
                         else {
@@ -270,7 +264,7 @@ var java;
                     }
                     AtomicInteger.prototype.compareAndSet = function (expect, update) {
                         if (this._internal == expect) {
-                            this._internal = expect;
+                            this._internal = update;
                             return true;
                         }
                         else {

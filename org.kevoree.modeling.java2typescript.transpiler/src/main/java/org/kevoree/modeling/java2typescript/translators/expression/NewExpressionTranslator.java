@@ -53,7 +53,7 @@ public class NewExpressionTranslator {
                         ctx.append("new Int32Array([");
                         hasToBeClosed = true;
                     } else if (element.getType().equalsToText("double[]")) {
-                        ctx.append("new Float32Array([");
+                        ctx.append("new Float64Array([");
                         hasToBeClosed = true;
                     } else if (element.getType().equalsToText("long[]")) {
                         ctx.append("new Float64Array([");
@@ -81,7 +81,7 @@ public class NewExpressionTranslator {
                             ExpressionTranslator.translate(element.getArrayDimensions()[0], ctx);
                             ctx.append(")");
                         } else if (element.getType().equalsToText("double[]")) {
-                            ctx.append("new Float32Array(");
+                            ctx.append("new Float64Array(");
                             ExpressionTranslator.translate(element.getArrayDimensions()[0], ctx);
                             ctx.append(")");
                         } else if (element.getType().equalsToText("long[]")) {

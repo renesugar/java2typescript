@@ -22,12 +22,7 @@ class System {
     };
 
     static arraycopy(src:any, srcPos:number, dest:any, destPos:number, numElements:number):void {
-        if (src instanceof Float32Array && dest instanceof Float32Array) {
-            for (var i = 0; i < numElements; i++) {
-                dest[destPos + i] = src[srcPos + i];
-            }
-            return;
-        } else if (src instanceof Float64Array && dest instanceof Float64Array) {
+        if (src instanceof Float64Array && dest instanceof Float64Array) {
             for (var i = 0; i < numElements; i++) {
                 dest[destPos + i] = src[srcPos + i];
             }
@@ -243,7 +238,7 @@ module java {
 
                     compareAndSet(expect:number, update:number):boolean {
                         if (this._internal == expect) {
-                            this._internal = expect;
+                            this._internal = update;
                             return true;
                         } else {
                             return false;
@@ -274,7 +269,7 @@ module java {
 
                     compareAndSet(expect:number, update:number):boolean {
                         if (this._internal == expect) {
-                            this._internal = expect;
+                            this._internal = update;
                             return true;
                         } else {
                             return false;
@@ -291,7 +286,7 @@ module java {
 
                     getAndSet(newVal:number):number {
                         var temp = this._internal;
-                        this._internal = newVal
+                        this._internal = newVal;
                         return temp;
                     }
 
@@ -408,7 +403,6 @@ module java {
 
         }
         XArray["prototype"] = new Array();
-
         export class List<T> extends XArray implements Collection<T> {
 
             addAll(vals:Collection<T>) {

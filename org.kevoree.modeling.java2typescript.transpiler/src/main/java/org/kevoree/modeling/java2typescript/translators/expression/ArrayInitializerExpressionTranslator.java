@@ -12,7 +12,7 @@ public class ArrayInitializerExpressionTranslator {
             ctx.append("new Int32Array([");
             hasToBeClosed = true;
         } else if (element.getType()!= null && element.getType().equalsToText("double[]")) {
-            ctx.append("new Float32Array([");
+            ctx.append("new Float64Array([");
             hasToBeClosed = true;
         } else if (element.getType()!= null && element.getType().equalsToText("long[]")) {
             ctx.append("new Float64Array([");
