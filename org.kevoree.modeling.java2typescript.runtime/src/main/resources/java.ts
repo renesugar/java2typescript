@@ -139,8 +139,8 @@ module java {
         }
 
         export class Boolean {
-            public static parseBoolean(val:string):boolean{
-               return val == "true";
+            public static parseBoolean(val:string):boolean {
+                return val == "true";
             }
         }
 
@@ -211,6 +211,77 @@ module java {
     }
 
     export module util {
+
+        export module concurrent {
+
+            export module atomic {
+
+                export class AtomicLong {
+                    _internal = 0;
+
+                    constructor(init: number){
+                        this._internal = init;
+                    }
+
+                    compareAndSet(expect:number, update:number):boolean {
+                        if (this._internal == expect) {
+                            this._internal = expect;
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+
+                    get():number {
+                        return this._internal;
+                    }
+
+                    incrementAndGet():number {
+                        this._internal++;
+                        return this._internal;
+                    }
+
+                    decrementAndGet():number {
+                        this._internal--;
+                        return this._internal;
+                    }
+                }
+
+                export class AtomicInt {
+                    _internal = 0;
+
+                    constructor(init: number){
+                        this._internal = init;
+                    }
+
+                    compareAndSet(expect:number, update:number):boolean {
+                        if (this._internal == expect) {
+                            this._internal = expect;
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+
+                    get():number {
+                        return this._internal;
+                    }
+
+                    incrementAndGet():number {
+                        this._internal++;
+                        return this._internal;
+                    }
+
+                    decrementAndGet():number {
+                        this._internal--;
+                        return this._internal;
+                    }
+
+                }
+
+            }
+
+        }
 
         export class Random {
             public nextInt(max:number):number {
@@ -353,11 +424,11 @@ module java {
         export class Stack<T> {
             content = new Array();
 
-            pop() : T {
+            pop():T {
                 return this.content.pop();
             }
 
-            push(t : T):void {
+            push(t:T):void {
                 this.content.push(t);
             }
 
@@ -365,7 +436,7 @@ module java {
                 return this.content.length == 0;
             }
 
-            peek() : T {
+            peek():T {
                 return this.content.slice(-1)[0];
             }
 
@@ -478,6 +549,7 @@ module java {
         export class HashSet<T> extends Set<T> {
 
         }
+
     }
 
 }
@@ -488,27 +560,27 @@ module org {
 
         export class Assert {
 
-            public static assertArrayEquals(p: Array<any>, p2 : Array<any>){
-                if(p == null || p == undefined){
-                    if(p2 == null || p2 == undefined){
+            public static assertArrayEquals(p:Array<any>, p2:Array<any>) {
+                if (p == null || p == undefined) {
+                    if (p2 == null || p2 == undefined) {
                         return;
                     } else {
-                        throw "Assert Error "+p+" and "+p2+ " must be equals"
+                        throw "Assert Error " + p + " and " + p2 + " must be equals"
                     }
                 }
-                if(p2 == null || p2 == undefined){
-                    if(p == null || p == undefined){
+                if (p2 == null || p2 == undefined) {
+                    if (p == null || p == undefined) {
                         return;
                     } else {
-                        throw "Assert Error "+p+" and "+p2+ " must be equals"
+                        throw "Assert Error " + p + " and " + p2 + " must be equals"
                     }
                 }
-                if(p.length != p2.length){
-                    throw "Assert Error "+p+" and "+p2+ " must be equals"
+                if (p.length != p2.length) {
+                    throw "Assert Error " + p + " and " + p2 + " must be equals"
                 }
-                for(var i=0;i<p.length;i++){
-                    if(p[i] != p2[i]){
-                        throw "Assert Error "+p+" and "+p2+ " must be equals"
+                for (var i = 0; i < p.length; i++) {
+                    if (p[i] != p2[i]) {
+                        throw "Assert Error " + p + " and " + p2 + " must be equals"
                     }
                 }
             }
@@ -526,15 +598,15 @@ module org {
             }
 
             public static assertEquals(p:any, p2:any):void {
-                if(p == null){
-                    if(p2 == null){
+                if (p == null) {
+                    if (p2 == null) {
                         return;
                     } else {
                         throw "Assert Error \n" + p + "\n must be equal to \n" + p2 + "\n";
                     }
                 }
-                if(p2 == null){
-                    if(p == null){
+                if (p2 == null) {
+                    if (p == null) {
                         return;
                     } else {
                         throw "Assert Error \n" + p + "\n must be equal to \n" + p2 + "\n";
