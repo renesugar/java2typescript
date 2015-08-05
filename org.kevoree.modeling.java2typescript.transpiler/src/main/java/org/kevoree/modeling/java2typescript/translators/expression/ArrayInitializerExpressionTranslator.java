@@ -7,7 +7,20 @@ import org.kevoree.modeling.java2typescript.TranslationContext;
 public class ArrayInitializerExpressionTranslator {
 
     public static void translate(PsiArrayInitializerExpression element, TranslationContext ctx) {
-        ctx.append("[");
+        boolean hasToBeClosed;
+        if (element.getType()!= null && element.getType().equalsToText("int[]")) {
+            ctx.append("new Int32Array([");
+            hasToBeClosed = true;
+        } else if (element.getType()!= null && element.getType().equalsToText("double[]")) {
+            ctx.append("new Float32Array([");
+            hasToBeClosed = true;
+        } else if (element.getType()!= null && element.getType().equalsToText("long[]")) {
+            ctx.append("new Float64Array([");
+            hasToBeClosed = true;
+        } else {
+            ctx.append("[");
+            hasToBeClosed = false;
+        }
         PsiExpression[] initializers = element.getInitializers();
         if (initializers.length > 0) {
             for (int i = 0; i < initializers.length; i++) {
@@ -18,6 +31,10 @@ public class ArrayInitializerExpressionTranslator {
             }
         }
         ctx.append("]");
+        if (hasToBeClosed) {
+            ctx.append(")");
+        }
+
     }
 
 }

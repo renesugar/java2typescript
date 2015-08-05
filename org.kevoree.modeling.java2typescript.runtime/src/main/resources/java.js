@@ -10,8 +10,28 @@ var System = (function () {
     System.gc = function () {
     };
     System.arraycopy = function (src, srcPos, dest, destPos, numElements) {
-        for (var i = 0; i < numElements; i++) {
-            dest[destPos + i] = src[srcPos + i];
+        if (src instanceof Float32Array && dest instanceof Float32Array) {
+            for (var i = 0; i < numElements; i++) {
+                dest[destPos + i] = src[srcPos + i];
+            }
+            return;
+        }
+        else if (src instanceof Float64Array && dest instanceof Float64Array) {
+            for (var i = 0; i < numElements; i++) {
+                dest[destPos + i] = src[srcPos + i];
+            }
+            return;
+        }
+        else if (src instanceof Int32Array && dest instanceof Int32Array) {
+            for (var i = 0; i < numElements; i++) {
+                dest[destPos + i] = src[srcPos + i];
+            }
+            return;
+        }
+        else {
+            for (var i = 0; i < numElements; i++) {
+                dest[destPos + i] = src[srcPos + i];
+            }
         }
     };
     System.out = {

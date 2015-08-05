@@ -14,10 +14,10 @@ import java.util.Set;
 public class TypeHelper {
 
     public static String printType(PsiType element, TranslationContext ctx) {
-        return printType(element, ctx, true, false);
+        return printType(element, ctx, true, false, false);
     }
 
-    public static String printType(PsiType element, TranslationContext ctx, boolean withGenericParams, boolean explicitType) {
+    public static String printType(PsiType element, TranslationContext ctx, boolean withGenericParams, boolean explicitType, boolean avoidNativeOptim) {
         String result = element.getPresentableText();
         if (objects.contains(result)) {
             return "any";
@@ -28,7 +28,15 @@ public class TypeHelper {
         } else if (booleans.contains(result)) {
             return "boolean";
         }
-
+        if (!avoidNativeOptim && element.getArrayDimensions() == 1) {
+            if (element.equalsToText("int[]")) {
+                return "Int32Array";
+            } else if (element.equalsToText("double[]")) {
+                return "Float32Array";
+            } else if (element.equalsToText("long[]")) {
+                return "Float64Array";
+            }
+        }
         if (element instanceof PsiPrimitiveType) {
             if (result == null || result.equals("null")) {
                 System.err.println("TypeHelper::printType -> Result null with elem:" + element.toString());
@@ -36,10 +44,9 @@ public class TypeHelper {
             return result;
         } else if (element instanceof PsiArrayType) {
             PsiArrayType typedElement = (PsiArrayType) element;
-            String partialResult = printType(typedElement.getComponentType(), ctx);
-
-            if(typedElement.getComponentType() instanceof PsiClassReferenceType) {
-                PsiClass resolvedClass = ((PsiClassReferenceType)typedElement.getComponentType()).resolve();
+            String partialResult = printType(typedElement.getComponentType(), ctx, true, false, true);
+            if (typedElement.getComponentType() instanceof PsiClassReferenceType) {
+                PsiClass resolvedClass = ((PsiClassReferenceType) typedElement.getComponentType()).resolve();
                 if (resolvedClass != null) {
                     if (isCallbackClass(resolvedClass) && !explicitType) {
                         //'{ (p: KEvent): void; }[]' is not assignable to type '(p: KEvent) => void[]'.
@@ -120,14 +127,14 @@ public class TypeHelper {
     }
 
     public static boolean isCallbackClass(PsiClass clazz) {
-        if(clazz == null){
+        if (clazz == null) {
             return false;
         }
         return clazz.isInterface() && clazz.getAllMethods().length == 1;
     }
 
     public static String primitiveStaticCall(String clazz) {
-        if(clazz.equals("String")) {
+        if (clazz.equals("String")) {
             return "StringUtils";
         }
         String result = javaTypes.get(clazz);
@@ -169,7 +176,7 @@ public class TypeHelper {
         javaTypes.put("Runnable", "java.lang.Runnable");
         javaTypes.put("RuntimeException", "java.lang.RuntimeException");
         javaTypes.put("IndexOutOfBoundsException", "java.lang.IndexOutOfBoundsException");
-        javaTypes.put("WeakReference","java.lang.ref.WeakReference");
+        javaTypes.put("WeakReference", "java.lang.ref.WeakReference");
     }
 
     public static final Set<String> primitiveNumbers = ImmutableSet.of("byte", "short", "int", "long", "float", "double");

@@ -21,9 +21,26 @@ class System {
         }
     };
 
-    static arraycopy(src:any[], srcPos:number, dest:any[], destPos:number, numElements:number):void {
-        for (var i = 0; i < numElements; i++) {
-            dest[destPos + i] = src[srcPos + i];
+    static arraycopy(src:any, srcPos:number, dest:any, destPos:number, numElements:number):void {
+        if (src instanceof Float32Array && dest instanceof Float32Array) {
+            for (var i = 0; i < numElements; i++) {
+                dest[destPos + i] = src[srcPos + i];
+            }
+            return;
+        } else if (src instanceof Float64Array && dest instanceof Float64Array) {
+            for (var i = 0; i < numElements; i++) {
+                dest[destPos + i] = src[srcPos + i];
+            }
+            return;
+        } else if (src instanceof Int32Array && dest instanceof Int32Array) {
+            for (var i = 0; i < numElements; i++) {
+                dest[destPos + i] = src[srcPos + i];
+            }
+            return;
+        } else {
+            for (var i = 0; i < numElements; i++) {
+                dest[destPos + i] = src[srcPos + i];
+            }
         }
     }
 }
@@ -115,6 +132,7 @@ module java {
             public static parseDouble(val:string):number {
                 return +val;
             }
+
             public static isNaN(val:any):boolean {
                 return isNaN(val);
             }
@@ -219,7 +237,7 @@ module java {
                 export class AtomicLong {
                     _internal = 0;
 
-                    constructor(init: number){
+                    constructor(init:number) {
                         this._internal = init;
                     }
 
@@ -250,7 +268,7 @@ module java {
                 export class AtomicInteger {
                     _internal = 0;
 
-                    constructor(init: number){
+                    constructor(init:number) {
                         this._internal = init;
                     }
 
@@ -267,11 +285,11 @@ module java {
                         return this._internal;
                     }
 
-                    set(newVal: number) {
+                    set(newVal:number) {
                         this._internal = newVal
                     }
 
-                    getAndSet(newVal : number) : number {
+                    getAndSet(newVal:number):number {
                         var temp = this._internal;
                         this._internal = newVal
                         return temp;

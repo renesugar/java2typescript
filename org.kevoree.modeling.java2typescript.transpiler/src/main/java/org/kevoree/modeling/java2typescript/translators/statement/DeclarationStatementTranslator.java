@@ -6,9 +6,6 @@ import com.intellij.psi.PsiLocalVariable;
 import com.intellij.psi.PsiStatement;
 import org.kevoree.modeling.java2typescript.TranslationContext;
 
-/**
- * Created by duke on 11/6/14.
- */
 public class DeclarationStatementTranslator {
 
     public static void translate(PsiDeclarationStatement stmt, TranslationContext ctx) {

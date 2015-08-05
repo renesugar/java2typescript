@@ -48,7 +48,20 @@ public class NewExpressionTranslator {
                 }
             } else {
                 if (arrayInitializer != null) {
-                    ctx.append("[");
+                    boolean hasToBeClosed;
+                    if (element.getType().equalsToText("int[]")) {
+                        ctx.append("new Int32Array([");
+                        hasToBeClosed = true;
+                    } else if (element.getType().equalsToText("double[]")) {
+                        ctx.append("new Float32Array([");
+                        hasToBeClosed = true;
+                    } else if (element.getType().equalsToText("long[]")) {
+                        ctx.append("new Float64Array([");
+                        hasToBeClosed = true;
+                    } else {
+                        ctx.append("[");
+                        hasToBeClosed = false;
+                    }
                     PsiExpression[] arrayInitializers = arrayInitializer.getInitializers();
                     for (int i = 0; i < arrayInitializers.length; i++) {
                         ExpressionTranslator.translate(arrayInitializers[i], ctx);
@@ -57,13 +70,34 @@ public class NewExpressionTranslator {
                         }
                     }
                     ctx.append("]");
+                    if (hasToBeClosed) {
+                        ctx.append(")");
+                    }
                 } else {
                     int dimensionCount = arrayDimensions.length;
-                    for (int i = 0; i < dimensionCount; i++) {
-                        ctx.append("new Array(");
-                    }
-                    for (int i = 0; i < dimensionCount; i++) {
-                        ctx.append(")");
+                    if (dimensionCount == 1) {
+                        if (element.getType().equalsToText("int[]")) {
+                            ctx.append("new Int32Array(");
+                            ExpressionTranslator.translate(element.getArrayDimensions()[0], ctx);
+                            ctx.append(")");
+                        } else if (element.getType().equalsToText("double[]")) {
+                            ctx.append("new Float32Array(");
+                            ExpressionTranslator.translate(element.getArrayDimensions()[0], ctx);
+                            ctx.append(")");
+                        } else if (element.getType().equalsToText("long[]")) {
+                            ctx.append("new Float64Array(");
+                            ExpressionTranslator.translate(element.getArrayDimensions()[0], ctx);
+                            ctx.append(")");
+                        } else {
+                            ctx.append("new Array()");
+                        }
+                    } else {
+                        for (int i = 0; i < dimensionCount; i++) {
+                            ctx.append("new Array(");
+                        }
+                        for (int i = 0; i < dimensionCount; i++) {
+                            ctx.append(")");
+                        }
                     }
                 }
             }
