@@ -141,6 +141,9 @@ public class TypeHelper {
     public static final HashMap<String, String> javaTypes = new HashMap<String, String>();
 
     static {
+        javaTypes.put("AtomicInteger", "java.util.concurrent.atomic.AtomicInteger");
+        javaTypes.put("AtomicLong", "java.util.concurrent.atomic.AtomicLong");
+
         javaTypes.put("Arrays", "java.util.Arrays");
         javaTypes.put("Collections", "java.util.Collections");
         javaTypes.put("Map", "java.util.Map");

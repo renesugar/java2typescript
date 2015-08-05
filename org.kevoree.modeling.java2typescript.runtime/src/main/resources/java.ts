@@ -247,7 +247,7 @@ module java {
                     }
                 }
 
-                export class AtomicInt {
+                export class AtomicInteger {
                     _internal = 0;
 
                     constructor(init: number){
@@ -275,6 +275,18 @@ module java {
                     decrementAndGet():number {
                         this._internal--;
                         return this._internal;
+                    }
+
+                    getAndIncrement():number {
+                        var temp = this._internal;
+                        this._internal++;
+                        return temp;
+                    }
+
+                    getAndDecrement():number {
+                        var temp = this._internal;
+                        this._internal--;
+                        return temp;
                     }
 
                 }

@@ -92,6 +92,11 @@ var java;
             Double.parseDouble = function (val) {
                 return +val;
             };
+            Double.isNaN = function (val) {
+                return isNaN(val);
+            };
+            Double.MIN_VALUE = Number.MIN_VALUE;
+            Double.MAX_VALUE = Number.MAX_VALUE;
             return Double;
         })();
         lang.Double = Double;
@@ -206,6 +211,78 @@ var java;
     })(lang = java.lang || (java.lang = {}));
     var util;
     (function (util) {
+        var concurrent;
+        (function (concurrent) {
+            var atomic;
+            (function (atomic) {
+                var AtomicLong = (function () {
+                    function AtomicLong(init) {
+                        this._internal = 0;
+                        this._internal = init;
+                    }
+                    AtomicLong.prototype.compareAndSet = function (expect, update) {
+                        if (this._internal == expect) {
+                            this._internal = expect;
+                            return true;
+                        }
+                        else {
+                            return false;
+                        }
+                    };
+                    AtomicLong.prototype.get = function () {
+                        return this._internal;
+                    };
+                    AtomicLong.prototype.incrementAndGet = function () {
+                        this._internal++;
+                        return this._internal;
+                    };
+                    AtomicLong.prototype.decrementAndGet = function () {
+                        this._internal--;
+                        return this._internal;
+                    };
+                    return AtomicLong;
+                })();
+                atomic.AtomicLong = AtomicLong;
+                var AtomicInteger = (function () {
+                    function AtomicInteger(init) {
+                        this._internal = 0;
+                        this._internal = init;
+                    }
+                    AtomicInteger.prototype.compareAndSet = function (expect, update) {
+                        if (this._internal == expect) {
+                            this._internal = expect;
+                            return true;
+                        }
+                        else {
+                            return false;
+                        }
+                    };
+                    AtomicInteger.prototype.get = function () {
+                        return this._internal;
+                    };
+                    AtomicInteger.prototype.incrementAndGet = function () {
+                        this._internal++;
+                        return this._internal;
+                    };
+                    AtomicInteger.prototype.decrementAndGet = function () {
+                        this._internal--;
+                        return this._internal;
+                    };
+                    AtomicInteger.prototype.getAndIncrement = function () {
+                        var temp = this._internal;
+                        this._internal++;
+                        return temp;
+                    };
+                    AtomicInteger.prototype.getAndDecrement = function () {
+                        var temp = this._internal;
+                        this._internal--;
+                        return temp;
+                    };
+                    return AtomicInteger;
+                })();
+                atomic.AtomicInteger = AtomicInteger;
+            })(atomic = concurrent.atomic || (concurrent.atomic = {}));
+        })(concurrent = util.concurrent || (util.concurrent = {}));
         var Random = (function () {
             function Random() {
             }
@@ -214,6 +291,9 @@ var java;
             };
             Random.prototype.nextDouble = function () {
                 return Math.random();
+            };
+            Random.prototype.nextBoolean = function () {
+                return Math.random() >= 0.5;
             };
             return Random;
         })();
