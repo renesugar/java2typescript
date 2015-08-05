@@ -267,6 +267,16 @@ module java {
                         return this._internal;
                     }
 
+                    set(newVal: number) {
+                        this._internal = newVal
+                    }
+
+                    getAndSet(newVal : number) : number {
+                        var temp = this._internal;
+                        this._internal = newVal
+                        return temp;
+                    }
+
                     incrementAndGet():number {
                         this._internal++;
                         return this._internal;

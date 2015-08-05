@@ -260,6 +260,14 @@ var java;
                     AtomicInteger.prototype.get = function () {
                         return this._internal;
                     };
+                    AtomicInteger.prototype.set = function (newVal) {
+                        this._internal = newVal;
+                    };
+                    AtomicInteger.prototype.getAndSet = function (newVal) {
+                        var temp = this._internal;
+                        this._internal = newVal;
+                        return temp;
+                    };
                     AtomicInteger.prototype.incrementAndGet = function () {
                         this._internal++;
                         return this._internal;
