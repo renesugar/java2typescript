@@ -26,12 +26,10 @@ class System {
             for (var i = 0; i < numElements; i++) {
                 dest[destPos + i] = src[srcPos + i];
             }
-            return;
         } else if (src instanceof Int32Array && dest instanceof Int32Array) {
             for (var i = 0; i < numElements; i++) {
                 dest[destPos + i] = src[srcPos + i];
             }
-            return;
         } else {
             for (var i = 0; i < numElements; i++) {
                 dest[destPos + i] = src[srcPos + i];
@@ -228,6 +226,34 @@ module java {
         export module concurrent {
 
             export module atomic {
+
+                export class AtomicReference<A> {
+                    _internal : A = null;
+
+                    compareAndSet(expect:A, update:A):boolean {
+                        if (this._internal == expect) {
+                            this._internal = update;
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+
+                    get() : A {
+                        return this._internal
+                    }
+
+                    set(newRef : A){
+                        this._internal = newRef;
+                    }
+
+                    getAndSet(newVal:A):A {
+                        var temp = this._internal;
+                        this._internal = newVal;
+                        return temp;
+                    }
+
+                }
 
                 export class AtomicLong {
                     _internal = 0;

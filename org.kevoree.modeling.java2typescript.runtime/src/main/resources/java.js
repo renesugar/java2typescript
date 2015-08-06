@@ -14,13 +14,11 @@ var System = (function () {
             for (var i = 0; i < numElements; i++) {
                 dest[destPos + i] = src[srcPos + i];
             }
-            return;
         }
         else if (src instanceof Int32Array && dest instanceof Int32Array) {
             for (var i = 0; i < numElements; i++) {
                 dest[destPos + i] = src[srcPos + i];
             }
-            return;
         }
         else {
             for (var i = 0; i < numElements; i++) {
@@ -229,6 +227,33 @@ var java;
         (function (concurrent) {
             var atomic;
             (function (atomic) {
+                var AtomicReference = (function () {
+                    function AtomicReference() {
+                        this._internal = null;
+                    }
+                    AtomicReference.prototype.compareAndSet = function (expect, update) {
+                        if (this._internal == expect) {
+                            this._internal = update;
+                            return true;
+                        }
+                        else {
+                            return false;
+                        }
+                    };
+                    AtomicReference.prototype.get = function () {
+                        return this._internal;
+                    };
+                    AtomicReference.prototype.set = function (newRef) {
+                        this._internal = newRef;
+                    };
+                    AtomicReference.prototype.getAndSet = function (newVal) {
+                        var temp = this._internal;
+                        this._internal = newVal;
+                        return temp;
+                    };
+                    return AtomicReference;
+                })();
+                atomic.AtomicReference = AtomicReference;
                 var AtomicLong = (function () {
                     function AtomicLong(init) {
                         this._internal = 0;
