@@ -227,6 +227,33 @@ var java;
         (function (concurrent) {
             var atomic;
             (function (atomic) {
+                var AtomicIntegerArray = (function () {
+                    function AtomicIntegerArray(p) {
+                        this._internal = p;
+                    }
+                    AtomicIntegerArray.prototype.set = function (index, newVal) {
+                        this._internal[index] = newVal;
+                    };
+                    AtomicIntegerArray.prototype.get = function (index) {
+                        return this._internal[index];
+                    };
+                    AtomicIntegerArray.prototype.getAndSet = function (index, newVal) {
+                        var temp = this._internal[index];
+                        this._internal[index] = newVal;
+                        return temp;
+                    };
+                    AtomicIntegerArray.prototype.compareAndSet = function (index, expect, update) {
+                        if (this._internal[index] == expect) {
+                            this._internal[index] = update;
+                            return true;
+                        }
+                        else {
+                            return false;
+                        }
+                    };
+                    return AtomicIntegerArray;
+                })();
+                atomic.AtomicIntegerArray = AtomicIntegerArray;
                 var AtomicReference = (function () {
                     function AtomicReference() {
                         this._internal = null;

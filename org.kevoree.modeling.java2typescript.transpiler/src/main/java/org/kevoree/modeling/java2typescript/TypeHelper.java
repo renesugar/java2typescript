@@ -151,7 +151,8 @@ public class TypeHelper {
         javaTypes.put("AtomicInteger", "java.util.concurrent.atomic.AtomicInteger");
         javaTypes.put("AtomicLong", "java.util.concurrent.atomic.AtomicLong");
         javaTypes.put("AtomicReference", "java.util.concurrent.atomic.AtomicReference");
-        
+        javaTypes.put("AtomicIntegerArray", "java.util.concurrent.atomic.AtomicIntegerArray");
+
         javaTypes.put("Arrays", "java.util.Arrays");
         javaTypes.put("Collections", "java.util.Collections");
         javaTypes.put("Map", "java.util.Map");

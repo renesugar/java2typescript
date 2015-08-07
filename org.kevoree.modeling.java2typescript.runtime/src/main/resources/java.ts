@@ -227,8 +227,40 @@ module java {
 
             export module atomic {
 
+                export class AtomicIntegerArray {
+                    _internal:Int32Array;
+
+                    constructor(p:Int32Array) {
+                        this._internal = p;
+                    }
+
+                    set(index:number, newVal:number) {
+                        this._internal[index] = newVal;
+                    }
+
+                    get(index:number) {
+                        return this._internal[index];
+                    }
+
+                    getAndSet(index:number, newVal:number) {
+                        var temp = this._internal[index];
+                        this._internal[index] = newVal;
+                        return temp;
+                    }
+
+                    compareAndSet(index:number, expect:number, update:number):boolean {
+                        if (this._internal[index] == expect) {
+                            this._internal[index] = update;
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+
+                }
+
                 export class AtomicReference<A> {
-                    _internal : A = null;
+                    _internal:A = null;
 
                     compareAndSet(expect:A, update:A):boolean {
                         if (this._internal == expect) {
@@ -239,11 +271,11 @@ module java {
                         }
                     }
 
-                    get() : A {
+                    get():A {
                         return this._internal
                     }
 
-                    set(newRef : A){
+                    set(newRef:A) {
                         this._internal = newRef;
                     }
 
