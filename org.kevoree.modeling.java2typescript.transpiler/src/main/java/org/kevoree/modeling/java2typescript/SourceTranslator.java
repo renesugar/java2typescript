@@ -45,8 +45,11 @@ public class SourceTranslator {
     private static final String JUNIT_D_TS = "junit.d.ts";
     private static final String JUNIT_JS = "junit.js";
 
-    public void processPsiDirectory(boolean isRoot, PsiDirectory currentDir, TranslationContext ctx) {
-        if (!isRoot) {
+    public String additionalAppend = null;
+    public String[] exportPackage = null;
+
+    public void processPsiDirectory(boolean isRoot, PsiDirectory currentDir, TranslationContext ctx, boolean exportRoot) {
+        if (exportRoot || !isRoot) {
             ctx.print("export module ");
         } else {
             ctx.print("module ");
@@ -96,7 +99,7 @@ public class SourceTranslator {
             }
         });
         for (PsiDirectory subDir : subDirectories) {
-            processPsiDirectory(false, subDir, ctx);
+            processPsiDirectory(false, subDir, ctx, exportRoot);
         }
 
         ctx.decreaseIdent();
@@ -104,7 +107,7 @@ public class SourceTranslator {
         ctx.append("\n");
     }
 
-    public void translateSources(String sourcePath, String outputPath, String name, boolean appendJavaStd, boolean appendJunitStd) throws IOException {
+    public void translateSources(String sourcePath, String outputPath, String name, boolean appendJavaStd, boolean appendJunitStd, boolean exportRoot) throws IOException {
         File sourceFolder = new File(sourcePath);
         File targetFolder = new File(outputPath);
         if (sourceFolder.exists()) {
@@ -134,19 +137,31 @@ public class SourceTranslator {
             Files.copy(this.getClass().getClassLoader().getResourceAsStream(JUNIT_D_TS), junitDTS.toPath(), StandardCopyOption.REPLACE_EXISTING);
             Files.copy(this.getClass().getClassLoader().getResourceAsStream(JUNIT_JS), junitJS.toPath(), StandardCopyOption.REPLACE_EXISTING);
         }
+
         TranslationContext ctx = new TranslationContext();
 
         //TODO protect by an option
         if (appendJavaStd) {
-            ctx.append(readFully(this.getClass().getClassLoader().getResourceAsStream(JAVA_TS)));
+            if (exportRoot) {
+                ctx.append(readFully(this.getClass().getClassLoader().getResourceAsStream(JAVA_TS)).replaceFirst("module java", "export module java"));
+            } else {
+                ctx.append(readFully(this.getClass().getClassLoader().getResourceAsStream(JAVA_TS)));
+            }
             ctx.append("\n");
         }
-        /*
-        if (appendJunitStd) {
-            ctx.append(readFully(this.getClass().getClassLoader().getResourceAsStream(JUNIT_TS)));
-            ctx.append("\n");
-        }*/
 
+        if (additionalAppend != null) {
+            if (exportRoot) {
+                String content = readFully(this.getClass().getClassLoader().getResourceAsStream(additionalAppend));
+                content = content.replaceFirst("module java", "export module java");
+                if (exportPackage != null) {
+                    for (String pack : exportPackage) {
+                        content = content.replaceFirst("module " + pack, "export module " + pack);
+                    }
+                }
+                ctx.append(content);
+            }
+        }
 
         PsiDirectory root = analyzer.analyze(sourceFolder);
         List<PsiDirectory> subDirectories = new ArrayList<PsiDirectory>();
@@ -167,7 +182,7 @@ public class SourceTranslator {
             }
         });
         for (PsiDirectory subDir : subDirectories) {
-            processPsiDirectory(true, subDir, ctx);
+            processPsiDirectory(true, subDir, ctx, exportRoot);
         }
 
         File generatedTS = new File(targetFolder, name + ".ts");

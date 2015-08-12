@@ -18,6 +18,9 @@ import java.nio.file.Paths;
 @Mojo(name = "generate", defaultPhase = LifecyclePhase.PROCESS_SOURCES, requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class MMCompilePlugin extends AbstractMojo {
 
+    @Parameter(defaultValue = "${project.basedir}/src/main/resources")
+    protected File inputTS;
+
     /**
      * Src file
      */
@@ -63,6 +66,9 @@ public class MMCompilePlugin extends AbstractMojo {
     @Parameter
     private boolean appendJunitStd = false;
 
+    @Parameter
+    private String moduleType = null;
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         source.mkdirs();
@@ -86,9 +92,9 @@ public class MMCompilePlugin extends AbstractMojo {
             }
         }
         try {
-            sourceTranslator.translateSources(source.getPath(), target.getPath(), projectName, appendJavaStd, appendJunitStd);
+            sourceTranslator.translateSources(source.getPath(), target.getPath(), projectName, appendJavaStd, appendJunitStd, moduleType != null);
             if (flatJUnit) {
-                sourceTranslator.translateSources(new File(flatJunitGenDir).getPath(), target.getPath(), "TestRunner", appendJavaStd, appendJunitStd);
+                sourceTranslator.translateSources(new File(flatJunitGenDir).getPath(), target.getPath(), "TestRunner", appendJavaStd, appendJunitStd, moduleType != null);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -96,11 +102,30 @@ public class MMCompilePlugin extends AbstractMojo {
         }
         if (targetJS != null) {
             try {
-                TSCRunner.run(target, targetJS, libraries, copyLibDTs);
+                TSCRunner.run(target, targetJS, libraries, copyLibDTs, moduleType);
             } catch (Exception e) {
                 throw new MojoExecutionException("TypeScript compilation failed !", e);
             }
         }
+
+        File packageJSON = new File(targetJS, "package.json");
+        if (packageJSON.exists()) {
+            try {
+                TSCompilePlugin.updateCONTENT(packageJSON, project);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            packageJSON = new File(inputTS, "package.json");
+            if (packageJSON.exists()) {
+                try {
+                    TSCompilePlugin.updateCONTENT(packageJSON, project);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
 
     }
 
