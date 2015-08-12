@@ -160,6 +160,9 @@ public class SourceTranslator {
                     }
                 }
                 ctx.append(content);
+            } else {
+                String content = readFully(this.getClass().getClassLoader().getResourceAsStream(additionalAppend));
+                ctx.append(content);
             }
         }
 
