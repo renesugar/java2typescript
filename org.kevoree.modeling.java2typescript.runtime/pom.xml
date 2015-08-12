@@ -25,7 +25,7 @@
                         <phase>compile</phase>
                         <configuration>
                             <tasks>
-                                <exec dir="${project.basedir}/src/main/ts" executable="node" failonerror="true">
+                                <exec dir="${project.basedir}/src/main/resources" executable="node" failonerror="true">
                                     <arg line="${project.basedir}/../org.kevoree.modeling.java2typescript.mavenplugin/src/main/resources/tsc.js --outDir ../../../target/classes -d java.ts junit.ts"/>
                                 </exec>
                             </tasks>

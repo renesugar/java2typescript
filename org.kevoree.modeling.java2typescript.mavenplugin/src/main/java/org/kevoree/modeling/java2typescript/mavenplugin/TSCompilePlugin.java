@@ -69,12 +69,12 @@ public class TSCompilePlugin extends AbstractMojo {
                     }
                     writer.flush();
                     writer.close();
-                    String basePath = f.getAbsolutePath().replace(inputTS.getAbsolutePath(),"");
-                    if(basePath.startsWith(File.separator)){
+                    String basePath = f.getAbsolutePath().replace(inputTS.getAbsolutePath(), "");
+                    if (basePath.startsWith(File.separator)) {
                         basePath = basePath.substring(1);
                     }
-                    File alreadyTs = new File(outputClasses,basePath);
-                    if(alreadyTs.exists()){
+                    File alreadyTs = new File(outputClasses, basePath);
+                    if (alreadyTs.exists()) {
                         alreadyTs.delete();
                     }
                 }
@@ -90,12 +90,12 @@ public class TSCompilePlugin extends AbstractMojo {
         }
 
         File[] libs;
-        if(libraries == null){
+        if (libraries == null) {
             libs = new File[1];
             libs[0] = jsdeps;
         } else {
-            libs = new File[libraries.length+1];
-            for(int i=0;i<libraries.length;i++){
+            libs = new File[libraries.length + 1];
+            for (int i = 0; i < libraries.length; i++) {
                 libs[i] = libraries[i];
             }
             libs[libraries.length] = jsdeps;
@@ -114,7 +114,17 @@ public class TSCompilePlugin extends AbstractMojo {
                 ZipEntry entry = (ZipEntry) e.nextElement();
                 if (entry.getName().endsWith(".js") || entry.getName().endsWith(".d.ts")) {
                     if (!entry.getName().equals("tsc.js") && !entry.getName().equals("lib.d.ts")) {
-                        unzipEntry(zipfile, entry, outputDir);
+                        if (
+                                entry.getName().equals("java.ts") ||
+                                        entry.getName().equals("java.d.ts") ||
+                                        entry.getName().equals("java.js") ||
+                                        entry.getName().equals("junit.d.ts") ||
+                                        entry.getName().equals("junit.ts") ||
+                                        entry.getName().equals("junit.js")) {
+
+                        } else {
+                            unzipEntry(zipfile, entry, outputDir);
+                        }
                     }
                 }
             }

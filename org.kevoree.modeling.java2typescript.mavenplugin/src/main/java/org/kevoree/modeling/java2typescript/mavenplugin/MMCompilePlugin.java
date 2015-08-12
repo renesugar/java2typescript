@@ -57,6 +57,12 @@ public class MMCompilePlugin extends AbstractMojo {
     @Parameter
     private boolean copyLibDTs = true;
 
+    @Parameter
+    private boolean appendJavaStd = false;
+
+    @Parameter
+    private boolean appendJunitStd = false;
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         source.mkdirs();
@@ -80,9 +86,9 @@ public class MMCompilePlugin extends AbstractMojo {
             }
         }
         try {
-            sourceTranslator.translateSources(source.getPath(), target.getPath(), projectName);
+            sourceTranslator.translateSources(source.getPath(), target.getPath(), projectName, appendJavaStd, appendJunitStd);
             if (flatJUnit) {
-                sourceTranslator.translateSources(new File(flatJunitGenDir).getPath(), target.getPath(), "TestRunner");
+                sourceTranslator.translateSources(new File(flatJunitGenDir).getPath(), target.getPath(), "TestRunner", appendJavaStd, appendJunitStd);
             }
         } catch (IOException e) {
             e.printStackTrace();
