@@ -1,55 +1,60 @@
-module org {
-    export module junit {
-        export class Assert {
-            public static assertArrayEquals(p:any, p2:any) {
+var org;
+(function (org) {
+    var junit;
+    (function (junit) {
+        var Assert = (function () {
+            function Assert() {
+            }
+            Assert.assertArrayEquals = function (p, p2) {
                 if (p == null || p == undefined) {
                     if (p2 == null || p2 == undefined) {
                         return;
-                    } else {
-                        throw "Assert Error " + p + " and " + p2 + " must be equals"
+                    }
+                    else {
+                        throw "Assert Error " + p + " and " + p2 + " must be equals";
                     }
                 }
                 if (p2 == null || p2 == undefined) {
                     if (p == null || p == undefined) {
                         return;
-                    } else {
-                        throw "Assert Error " + p + " and " + p2 + " must be equals"
+                    }
+                    else {
+                        throw "Assert Error " + p + " and " + p2 + " must be equals";
                     }
                 }
                 if (p.length != p2.length) {
-                    throw "Assert Error " + p + " and " + p2 + " must be equals"
+                    throw "Assert Error " + p + " and " + p2 + " must be equals";
                 }
                 for (var i = 0; i < p.length; i++) {
                     if (p[i] != p2[i]) {
-                        throw "Assert Error " + p + " and " + p2 + " must be equals"
+                        throw "Assert Error " + p + " and " + p2 + " must be equals";
                     }
                 }
-            }
-
-            public static assertNotNull(p:any):void {
+            };
+            Assert.assertNotNull = function (p) {
                 if (p == null) {
                     throw "Assert Error " + p + " must not be null";
                 }
-            }
-
-            public static assertNull(p:any):void {
+            };
+            Assert.assertNull = function (p) {
                 if (p != null) {
                     throw "Assert Error " + p + " must be null";
                 }
-            }
-
-            public static assertEquals(p:any, p2:any):void {
+            };
+            Assert.assertEquals = function (p, p2) {
                 if (p == null) {
                     if (p2 == null) {
                         return;
-                    } else {
+                    }
+                    else {
                         throw "Assert Error \n" + p + "\n must be equal to \n" + p2 + "\n";
                     }
                 }
                 if (p2 == null) {
                     if (p == null) {
                         return;
-                    } else {
+                    }
+                    else {
                         throw "Assert Error \n" + p + "\n must be equal to \n" + p2 + "\n";
                     }
                 }
@@ -57,36 +62,38 @@ module org {
                     if (!p.equals(p2)) {
                         throw "Assert Error \n" + p + "\n must be equal to \n" + p2 + "\n";
                     }
-                } else {
+                }
+                else {
                     if (p != p2) {
                         throw "Assert Error \n" + p + "\n must be equal to \n" + p2 + "\n";
                     }
                 }
-            }
-
-            public static assertNotEquals(p:any, p2:any):void {
+            };
+            Assert.assertNotEquals = function (p, p2) {
                 if (p.equals !== undefined) {
                     if (p.equals(p2)) {
                         throw "Assert Error \n" + p + "\n must not be equal to \n" + p2 + "\n";
                     }
-                } else {
+                }
+                else {
                     if (p == p2) {
                         throw "Assert Error \n" + p + "\n must not be equal to \n" + p2 + "\n";
                     }
                 }
-            }
-
-            public static assertTrue(b:boolean):void {
+            };
+            Assert.assertTrue = function (b) {
                 if (!b) {
                     throw "Assert Error " + b + " must be true";
                 }
-            }
-
-            public static assertFalse(b:boolean):void {
+            };
+            Assert.assertFalse = function (b) {
                 if (b) {
                     throw "Assert Error " + b + " must be false";
                 }
-            }
-        }
-    }
-}
+            };
+            return Assert;
+        })();
+        junit.Assert = Assert;
+    })(junit = org.junit || (org.junit = {}));
+})(org || (org = {}));
+//# sourceMappingURL=junit.js.map

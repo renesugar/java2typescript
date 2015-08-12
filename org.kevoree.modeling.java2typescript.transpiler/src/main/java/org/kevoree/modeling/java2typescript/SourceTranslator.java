@@ -39,6 +39,9 @@ public class SourceTranslator {
     private static final String JAVA_D_TS = "java.d.ts";
     private static final String JAVA_JS = "java.js";
 
+    private static final String JUNIT_D_TS = "junit.d.ts";
+    private static final String JUNIT_JS = "junit.js";
+
     public void processPsiDirectory(boolean isRoot, PsiDirectory currentDir, TranslationContext ctx) {
         if (!isRoot) {
             ctx.print("export module ");
@@ -118,8 +121,13 @@ public class SourceTranslator {
         //copy default library
         File javaDTS = new File(targetFolder, JAVA_D_TS);
         File javaJS = new File(targetFolder, JAVA_JS);
-        Files.copy(this.getClass().getClassLoader().getResourceAsStream(JAVA_D_TS), javaDTS.toPath(), StandardCopyOption.REPLACE_EXISTING);
-        Files.copy(this.getClass().getClassLoader().getResourceAsStream(JAVA_JS), javaJS.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(this.getClass().getClassLoader().getResourceAsStream("global/" + JAVA_D_TS), javaDTS.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(this.getClass().getClassLoader().getResourceAsStream("global/" + JAVA_JS), javaJS.toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+        File junitDTS = new File(targetFolder, JUNIT_D_TS);
+        File junitJS = new File(targetFolder, JUNIT_JS);
+        Files.copy(this.getClass().getClassLoader().getResourceAsStream("global/" + JUNIT_D_TS), junitDTS.toPath(), StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(this.getClass().getClassLoader().getResourceAsStream("global/" + JUNIT_JS), junitJS.toPath(), StandardCopyOption.REPLACE_EXISTING);
 
         TranslationContext ctx = new TranslationContext();
         PsiDirectory root = analyzer.analyze(sourceFolder);

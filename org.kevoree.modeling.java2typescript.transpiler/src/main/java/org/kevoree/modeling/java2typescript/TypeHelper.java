@@ -148,6 +148,9 @@ public class TypeHelper {
     public static final HashMap<String, String> javaTypes = new HashMap<String, String>();
 
     static {
+
+        javaTypes.put("System", "java.lang.System");
+
         javaTypes.put("AtomicInteger", "java.util.concurrent.atomic.AtomicInteger");
         javaTypes.put("AtomicLong", "java.util.concurrent.atomic.AtomicLong");
         javaTypes.put("AtomicReference", "java.util.concurrent.atomic.AtomicReference");

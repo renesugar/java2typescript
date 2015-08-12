@@ -7,6 +7,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class TSCRunner {
 
@@ -61,7 +62,7 @@ public class TSCRunner {
             node = e.start();
             int retVal = node.waitFor();
             if (retVal != 0) {
-                throw new Exception("There were TypeScript compilation errors.");
+                throw new Exception("There were TypeScript compilation errors. "/*+ Arrays.toString(paramsCol.toArray())*/);
             }
         } catch (InterruptedException var11) {
             var11.printStackTrace();

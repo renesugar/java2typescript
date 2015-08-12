@@ -101,17 +101,16 @@ export module lang {
   }
 
   export class StringBuilder {
-    private buffer: string = '';
-    private length: number = 0;
-
+    private _buffer: string = '';
+    public length = 0;
     append(val: any): StringBuilder {
-      this.buffer = this.buffer + val;
-      length = this.buffer.length;
+      this._buffer = this._buffer + val;
+      length = this._buffer.length;
       return this;
     }
 
     toString(): string {
-      return this.buffer;
+      return this._buffer;
     }
   }
 
