@@ -13,6 +13,25 @@ var java;
             }
             System.gc = function () {
             };
+            /*
+            static out = {
+                println(obj?:any):void {
+                    console.log(obj);
+                },
+                print(obj:any):void {
+                    console.log(obj);
+                }
+            };
+
+            static err = {
+                println(obj?:any):void {
+                    console.error(obj);
+                },
+                print(obj:any):void {
+                    console.error(obj);
+                }
+            };
+            */
             System.arraycopy = function (src, srcPos, dest, destPos, numElements) {
                 /*
                  if(!Array.isArray(src) && ! Array.isArray(dest)){
@@ -41,22 +60,6 @@ var java;
                  }*/
                 for (var i = 0; i < numElements; i++) {
                     dest[destPos + i] = src[srcPos + i];
-                }
-            };
-            System.out = {
-                println: function (obj) {
-                    console.log(obj);
-                },
-                print: function (obj) {
-                    console.log(obj);
-                }
-            };
-            System.err = {
-                println: function (obj) {
-                    console.error(obj);
-                },
-                print: function (obj) {
-                    console.error(obj);
                 }
             };
             return System;

@@ -4,6 +4,7 @@ module java {
             static gc() {
             }
 
+            /*
             static out = {
                 println(obj?:any):void {
                     console.log(obj);
@@ -21,6 +22,7 @@ module java {
                     console.error(obj);
                 }
             };
+            */
 
             static arraycopy(src:any[] | Float64Array | Int32Array, srcPos:number, dest:any[] | Float64Array | Int32Array, destPos:number, numElements:number):void {
 
