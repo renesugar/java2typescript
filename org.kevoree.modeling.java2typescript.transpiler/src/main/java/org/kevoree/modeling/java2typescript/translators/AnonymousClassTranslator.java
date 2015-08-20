@@ -13,7 +13,6 @@ public class AnonymousClassTranslator {
     private static final Joiner joiner = Joiner.on(", ");
 
     public static void translate(PsiAnonymousClass element, TranslationContext ctx) {
-
         if (TypeHelper.isCallbackClass(element.getBaseClassType().resolve())) {
             PsiMethod method = element.getAllMethods()[0];
             PsiParameter[] parameters = method.getParameterList().getParameters();
@@ -21,7 +20,6 @@ public class AnonymousClassTranslator {
             for (int i = 0; i < methodParameters.length; i++) {
                 methodParameters[i] = parameters[i].getName() + " : " + TypeHelper.printType(parameters[i].getTypeElement().getType(), ctx);
             }
-            // ctx.append("function(){\n");
             ctx.append(" (" + String.join(", ", methodParameters) + ") => {\n");
             if (method.getBody() != null) {
                 ctx.increaseIdent();
@@ -29,7 +27,6 @@ public class AnonymousClassTranslator {
                 ctx.decreaseIdent();
             }
             ctx.print("}");
-            //ctx.print("}()\n");
         } else {
             ctx.append("{");
             ctx.increaseIdent();
