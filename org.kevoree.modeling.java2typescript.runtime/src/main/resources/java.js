@@ -4,40 +4,41 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
-Error.prototype.printStackTrace = function () {
-    console.error(this.stack);
-};
 var java;
 (function (java) {
     var lang;
     (function (lang) {
-        /*
-        export class Throwable {
-            private message:string;
-            private error:Error;
-
-            constructor(message:string) {
-                this.message = message;
-                this.error = new Error(message);
-            }
-
-            printStackTrace() {
-                console.error(this.error.stack);
-            }
-        }
-
-        export class Exception extends Throwable {
-        }
-        export class RuntimeException extends Exception {
-        }
-        export class IndexOutOfBoundsException extends Exception {
-        }*/
         var System = (function () {
             function System() {
             }
             System.gc = function () {
             };
             System.arraycopy = function (src, srcPos, dest, destPos, numElements) {
+                /*
+                 if(!Array.isArray(src) && ! Array.isArray(dest)){
+                 var udest = <ArrayBufferView> dest;
+                 var usrc =  <ArrayBufferView> src;
+                 udest.set(src.slice(srcPos,srcPos+numElements),destPos);
+                 } else {
+                 for (var i = 0; i < numElements; i++) {
+                 dest[destPos + i] = src[srcPos + i];
+                 }
+                 }
+                 */
+                /*
+                 if (src['buffer'] != undefined && dest['buffer'] != undefined) {
+                 var srcBuffer = src['buffer'];
+                 var destBuffer = src['buffer'];
+                 if (srcPos != 0 || src['length'] != numElements) {
+                 srcBuffer = srcBuffer.slice(srcPos,srcPos+numElements);
+                 }
+                 destBuffer.set(srcBuffer, destPos);
+                 } else {
+
+                 for (var i = 0; i < numElements; i++) {
+                 dest[destPos + i] = src[srcPos + i];
+                 }
+                 }*/
                 for (var i = 0; i < numElements; i++) {
                     dest[destPos + i] = src[srcPos + i];
                 }

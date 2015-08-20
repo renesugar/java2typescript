@@ -1,34 +1,5 @@
-interface Error {
-    printStackTrace();
-}
-Error.prototype.printStackTrace = function(){
-    console.error(this.stack);
-};
 module java {
     export module lang {
-
-        /*
-        export class Throwable {
-            private message:string;
-            private error:Error;
-
-            constructor(message:string) {
-                this.message = message;
-                this.error = new Error(message);
-            }
-
-            printStackTrace() {
-                console.error(this.error.stack);
-            }
-        }
-
-        export class Exception extends Throwable {
-        }
-        export class RuntimeException extends Exception {
-        }
-        export class IndexOutOfBoundsException extends Exception {
-        }*/
-
         export class System {
             static gc() {
             }
@@ -51,10 +22,66 @@ module java {
                 }
             };
 
-            static arraycopy(src:any[] | ArrayBuffer, srcPos:number, dest:any[] | ArrayBuffer, destPos:number, numElements:number):void {
+            static arraycopy(src:any[] | Float64Array | Int32Array, srcPos:number, dest:any[] | Float64Array | Int32Array, destPos:number, numElements:number):void {
+
+                /*
+                 if(!Array.isArray(src) && ! Array.isArray(dest)){
+                 var udest = <ArrayBufferView> dest;
+                 var usrc =  <ArrayBufferView> src;
+                 udest.set(src.slice(srcPos,srcPos+numElements),destPos);
+                 } else {
+                 for (var i = 0; i < numElements; i++) {
+                 dest[destPos + i] = src[srcPos + i];
+                 }
+                 }
+                 */
+                /*
+                 if (src['buffer'] != undefined && dest['buffer'] != undefined) {
+                 var srcBuffer = src['buffer'];
+                 var destBuffer = src['buffer'];
+                 if (srcPos != 0 || src['length'] != numElements) {
+                 srcBuffer = srcBuffer.slice(srcPos,srcPos+numElements);
+                 }
+                 destBuffer.set(srcBuffer, destPos);
+                 } else {
+
+                 for (var i = 0; i < numElements; i++) {
+                 dest[destPos + i] = src[srcPos + i];
+                 }
+                 }*/
+
+                /*
+                 if(src instanceof Float64Array && dest instanceof Float64Array){
+                 var castedSrc = <Float64Array> src;
+                 var castedDest = <Float64Array> dest;
+                 if(srcPos == 0 && src.length == numElements){
+                 castedDest.set(castedSrc,destPos);
+                 } else {
+                 for (var i = 0; i < numElements; i++) {
+                 dest[destPos + i] = src[srcPos + i];
+                 }
+                 }
+                 } else if(src instanceof Int32Array && dest instanceof Int32Array){
+                 var castedSrc = <Int32Array> src;
+                 var castedDest = <Int32Array> dest;
+                 if(srcPos == 0 && src.length == numElements){
+                 castedDest.set(castedSrc,destPos);
+                 } else {
+                 for (var i = 0; i < numElements; i++) {
+                 dest[destPos + i] = src[srcPos + i];
+                 }
+                 }
+                 } else {
+                 for (var i = 0; i < numElements; i++) {
+                 dest[destPos + i] = src[srcPos + i];
+                 }
+                 }*/
+
                 for (var i = 0; i < numElements; i++) {
                     dest[destPos + i] = src[srcPos + i];
                 }
+
+
             }
         }
 
