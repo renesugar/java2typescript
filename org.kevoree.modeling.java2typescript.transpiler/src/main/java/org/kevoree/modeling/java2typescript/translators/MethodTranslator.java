@@ -15,26 +15,26 @@ import java.util.List;
  */
 public class MethodTranslator {
 
-    public static void translate(PsiMethod method, TranslationContext ctx) {
+    public static void translate(PsiMethod method, TranslationContext ctx, boolean isAnonymous) {
 
         boolean nativeActivated = false;
         boolean ignore = false;
         //Check for native code
         PsiDocComment comment = method.getDocComment();
-        if(comment != null) {
+        if (comment != null) {
             PsiDocTag[] tags = comment.getTags();
-            if(tags != null) {
-                for(PsiDocTag tag : tags) {
-                    if (tag.getName().equals(NativeTsTranslator.TAG) && tag.getValueElement()!=null && tag.getValueElement().getText().equals(NativeTsTranslator.TAG_VAL_TS)) {
+            if (tags != null) {
+                for (PsiDocTag tag : tags) {
+                    if (tag.getName().equals(NativeTsTranslator.TAG) && tag.getValueElement() != null && tag.getValueElement().getText().equals(NativeTsTranslator.TAG_VAL_TS)) {
                         nativeActivated = true;
                     }
-                    if (tag.getName().equals(NativeTsTranslator.TAG_IGNORE) && tag.getValueElement()!=null && tag.getValueElement().getText().equals(NativeTsTranslator.TAG_VAL_TS)) {
+                    if (tag.getName().equals(NativeTsTranslator.TAG_IGNORE) && tag.getValueElement() != null && tag.getValueElement().getText().equals(NativeTsTranslator.TAG_VAL_TS)) {
                         ignore = true;
                     }
                 }
             }
         }
-        if(ignore){
+        if (ignore) {
             return;
         }
         PsiModifierList modifierList = method.getModifierList();
@@ -53,7 +53,9 @@ public class MethodTranslator {
             if (modifierList.hasModifierProperty("static")) {
                 ctx.append("static ");
             }
-            ctx.append(method.getName());
+            if (!isAnonymous) {
+                ctx.append(method.getName());
+            }
             PsiTypeParameter[] typeParameters = method.getTypeParameters();
             if (typeParameters.length > 0) {
                 ctx.append('<');
@@ -97,7 +99,7 @@ public class MethodTranslator {
         if (!containingClass.isInterface()) {
             ctx.append(" {\n");
             ctx.increaseIdent();
-            if(!nativeActivated) {
+            if (!nativeActivated) {
                 if (modifierList.hasModifierProperty("abstract") || method.getBody() == null) {
                     ctx.print("throw \"Abstract method\";\n");
                 } else {

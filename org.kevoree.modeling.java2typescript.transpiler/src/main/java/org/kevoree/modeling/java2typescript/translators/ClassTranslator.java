@@ -20,10 +20,10 @@ public class ClassTranslator {
             PsiDocTag[] tags = comment.getTags();
             if (tags != null) {
                 for (PsiDocTag tag : tags) {
-                    if (tag.getName().equals(NativeTsTranslator.TAG_IGNORE) && tag.getValueElement()!=null && tag.getValueElement().getText().equals(NativeTsTranslator.TAG_VAL_TS)) {
+                    if (tag.getName().equals(NativeTsTranslator.TAG_IGNORE) && tag.getValueElement() != null && tag.getValueElement().getText().equals(NativeTsTranslator.TAG_VAL_TS)) {
                         ignoreClass = true;
                     }
-                    if (tag.getName().equals(NativeTsTranslator.TAG) && tag.getValueElement()!=null && tag.getValueElement().getText().equals(NativeTsTranslator.TAG_VAL_TS)) {
+                    if (tag.getName().equals(NativeTsTranslator.TAG) && tag.getValueElement() != null && tag.getValueElement().getText().equals(NativeTsTranslator.TAG_VAL_TS)) {
                         nativeActivated = true;
                     }
                 }
@@ -87,20 +87,20 @@ public class ClassTranslator {
         PsiClass[] innerClasses = element.getInnerClasses();
 
         boolean atLeastOne = false;
-        for(PsiClass loopClass : innerClasses){
+        for (PsiClass loopClass : innerClasses) {
             boolean ignoreClass = false;
             PsiDocComment comment = loopClass.getDocComment();
             if (comment != null) {
                 PsiDocTag[] tags = comment.getTags();
                 if (tags != null) {
                     for (PsiDocTag tag : tags) {
-                        if (tag.getName().equals(NativeTsTranslator.TAG_IGNORE) && tag.getValueElement()!=null && tag.getValueElement().getText().equals(NativeTsTranslator.TAG_VAL_TS)) {
+                        if (tag.getName().equals(NativeTsTranslator.TAG_IGNORE) && tag.getValueElement() != null && tag.getValueElement().getText().equals(NativeTsTranslator.TAG_VAL_TS)) {
                             ignoreClass = true;
                         }
                     }
                 }
             }
-            if(!ignoreClass){
+            if (!ignoreClass) {
                 atLeastOne = true;
             }
         }
@@ -138,8 +138,12 @@ public class ClassTranslator {
             ctx.print("}\n");
         }
         PsiMethod[] methods = clazz.getMethods();
-        for (PsiMethod method : methods) {
-            MethodTranslator.translate(method, ctx);
+        if (TypeHelper.isCallbackClass(clazz)) {
+            MethodTranslator.translate(methods[0], ctx, true);
+        } else {
+            for (PsiMethod method : methods) {
+                MethodTranslator.translate(method, ctx, false);
+            }
         }
         if (clazz.isEnum()) {
             ctx.print("public equals(other: any): boolean {\n");

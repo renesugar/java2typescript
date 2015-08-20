@@ -20,7 +20,7 @@ public class TypeHelper {
     public static String printType(PsiType element, TranslationContext ctx, boolean withGenericParams, boolean explicitType, boolean avoidNativeOptim) {
         String result = element.getPresentableText();
 
-        if(result.equals("Throwable") || result.equals("Exception") || result.equals("RuntimeException") || result.equals("IndexOutOfBoundsException")){
+        if (result.equals("Throwable") || result.equals("Exception") || result.equals("RuntimeException") || result.equals("IndexOutOfBoundsException")) {
             return "Error";
         }
 
@@ -51,6 +51,7 @@ public class TypeHelper {
         } else if (element instanceof PsiArrayType) {
             PsiArrayType typedElement = (PsiArrayType) element;
             String partialResult = printType(typedElement.getComponentType(), ctx, true, false, true);
+            /*
             if (typedElement.getComponentType() instanceof PsiClassReferenceType) {
                 PsiClass resolvedClass = ((PsiClassReferenceType) typedElement.getComponentType()).resolve();
                 if (resolvedClass != null) {
@@ -60,47 +61,21 @@ public class TypeHelper {
                         return result;
                     }
                 }
-            }
+            }*/
             result = partialResult + "[]";
             return result;
         } else if (element instanceof PsiClassReferenceType) {
             PsiClass resolvedClass = ((PsiClassReferenceType) element).resolve();
             if (resolvedClass != null) {
-                if (isCallbackClass(resolvedClass) && !explicitType) {
-                    PsiMethod method = resolvedClass.getAllMethods()[0];
-                    PsiParameter[] parameters = method.getParameterList().getParameters();
-                    String[] methodParameters = new String[parameters.length];
-                    for (int i = 0; i < methodParameters.length; i++) {
-                        PsiType parameterType = parameters[i].getType();
-                        for (int j = 0; j < resolvedClass.getTypeParameters().length; j++) {
-                            if (resolvedClass.getTypeParameters()[j].getName().equals(parameterType.getPresentableText())) {
-                                if (((PsiClassReferenceType) element).getParameters().length <= j) {
-                                    parameterType = null;
-                                } else {
-                                    parameterType = ((PsiClassReferenceType) element).getParameters()[j];
-                                }
-                            }
-                        }
-                        if (parameterType == null) {
-                            methodParameters[i] = parameters[i].getName() + " : any";
-                        } else {
-                            methodParameters[i] = parameters[i].getName() + " : " + printType(parameterType, ctx);
-                        }
-
-                    }
-                    result = "(" + String.join(", ", methodParameters) + ") => " + printType(method.getReturnType(), ctx);
-                    return result;
-                } else {
-                    String qualifiedName = resolvedClass.getQualifiedName();
-                    if (qualifiedName != null) {
-                        result = resolvedClass.getQualifiedName();
-                    }
-                    if (resolvedClass.getTypeParameters().length > 0) {
-                        String[] generics = new String[resolvedClass.getTypeParameters().length];
-                        Arrays.fill(generics, "any");
-                        if (withGenericParams) {
-                            result += "<" + String.join(", ", generics) + ">";
-                        }
+                String qualifiedName = resolvedClass.getQualifiedName();
+                if (qualifiedName != null) {
+                    result = resolvedClass.getQualifiedName();
+                }
+                if (resolvedClass.getTypeParameters().length > 0) {
+                    String[] generics = new String[resolvedClass.getTypeParameters().length];
+                    Arrays.fill(generics, "any");
+                    if (withGenericParams) {
+                        result += "<" + String.join(", ", generics) + ">";
                     }
                 }
             } else {
