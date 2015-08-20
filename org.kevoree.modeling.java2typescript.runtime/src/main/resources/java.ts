@@ -1,5 +1,5 @@
 interface Error {
-    printStackTrace;
+    printStackTrace();
 }
 Error.prototype.printStackTrace = function(){
     console.error(this.stack);
