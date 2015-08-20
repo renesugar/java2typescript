@@ -33,6 +33,9 @@ public class ClassTranslator {
             //we skip the class
             return;
         }
+
+        printInnerClasses(clazz, ctx);
+
         if (clazz.isInterface()) {
             ctx.print("export interface ");
         } else {
@@ -80,7 +83,6 @@ public class ClassTranslator {
 
         ctx.print("}\n");
         ctx.append("\n");
-        printInnerClasses(clazz, ctx);
     }
 
     private static void printInnerClasses(PsiClass element, TranslationContext ctx) {
