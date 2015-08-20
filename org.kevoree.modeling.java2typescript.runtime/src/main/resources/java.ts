@@ -1,8 +1,13 @@
 interface Error {
-    stack?: string;
+    printStackTrace;
 }
+Error.prototype.printStackTrace = function(){
+    console.error(this.stack);
+};
 module java {
     export module lang {
+
+        /*
         export class Throwable {
             private message:string;
             private error:Error;
@@ -16,6 +21,13 @@ module java {
                 console.error(this.error.stack);
             }
         }
+
+        export class Exception extends Throwable {
+        }
+        export class RuntimeException extends Exception {
+        }
+        export class IndexOutOfBoundsException extends Exception {
+        }*/
 
         export class System {
             static gc() {
@@ -44,13 +56,6 @@ module java {
                     dest[destPos + i] = src[srcPos + i];
                 }
             }
-        }
-
-        export class Exception extends Throwable {
-        }
-        export class RuntimeException extends Exception {
-        }
-        export class IndexOutOfBoundsException extends Exception {
         }
 
         export interface Runnable {

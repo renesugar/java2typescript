@@ -19,6 +19,12 @@ public class TypeHelper {
 
     public static String printType(PsiType element, TranslationContext ctx, boolean withGenericParams, boolean explicitType, boolean avoidNativeOptim) {
         String result = element.getPresentableText();
+
+        if(result.equals("Throwable") || result.equals("Exception") || result.equals("RuntimeException") || result.equals("IndexOutOfBoundsException")){
+            return "Error";
+        }
+
+
         if (objects.contains(result)) {
             return "any";
         } else if (primitiveNumbers.contains(result) || objectNumbers.contains(result)) {

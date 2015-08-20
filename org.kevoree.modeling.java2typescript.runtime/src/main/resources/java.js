@@ -4,21 +4,34 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
+Error.prototype.printStackTrace = function () {
+    console.error(this.stack);
+};
 var java;
 (function (java) {
     var lang;
     (function (lang) {
-        var Throwable = (function () {
-            function Throwable(message) {
+        /*
+        export class Throwable {
+            private message:string;
+            private error:Error;
+
+            constructor(message:string) {
                 this.message = message;
                 this.error = new Error(message);
             }
-            Throwable.prototype.printStackTrace = function () {
+
+            printStackTrace() {
                 console.error(this.error.stack);
-            };
-            return Throwable;
-        })();
-        lang.Throwable = Throwable;
+            }
+        }
+
+        export class Exception extends Throwable {
+        }
+        export class RuntimeException extends Exception {
+        }
+        export class IndexOutOfBoundsException extends Exception {
+        }*/
         var System = (function () {
             function System() {
             }
@@ -48,30 +61,6 @@ var java;
             return System;
         })();
         lang.System = System;
-        var Exception = (function (_super) {
-            __extends(Exception, _super);
-            function Exception() {
-                _super.apply(this, arguments);
-            }
-            return Exception;
-        })(Throwable);
-        lang.Exception = Exception;
-        var RuntimeException = (function (_super) {
-            __extends(RuntimeException, _super);
-            function RuntimeException() {
-                _super.apply(this, arguments);
-            }
-            return RuntimeException;
-        })(Exception);
-        lang.RuntimeException = RuntimeException;
-        var IndexOutOfBoundsException = (function (_super) {
-            __extends(IndexOutOfBoundsException, _super);
-            function IndexOutOfBoundsException() {
-                _super.apply(this, arguments);
-            }
-            return IndexOutOfBoundsException;
-        })(Exception);
-        lang.IndexOutOfBoundsException = IndexOutOfBoundsException;
         var StringBuilder = (function () {
             function StringBuilder() {
                 this._buffer = '';
