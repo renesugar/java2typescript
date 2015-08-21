@@ -13,51 +13,7 @@ var java;
             }
             System.gc = function () {
             };
-            /*
-            static out = {
-                println(obj?:any):void {
-                    console.log(obj);
-                },
-                print(obj:any):void {
-                    console.log(obj);
-                }
-            };
-
-            static err = {
-                println(obj?:any):void {
-                    console.error(obj);
-                },
-                print(obj:any):void {
-                    console.error(obj);
-                }
-            };
-            */
             System.arraycopy = function (src, srcPos, dest, destPos, numElements) {
-                /*
-                 if(!Array.isArray(src) && ! Array.isArray(dest)){
-                 var udest = <ArrayBufferView> dest;
-                 var usrc =  <ArrayBufferView> src;
-                 udest.set(src.slice(srcPos,srcPos+numElements),destPos);
-                 } else {
-                 for (var i = 0; i < numElements; i++) {
-                 dest[destPos + i] = src[srcPos + i];
-                 }
-                 }
-                 */
-                /*
-                 if (src['buffer'] != undefined && dest['buffer'] != undefined) {
-                 var srcBuffer = src['buffer'];
-                 var destBuffer = src['buffer'];
-                 if (srcPos != 0 || src['length'] != numElements) {
-                 srcBuffer = srcBuffer.slice(srcPos,srcPos+numElements);
-                 }
-                 destBuffer.set(srcBuffer, destPos);
-                 } else {
-
-                 for (var i = 0; i < numElements; i++) {
-                 dest[destPos + i] = src[srcPos + i];
-                 }
-                 }*/
                 for (var i = 0; i < numElements; i++) {
                     dest[destPos + i] = src[srcPos + i];
                 }
