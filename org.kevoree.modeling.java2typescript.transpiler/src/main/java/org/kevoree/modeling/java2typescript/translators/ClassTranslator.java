@@ -139,7 +139,9 @@ public class ClassTranslator {
         }
         PsiMethod[] methods = clazz.getMethods();
         if (TypeHelper.isCallbackClass(clazz)) {
-            MethodTranslator.translate(methods[0], ctx, true);
+            if(methods.length > 0){
+                MethodTranslator.translate(methods[0], ctx, true);
+            }
         } else {
             for (PsiMethod method : methods) {
                 MethodTranslator.translate(method, ctx, false);
