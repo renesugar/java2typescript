@@ -34,7 +34,17 @@ public class LocalVariableTranslator {
             ctx.append(" = ");
             ExpressionTranslator.translate(element.getInitializer(), ctx);
         }
-        if (!loopDeclaration) {
+
+        boolean listDecl = false;
+        PsiElement next = element.getNextSibling();
+        while(next instanceof PsiWhiteSpace) {
+            next = next.getNextSibling();
+        }
+        if(next instanceof PsiJavaToken) {
+            listDecl = true;
+        }
+
+        if (!loopDeclaration && !listDecl) {
             ctx.append(";");
             ctx.append("\n");
         }
