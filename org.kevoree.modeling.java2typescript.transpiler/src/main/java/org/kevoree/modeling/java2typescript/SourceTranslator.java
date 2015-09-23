@@ -16,18 +16,18 @@ import java.util.Comparator;
 import java.util.List;
 
 public class SourceTranslator {
-    //private static final String baseDir = "/Users/duke/Documents/dev/dukeboard/kevoree-modeling-framework/org.kevoree.modeling.microframework/src/main/java";
+    private static final String baseDir = "/Users/duke/Documents/dev/kevoree-modeling/framework/org.kevoree.modeling.microframework/src/main/java";
     //private static final String baseDir = "/Users/duke/Documents/dev/dukeboard/kevoree-modeling-framework/org.kevoree.modeling.microframework.typescript/target/sources";
     //private static final String baseDir = "/Users/duke/IdeaProjects/kmf_mini/src/gen/java";
     // private static final String baseDir = "/Users/gnain/Sources/Kevoree/kevoree-modeling-framework-private/public/test/org.kevoree.modeling.test.datastore/target/generated-sources/kmf";
 
-    /*
+
     public static void main(String[] args) throws IOException {
         SourceTranslator sourceTranslator = new SourceTranslator();
-        sourceTranslator.getAnalyzer().addClasspath("/Users/gnain/.m2/repository/org/kevoree/modeling/org.kevoree.modeling.microframework/4.18.5-SNAPSHOT/org.kevoree.modeling.microframework-4.18.5-SNAPSHOT.jar");
-        sourceTranslator.getAnalyzer().addClasspath("/Users/gnain/.m2/repository/junit/junit/4.11/junit-4.11.jar");
-        sourceTranslator.translateSources(baseDir, "target", "out");
-    }*/
+        sourceTranslator.getAnalyzer().addClasspath("/Users/duke/.m2/repository/org/kevoree/modeling/org.kevoree.modeling.microframework/4.25.1-SNAPSHOT/org.kevoree.modeling.microframework-4.25.1-SNAPSHOT.jar");
+        sourceTranslator.getAnalyzer().addClasspath("/Users/duke/.m2/repository/junit/junit/4.11/junit-4.11.jar");
+        sourceTranslator.translateSources(baseDir, "target", "out", false, false, false);
+    }
 
     private JavaAnalyzer analyzer;
 

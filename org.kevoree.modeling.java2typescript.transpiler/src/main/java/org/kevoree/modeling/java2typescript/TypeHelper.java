@@ -111,11 +111,7 @@ public class TypeHelper {
         if (clazz == null) {
             return false;
         }
-
-        System.err.println(clazz.getName()+"=>"+(clazz.isInterface() && clazz.getAllMethods().length == 1));
-
-
-        return clazz.isInterface() && clazz.getAllMethods().length == 1;
+        return clazz.isInterface() && clazz.getAllFields().length == 0 && clazz.getAllMethods().length == 1;
     }
 
     public static String primitiveStaticCall(String clazz) {

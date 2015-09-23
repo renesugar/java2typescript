@@ -3,8 +3,11 @@ package org.kevoree.modeling.java2typescript.translators;
 
 import com.google.common.base.*;
 import com.intellij.psi.*;
+import com.intellij.psi.impl.compiled.ClsMethodImpl;
+import com.intellij.psi.impl.java.stubs.PsiMethodStub;
 import org.kevoree.modeling.java2typescript.TranslationContext;
 import org.kevoree.modeling.java2typescript.TypeHelper;
+import org.kevoree.modeling.java2typescript.translators.expression.ExpressionTranslator;
 
 import java.util.*;
 
@@ -37,21 +40,46 @@ public class AnonymousClassTranslator {
     }
 
     private static void printClassMembers(PsiClass element, TranslationContext ctx) {
-        PsiMethod[] methods = element.getMethods();
+        boolean isFirst = true;
+        PsiMethod[] methods = element.getAllMethods();
         for (int i = 0; i < methods.length; i++) {
             PsiMethod method = methods[i];
-            ctx.append(method.getName());
-            ctx.append(":function(");
-            printParameterList(method, ctx);
-            ctx.append("){\n");
-            if (method.getBody() != null) {
-                CodeBlockTranslator.translate(method.getBody(), ctx);
-            }
-            ctx.append("}");
-            if (i < methods.length - 1) {
-                ctx.append(", ");
+            if (method instanceof ClsMethodImpl) {
+
+            } else {
+                if (!isFirst) {
+                    ctx.append(", ");
+                } else {
+                    isFirst = false;
+                }
+                ctx.append(method.getName());
+                ctx.append(":function(");
+                printParameterList(method, ctx);
+                ctx.append("){\n");
+                if (method.getBody() != null) {
+                    CodeBlockTranslator.translate(method.getBody(), ctx);
+                }
+                ctx.append("}");
             }
         }
+        /*
+        PsiField[] fields = element.getAllFields();
+        for (int i = 0; i < fields.length; i++) {
+            PsiField field = fields[i];
+            if (!isFirst) {
+                ctx.append(", ");
+            } else {
+                isFirst = false;
+            }
+            ctx.append(field.getName());
+            ctx.append(": ");
+            ctx.append(TypeHelper.printType(field.getType(), ctx));
+            if (field.hasInitializer()) {
+                ctx.append(" = ");
+                ExpressionTranslator.translate(field.getInitializer(), ctx);
+                ctx.append(";\n");
+            }
+        }*/
     }
 
     private static void printParameterList(PsiMethod element, TranslationContext ctx) {
