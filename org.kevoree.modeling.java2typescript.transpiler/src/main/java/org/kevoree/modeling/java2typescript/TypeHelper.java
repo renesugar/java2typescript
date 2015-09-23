@@ -111,6 +111,10 @@ public class TypeHelper {
         if (clazz == null) {
             return false;
         }
+
+        System.err.println(clazz.getName()+"=>"+(clazz.isInterface() && clazz.getAllMethods().length == 1));
+
+
         return clazz.isInterface() && clazz.getAllMethods().length == 1;
     }
 
