@@ -65,33 +65,51 @@ public class TypeHelper {
             result = partialResult + "[]";
             return result;
         } else if (element instanceof PsiClassReferenceType) {
-            PsiClass resolvedClass = ((PsiClassReferenceType) element).resolve();
+
+            PsiClassReferenceType elementClassRefType = ((PsiClassReferenceType) element);
+            PsiClass resolvedClass = elementClassRefType.resolve();
+
             if (resolvedClass != null) {
                 String qualifiedName = resolvedClass.getQualifiedName();
                 if (qualifiedName != null) {
                     result = resolvedClass.getQualifiedName();
                 }
-                if (resolvedClass.getTypeParameters().length > 0) {
-                    String[] generics = new String[resolvedClass.getTypeParameters().length];
-                    Arrays.fill(generics, "any");
-                    if (withGenericParams) {
+                if (withGenericParams) {
+                    PsiTypeParameter[] typeParameters = resolvedClass.getTypeParameters();
+                    PsiType[] referenceParameters = elementClassRefType.getParameters();
+                    if (typeParameters.length > 0) {
+                        String[] generics = new String[typeParameters.length];
+                        for (int i = 0; i < typeParameters.length; i++) {
+                            if (referenceParameters.length > i) {
+                                generics[i] = printType(referenceParameters[i], ctx);//((PsiClassReferenceType)).resolve().getQualifiedName();
+                            } else {
+                                generics[i] = "any";
+                            }
+                        }
                         result += "<" + String.join(", ", generics) + ">";
                     }
+                    /*
+                    if (elementClassRefType.getParameters().length > 0) {
+                        String[] generics = new String[elementClassRefType.getParameters().length];
+                        Arrays.fill(generics, "any");
+                        result += "<" + String.join(", ", generics) + ">";
+                    }
+                    */
                 }
             } else {
-                String tryJavaUtil = javaTypes.get(((PsiClassReferenceType) element).getClassName());
+                String tryJavaUtil = javaTypes.get(elementClassRefType.getClassName());
                 if (tryJavaUtil != null) {
                     result = tryJavaUtil;
                 } else {
-                    result = ((PsiClassReferenceType) element).getReference().getQualifiedName();
+                    result = elementClassRefType.getReference().getQualifiedName();
                 }
-                if (((PsiClassReferenceType) element).getParameterCount() > 0) {
-                    String[] generics = new String[((PsiClassReferenceType) element).getParameterCount()];
-                    PsiType[] genericTypes = ((PsiClassReferenceType) element).getParameters();
-                    for (int i = 0; i < genericTypes.length; i++) {
-                        generics[i] = printType(genericTypes[i], ctx);
-                    }
-                    if (withGenericParams) {
+                if (withGenericParams) {
+                    if (elementClassRefType.getParameterCount() > 0) {
+                        String[] generics = new String[elementClassRefType.getParameterCount()];
+                        PsiType[] genericTypes = elementClassRefType.getParameters();
+                        for (int i = 0; i < genericTypes.length; i++) {
+                            generics[i] = printType(genericTypes[i], ctx);
+                        }
                         result += "<" + String.join(", ", generics) + ">";
                     }
                 }
