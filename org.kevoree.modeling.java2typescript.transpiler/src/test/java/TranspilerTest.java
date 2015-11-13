@@ -7,8 +7,8 @@ import java.io.IOException;
  */
 public class TranspilerTest {
 
-    //private static final String baseDir = "/Users/gnain/Sources/Kevoree-Modeling/java2typescript/org.kevoree.modeling.java2typescript.transpiler/src/test/resources";
-    private static final String baseDir = "/Users/gnain/Sources/Kevoree-Modeling/framework/org.kevoree.modeling.microframework/src/main/java";
+    private static final String baseDir = "/Users/gnain/Sources/Kevoree-Modeling/java2typescript/org.kevoree.modeling.java2typescript.transpiler/src/test/resources";
+//    /private static final String baseDir = "/Users/gnain/Sources/Kevoree-Modeling/framework/org.kevoree.modeling.microframework/src/main/java";
 
     public static void main(String[] args) throws IOException {
         SourceTranslator sourceTranslator = new SourceTranslator();
