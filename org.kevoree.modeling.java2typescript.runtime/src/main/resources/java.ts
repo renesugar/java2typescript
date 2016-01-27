@@ -19,7 +19,7 @@ module java {
 
             append(val:any):StringBuilder {
                 this._buffer = this._buffer + val;
-                length = this._buffer.length;
+                this.length = this._buffer.length;
                 return this;
             }
 
