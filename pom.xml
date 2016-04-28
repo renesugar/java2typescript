@@ -1,10 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
-    <groupId>org.kevoree.modeling</groupId>
-    <artifactId>org.kevoree.modeling.java2typescript.root</artifactId>
+    <groupId>org.kevoree.modeling.j2ts</groupId>
+    <artifactId>j2ts</artifactId>
     <packaging>pom</packaging>
     <version>48-SNAPSHOT</version>
-    <name>Kevoree :: Modeling :: Java2TypeScript :: Root</name>
+    <name>Kevoree :: Modeling :: J2TS :: Root</name>
     <url>https://github.com/kevoree-modeling/java2typescript</url>
     <description>Kevoree Modeling Java2TypeScript</description>
 
@@ -51,9 +51,9 @@
     </developers>
 
     <modules>
-        <module>org.kevoree.modeling.java2typescript.runtime</module>
-        <module>org.kevoree.modeling.java2typescript.transpiler</module>
-        <module>org.kevoree.modeling.java2typescript.mavenplugin</module>
+        <module>runtime</module>
+        <module>transpiler</module>
+        <module>mavenplugin</module>
     </modules>
 
     <dependencies>
