@@ -9,7 +9,6 @@ import com.intellij.psi.PsiManager;
 import java.io.File;
 
 /**
- *
  * Created by duke on 11/6/14.
  */
 public class JavaAnalyzer {
@@ -17,7 +16,9 @@ public class JavaAnalyzer {
     private JavaCoreProjectEnvironment environment;
 
     public JavaAnalyzer() {
-        environment = new JavaCoreProjectEnvironment(() -> {}, new JavaCoreApplicationEnvironment(() -> {}));
+        environment = new JavaCoreProjectEnvironment(() -> {
+        }, new JavaCoreApplicationEnvironment(() -> {
+        }));
     }
 
     public void addClasspath(String filePath) {

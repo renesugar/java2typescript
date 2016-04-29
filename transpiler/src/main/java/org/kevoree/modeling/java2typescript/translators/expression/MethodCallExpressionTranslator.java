@@ -32,6 +32,35 @@ public class MethodCallExpressionTranslator {
     }
 
     private static boolean tryNativeTransform(PsiMethodCallExpression element, TranslationContext ctx) {
+        if (element.getMethodExpression().getQualifierExpression() != null
+                && element.getMethodExpression().getQualifierExpression().getType() != null
+                && element.getMethodExpression().getQualifierExpression().getType().getCanonicalText().equals("String")) {
+            //transform .length
+            if (element.getMethodExpression().getReferenceName() != null &&
+                    element.getMethodExpression().getReferenceName().equals("length")) {
+                ExpressionTranslator.translate(element.getMethodExpression().getQualifierExpression(), ctx);
+                if (element.getArgumentList().getExpressions().length == 0) {
+                    ctx.append(".length");
+                    return true;
+                }
+            }
+            //transform .codePointAt
+            if (element.getMethodExpression().getReferenceName() != null &&
+                    element.getMethodExpression().getReferenceName().equals("codePointAt")) {
+                ExpressionTranslator.translate(element.getMethodExpression().getQualifierExpression(), ctx);
+                ctx.append(".charCodeAt(");
+                PsiExpression[] arguments = element.getArgumentList().getExpressions();
+                for (int i = 0; i < arguments.length; i++) {
+                    ExpressionTranslator.translate(arguments[i], ctx);
+                    if (i != arguments.length - 1) {
+                        ctx.append(", ");
+                    }
+                }
+                ctx.append(")");
+                ctx.needsJava(TypeHelper.javaTypes.get("String"));
+                return true;
+            }
+        }
         if (element.getText().matches("^(java\\.lang\\.)?System\\.out.*$")) {
             ctx.append("console.log(");
             PsiExpression[] arguments = element.getArgumentList().getExpressions();

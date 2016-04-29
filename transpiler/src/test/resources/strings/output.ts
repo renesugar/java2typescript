@@ -14,7 +14,7 @@ export class InFunction {
   public bar(): void {
     this.str = this.str2 + this.str;
     var s: string = this.getString();
-    var s2: string = java.lang.String.replace(this.getString(), 'o'.charCodeAt(0), 'a'.charCodeAt(0));
+    var s2: string = java.lang.String.replace(this.getString(), 'o', 'a');
     var s3: string = java.lang.String.getString(java.lang.String.getF(this.getF()));
   }
   public getString(): string {

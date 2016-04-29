@@ -55,11 +55,11 @@ public class TypeHelper {
         } else if (element instanceof PsiArrayType) {
             PsiArrayType typedElement = (PsiArrayType) element;
             String partialResult = printType(typedElement.getComponentType(), ctx, withGenericParams, avoidNativeOptim);
-            if (withGenericParams) {
-                result = partialResult + "[]";
-            } else {
-                result = partialResult;
-            }
+            //if (withGenericParams) {
+            result = partialResult + "[]";
+            //} else {
+            //   result = partialResult;
+            //}
             return result;
         } else if (element instanceof PsiClassReferenceType) {
             PsiClassReferenceType elementClassRefType = ((PsiClassReferenceType) element);
@@ -226,11 +226,11 @@ public class TypeHelper {
         if (count == genericLetters.length() - 1) {
             throw new UnsupportedOperationException("Unable to find a suitable generic type character");
         } else {
-            String genType = genericLetters.substring(count, count+1);
+            String genType = genericLetters.substring(count, count + 1);
             if (!usedGenerics.contains(genType)) {
                 return genType;
             } else {
-                return availableGenericType(usedGenerics, count+1);
+                return availableGenericType(usedGenerics, count + 1);
             }
         }
     }

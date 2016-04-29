@@ -72,7 +72,7 @@ public class NewExpressionTranslator {
                                     ctx.append(TypeHelper.printType(element.getType(), ctx, false, false));
                                 }
                             } else {
-                                ctx.append(TypeHelper.printType(element.getType(), ctx, false, false));
+                                ctx.append(TypeHelper.printType(((PsiArrayType) element).getComponentType(), ctx, false, false));
                             }
                             ctx.append(">(");
                             ExpressionTranslator.translate(element.getArrayDimensions()[0], ctx);
