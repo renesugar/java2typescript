@@ -1,7 +1,7 @@
 package org.kevoree.modeling.java2typescript.translators.statement;
 
 import com.intellij.psi.*;
-import org.kevoree.modeling.java2typescript.TranslationContext;
+import org.kevoree.modeling.java2typescript.context.TranslationContext;
 import org.kevoree.modeling.java2typescript.translators.CodeBlockTranslator;
 
 /**
@@ -42,6 +42,8 @@ public class StatementTranslator {
             DeclarationStatementTranslator.translate((PsiDeclarationStatement) statement, ctx);
         } else if (statement instanceof PsiExpressionListStatement) {
             ExpressionListStatementTranslator.translate((PsiExpressionListStatement) statement, ctx);
+        } else {
+            System.err.println("STMT "+statement.toString());
         }
     }
 

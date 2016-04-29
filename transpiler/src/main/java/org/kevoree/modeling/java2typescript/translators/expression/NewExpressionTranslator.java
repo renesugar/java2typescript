@@ -2,8 +2,9 @@
 package org.kevoree.modeling.java2typescript.translators.expression;
 
 import com.intellij.psi.*;
-import org.kevoree.modeling.java2typescript.TranslationContext;
-import org.kevoree.modeling.java2typescript.TypeHelper;
+import org.kevoree.modeling.java2typescript.helper.GenericHelper;
+import org.kevoree.modeling.java2typescript.context.TranslationContext;
+import org.kevoree.modeling.java2typescript.helper.TypeHelper;
 import org.kevoree.modeling.java2typescript.translators.AnonymousClassTranslator;
 
 public class NewExpressionTranslator {
@@ -17,7 +18,6 @@ public class NewExpressionTranslator {
             PsiJavaCodeReferenceElement classReference = element.getClassReference();
             String className;
             if (classReference != null) {
-                //PsiElement resolved = classReference.resolve();
                 className = TypeHelper.printType(element.getType(), ctx);
             } else {
                 className = TypeHelper.printType(element.getType().getDeepComponentType(), ctx);
@@ -32,46 +32,20 @@ public class NewExpressionTranslator {
                 arrayDefinition = true;
             }
             if (!arrayDefinition) {
-                if (anonymousClass == null) {
+                if (className.equals("string")) {
+                    if (element.getArgumentList() != null) {
+                        ExpressionListTranslator.translate(element.getArgumentList(), ctx);
+                    }
+                } else {
                     ctx.append("new ").append(className).append('(');
                     if (element.getArgumentList() != null) {
-                        PsiExpression[] arguments = element.getArgumentList().getExpressions();
-                        for (int i = 0; i < arguments.length; i++) {
-                            ExpressionTranslator.translate(arguments[i], ctx);
-                            if (i != arguments.length - 1) {
-                                ctx.append(", ");
-                            }
-                        }
+                        ExpressionListTranslator.translate(element.getArgumentList(), ctx);
                     }
                     ctx.append(')');
                 }
             } else {
                 if (arrayInitializer != null) {
-                    boolean hasToBeClosed;
-                    if (ctx.NATIVE_ARRAY && element.getType().equalsToText("int[]")) {
-                        ctx.append("new Int32Array([");
-                        hasToBeClosed = true;
-                    } else if (ctx.NATIVE_ARRAY && element.getType().equalsToText("double[]")) {
-                        ctx.append("new Float64Array([");
-                        hasToBeClosed = true;
-                    } else if (ctx.NATIVE_ARRAY && element.getType().equalsToText("long[]")) {
-                        ctx.append("new Float64Array([");
-                        hasToBeClosed = true;
-                    } else {
-                        ctx.append("[");
-                        hasToBeClosed = false;
-                    }
-                    PsiExpression[] arrayInitializers = arrayInitializer.getInitializers();
-                    for (int i = 0; i < arrayInitializers.length; i++) {
-                        ExpressionTranslator.translate(arrayInitializers[i], ctx);
-                        if (i != arrayInitializers.length - 1) {
-                            ctx.append(", ");
-                        }
-                    }
-                    ctx.append("]");
-                    if (hasToBeClosed) {
-                        ctx.append(")");
-                    }
+                    ArrayInitializerExpressionTranslator.translate(arrayInitializer, ctx);
                 } else {
                     int dimensionCount = arrayDimensions.length;
                     if (ctx.NATIVE_ARRAY && dimensionCount == 1) {
@@ -88,14 +62,28 @@ public class NewExpressionTranslator {
                             ExpressionTranslator.translate(element.getArrayDimensions()[0], ctx);
                             ctx.append(")");
                         } else {
-                            ctx.append("new Array()");
+                            ctx.append("new Array<");
+                            if (element.getClassOrAnonymousClassReference() != null) {
+                                PsiJavaCodeReferenceElement ref = element.getClassOrAnonymousClassReference();
+                                if (ref.getReference() != null && ref.getReference().resolve() != null) {
+                                    PsiClass refClass = (PsiClass) ref.getReference().resolve();
+                                    ctx.append(GenericHelper.process(refClass));
+                                } else {
+                                    ctx.append(TypeHelper.printType(element.getType(), ctx, false, false));
+                                }
+                            } else {
+                                ctx.append(TypeHelper.printType(element.getType(), ctx, false, false));
+                            }
+                            ctx.append(">(");
+                            ExpressionTranslator.translate(element.getArrayDimensions()[0], ctx);
+                            ctx.append(")");
                         }
                     } else {
                         for (int i = 0; i < dimensionCount; i++) {
-                            ctx.append("new Array(");
+                            ctx.append("[");
                         }
                         for (int i = 0; i < dimensionCount; i++) {
-                            ctx.append(")");
+                            ctx.append("]");
                         }
                     }
                 }

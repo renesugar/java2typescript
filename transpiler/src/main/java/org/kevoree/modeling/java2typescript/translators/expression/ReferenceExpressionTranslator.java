@@ -2,54 +2,64 @@
 package org.kevoree.modeling.java2typescript.translators.expression;
 
 import com.intellij.psi.*;
-import org.kevoree.modeling.java2typescript.TranslationContext;
-import org.kevoree.modeling.java2typescript.TypeHelper;
+import org.kevoree.modeling.java2typescript.context.TranslationContext;
+import org.kevoree.modeling.java2typescript.helper.TypeHelper;
 
 public class ReferenceExpressionTranslator {
 
-    public static void translate(PsiReferenceExpression element, TranslationContext ctx) {
+    public static String translate(PsiReferenceExpression element, TranslationContext ctx, boolean appendToCtx) {
+        String result = "";
+        if (element.getReference() != null && element.getReference().resolve() instanceof PsiClass) {
+            PsiClass clazz = (PsiClass) element.getReference().resolve();
+            if (clazz != null) {
+                result += clazz.getQualifiedName();
+                return result;
+            }
+        }
+
         PsiElement resolution = element.resolve();
         if (element.getQualifierExpression() != null) {
-            ExpressionTranslator.translate(element.getQualifierExpression(), ctx);
-            if (resolution instanceof PsiMethod) {
-                PsiMethod method = (PsiMethod) resolution;
-                if (!TypeHelper.isCallbackClass(method.getContainingClass())) {
-                    ctx.append('.');
-                }
+            if (element.getQualifierExpression() instanceof PsiReferenceExpression) {
+                result += translate((PsiReferenceExpression) element.getQualifierExpression(), ctx, false);
             } else {
-                ctx.append('.');
+                ExpressionTranslator.translate(element.getQualifierExpression(), ctx);
             }
+            result += ".";
         } else {
             if (resolution != null) {
                 String qualifier = "this";
                 if (resolution instanceof PsiField) {
                     PsiField field = (PsiField) resolution;
                     if (field.getModifierList() != null && field.getModifierList().hasModifierProperty("static")) {
-                        qualifier = field.getContainingClass().getName();
+                        qualifier = field.getContainingClass().getQualifiedName();
                     }
-                    ctx.append(qualifier).append('.');
+                    result += qualifier + ".";
                 } else if (resolution instanceof PsiMethod) {
                     PsiMethod method = (PsiMethod) resolution;
                     if (method.getModifierList().hasModifierProperty("static")) {
                         qualifier = method.getContainingClass().getQualifiedName();
                     }
                     if (!element.getReferenceName().equals("super")) {
-                        ctx.append(qualifier).append('.');
+                        result += qualifier + ".";
                     }
-                } else if (resolution instanceof PsiClass) {
-                    PsiClass resolClazz = (PsiClass) resolution;
-                    ctx.append(resolClazz.getQualifiedName().substring(0, resolClazz.getQualifiedName().lastIndexOf(".") + 1));
                 }
             }
         }
-        if (resolution instanceof PsiMethod) {
-            PsiMethod method = (PsiMethod) resolution;
-            if (!TypeHelper.isCallbackClass(method.getContainingClass())) {
-                ctx.append(element.getReferenceName());
-            }
+
+        String type = TypeHelper.primitiveStaticCall(element.getReferenceName(), ctx);
+        if (!result.isEmpty() && type.startsWith(result)) {
+            result = type;
         } else {
-            ctx.append(TypeHelper.primitiveStaticCall(element.getReferenceName()));
+            result += type;
         }
+
+        if (appendToCtx) {
+            ctx.append(result);
+        }
+        return result;
     }
 
+    public static void translate(PsiReferenceExpression element, TranslationContext ctx) {
+        translate(element, ctx, true);
+    }
 }

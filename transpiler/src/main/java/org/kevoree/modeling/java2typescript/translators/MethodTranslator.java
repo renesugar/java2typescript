@@ -1,43 +1,35 @@
 package org.kevoree.modeling.java2typescript.translators;
 
 import com.intellij.psi.*;
-import com.intellij.psi.javadoc.PsiDocComment;
-import com.intellij.psi.javadoc.PsiDocTag;
-import com.intellij.psi.javadoc.PsiDocTagValue;
-import org.kevoree.modeling.java2typescript.TranslationContext;
-import org.kevoree.modeling.java2typescript.TypeHelper;
+import com.intellij.psi.impl.source.PsiClassReferenceType;
+import org.kevoree.modeling.java2typescript.context.TranslationContext;
+import org.kevoree.modeling.java2typescript.helper.DocHelper;
+import org.kevoree.modeling.java2typescript.helper.KeywordHelper;
+import org.kevoree.modeling.java2typescript.helper.TypeHelper;
+import org.kevoree.modeling.java2typescript.metas.DocMeta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 /**
+ *
  * Created by duke on 11/6/14.
  */
 public class MethodTranslator {
 
     public static void translate(PsiMethod method, TranslationContext ctx, boolean isAnonymous) {
+        DocMeta docMeta = DocHelper.process(method.getDocComment());
 
-        boolean nativeActivated = false;
-        boolean ignore = false;
-        //Check for native code
-        PsiDocComment comment = method.getDocComment();
-        if (comment != null) {
-            PsiDocTag[] tags = comment.getTags();
-            if (tags != null) {
-                for (PsiDocTag tag : tags) {
-                    if (tag.getName().equals(NativeTsTranslator.TAG) && tag.getValueElement() != null && tag.getValueElement().getText().equals(NativeTsTranslator.TAG_VAL_TS)) {
-                        nativeActivated = true;
-                    }
-                    if (tag.getName().equals(NativeTsTranslator.TAG_IGNORE) && tag.getValueElement() != null && tag.getValueElement().getText().equals(NativeTsTranslator.TAG_VAL_TS)) {
-                        ignore = true;
-                    }
-                }
-            }
-        }
-        if (ignore) {
+        if (docMeta.ignored) {
             return;
         }
+
         PsiModifierList modifierList = method.getModifierList();
+        PsiClass containingClass = (PsiClass) method.getParent();
+        ArrayList<String> paramGenParamTypeName = new ArrayList<>();
+        ctx.setGenericParameterNames(paramGenParamTypeName);
         if (method.isConstructor()) {
             ctx.print("constructor");
         } else {
@@ -53,40 +45,68 @@ public class MethodTranslator {
             if (modifierList.hasModifierProperty("static")) {
                 ctx.append("static ");
             }
-            if (!isAnonymous) {
-                ctx.append(method.getName());
+            if (!containingClass.isInterface() && modifierList.hasModifierProperty(PsiModifier.ABSTRACT)) {
+                ctx.append("abstract ");
             }
-            PsiTypeParameter[] typeParameters = method.getTypeParameters();
-            if (typeParameters.length > 0) {
-                ctx.append('<');
-                for (int i = 0; i < typeParameters.length; i++) {
-                    PsiTypeParameter p = typeParameters[i];
-                    ctx.append(p.getName());
-                    PsiClassType[] extentions = p.getExtendsList().getReferencedTypes();
-                    if (extentions.length > 0) {
-                        ctx.append(" extends ");
-                        for (PsiClassType ext : extentions) {
-                            ctx.append(TypeHelper.printType(ext, ctx));
+            if (!isAnonymous) {
+                ctx.append(KeywordHelper.process(method.getName(), ctx));
+            }
+            HashSet<String> usedGenerics = new HashSet<>();
+            PsiTypeParameter[] parameters = method.getTypeParameters();
+            for (PsiTypeParameter parameter : parameters) {
+                usedGenerics.add(parameter.getName());
+            }
+            String genericParams = TypeParametersTranslator.print(method.getTypeParameters(), ctx);
+            if (!genericParams.isEmpty()) {
+                genericParams = "<" + genericParams;
+            }
+            for (int i=0; i < method.getParameterList().getParameters().length; i++) {
+                PsiParameter param = method.getParameterList().getParameters()[i];
+                if (param.getType() instanceof PsiClassReferenceType) {
+                    PsiClassReferenceType paramClassRef = (PsiClassReferenceType) param.getType();
+                    if (paramClassRef.getParameters().length > 0) {
+                        // param has generic params
+                        for (PsiType paramGenParamType : paramClassRef.getParameters()) {
+                            if (paramGenParamType instanceof PsiWildcardType) {
+                                if (((PsiWildcardType) paramGenParamType).getBound() != null) {
+                                    if (!genericParams.isEmpty()) {
+                                        genericParams += ", ";
+                                    } else {
+                                        genericParams = "<";
+                                    }
+                                    String genType = TypeHelper.availableGenericType(usedGenerics);
+                                    usedGenerics.add(genType);
+                                    paramGenParamTypeName.add(i, genType);
+                                    genericParams += genType +
+                                            " extends " +
+                                            TypeHelper.printType(((PsiWildcardType) paramGenParamType).getBound(), ctx);
+                                    break;
+                                }
+                            }
                         }
                     }
-                    if (i != typeParameters.length - 1) {
-                        ctx.append(", ");
-                    }
                 }
-                ctx.append("> ");
             }
+            if (!genericParams.isEmpty()) {
+                genericParams += ">";
+            }
+            ctx.append(genericParams);
         }
         ctx.append('(');
-        List<String> params = new ArrayList<String>();
+        List<String> params = new ArrayList<>();
         StringBuilder paramSB = new StringBuilder();
         for (PsiParameter parameter : method.getParameterList().getParameters()) {
             paramSB.setLength(0);
             if (parameter.isVarArgs()) {
                 paramSB.append("...");
             }
-            paramSB.append(parameter.getName());
+            paramSB.append(KeywordHelper.process(parameter.getName(), ctx));
+            if (docMeta.optional.contains(parameter.getName())) {
+                paramSB.append("?");
+            }
             paramSB.append(": ");
-            paramSB.append(TypeHelper.printType(parameter.getType(), ctx));
+
+            paramSB.append(TypeHelper.printType(parameter.getType(), ctx, false, true));
             params.add(paramSB.toString());
         }
         ctx.append(String.join(", ", params));
@@ -95,25 +115,32 @@ public class MethodTranslator {
             ctx.append(": ");
             ctx.append(TypeHelper.printType(method.getReturnType(), ctx));
         }
-        PsiClass containingClass = (PsiClass) method.getParent();
         if (!containingClass.isInterface()) {
-            ctx.append(" {\n");
-            ctx.increaseIdent();
-            if (!nativeActivated) {
-                if (modifierList.hasModifierProperty("abstract") || method.getBody() == null) {
-                    ctx.print("throw \"Abstract method\";\n");
-                } else {
-                    CodeBlockTranslator.translate(method.getBody(), ctx);
-                }
+            if (method.getBody() == null) {
+                ctx.append(";\n");
             } else {
-                NativeTsTranslator.translate(comment, ctx);
+                ctx.append(" {");
+                if (method.getBody().getStatements().length > 0) {
+                    ctx.append("\n");
+                    ctx.increaseIdent();
+                    if (!docMeta.nativeActivated) {
+                        if (method.getBody() == null) {
+                            ctx.print("throw \"Empty body\";\n");
+                        } else {
+                            CodeBlockTranslator.translate(method.getBody(), ctx);
+                        }
+                    } else {
+                        DocTagTranslator.translate(method.getDocComment(), ctx);
+                    }
+                    ctx.decreaseIdent();
+                    ctx.print("}\n");
+                } else {
+                    ctx.append("}\n");
+                }
             }
-            ctx.decreaseIdent();
-            ctx.print("}\n");
         } else {
             ctx.append(";\n");
         }
-        ctx.append("\n");
+        ctx.removeGenericParameterNames();
     }
-
 }

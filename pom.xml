@@ -48,10 +48,18 @@
             </roles>
             <timezone>+2</timezone>
         </developer>
+        <developer>
+            <name>Maxime Tricoire</name>
+            <id>maxleiko</id>
+            <email>leiko@braindead.fr</email>
+            <roles>
+                <role>developer</role>
+            </roles>
+            <timezone>+2</timezone>
+        </developer>
     </developers>
 
     <modules>
-        <module>runtime</module>
         <module>transpiler</module>
         <module>mavenplugin</module>
     </modules>

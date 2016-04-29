@@ -2,62 +2,43 @@
 package org.kevoree.modeling.java2typescript.translators;
 
 import com.intellij.psi.*;
-import com.intellij.psi.javadoc.PsiDocComment;
-import com.intellij.psi.javadoc.PsiDocTag;
-import org.kevoree.modeling.java2typescript.TranslationContext;
-import org.kevoree.modeling.java2typescript.TypeHelper;
+import org.kevoree.modeling.java2typescript.helper.DocHelper;
+import org.kevoree.modeling.java2typescript.context.TranslationContext;
+import org.kevoree.modeling.java2typescript.helper.KeywordHelper;
+import org.kevoree.modeling.java2typescript.helper.TypeHelper;
+import org.kevoree.modeling.java2typescript.metas.DocMeta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class ClassTranslator {
 
     public static void translate(PsiClass clazz, TranslationContext ctx) {
-
-        boolean ignoreClass = false;
-        boolean nativeActivated = false;
-        PsiDocComment comment = clazz.getDocComment();
-        if (comment != null) {
-            PsiDocTag[] tags = comment.getTags();
-            if (tags != null) {
-                for (PsiDocTag tag : tags) {
-                    if (tag.getName().equals(NativeTsTranslator.TAG_IGNORE) && tag.getValueElement() != null && tag.getValueElement().getText().equals(NativeTsTranslator.TAG_VAL_TS)) {
-                        ignoreClass = true;
-                    }
-                    if (tag.getName().equals(NativeTsTranslator.TAG) && tag.getValueElement() != null && tag.getValueElement().getText().equals(NativeTsTranslator.TAG_VAL_TS)) {
-                        nativeActivated = true;
-                    }
-                }
-            }
-        }
-        if (ignoreClass) {
+        DocMeta metas = DocHelper.process(clazz.getDocComment());
+        if (metas.ignored) {
             //we skip the class
             return;
         }
-        if (clazz.isInterface()) {
+
+        if (clazz.getModifierList() != null &&
+                clazz.getModifierList().hasExplicitModifier(PsiModifier.ABSTRACT)) {
+            ctx.print("export abstract class ");
+        } else if (clazz.isInterface()) {
             ctx.print("export interface ");
         } else {
             ctx.print("export class ");
         }
+
         ctx.append(clazz.getName());
-        PsiTypeParameter[] typeParameters = clazz.getTypeParameters();
-        if (typeParameters.length > 0) {
-            ctx.append('<');
-            for (int i = 0; i < typeParameters.length; i++) {
-                PsiTypeParameter p = typeParameters[i];
-                ctx.append(p.getName());
-                PsiClassType[] extentions = p.getExtendsList().getReferencedTypes();
-                if (extentions.length > 0) {
-                    ctx.append(" extends ");
-                    for (PsiClassType ext : extentions) {
-                        ctx.append(TypeHelper.printType(ext, ctx));
-                    }
-                }
-                if (i != typeParameters.length - 1) {
-                    ctx.append(", ");
-                }
-            }
-            ctx.append('>');
+        String genericParams = TypeParametersTranslator.print(clazz.getTypeParameters(), ctx);
+        if (!genericParams.isEmpty()) {
+            ctx.append("<");
+            ctx.append(genericParams);
+            ctx.append(">");
         }
+
         PsiClassType[] extendsList = clazz.getExtendsListTypes();
         if (extendsList.length != 0 && !clazz.isEnum()) {
             ctx.append(" extends ");
@@ -68,18 +49,17 @@ public class ClassTranslator {
             ctx.append(" implements ");
             writeTypeList(ctx, implementsList);
         }
-        ctx.append(" {\n\n");
+        ctx.append(" {\n");
 
-        if (!nativeActivated) {
-            printClassMembers(clazz, ctx);
-        } else {
+        if (metas.nativeActivated) {
             ctx.increaseIdent();
-            NativeTsTranslator.translate(comment, ctx);
+            DocTagTranslator.translate(clazz.getDocComment(), ctx);
             ctx.decreaseIdent();
+        } else {
+            printClassMembers(clazz, ctx);
         }
 
         ctx.print("}\n");
-        ctx.append("\n");
         printInnerClasses(clazz, ctx);
     }
 
@@ -88,29 +68,23 @@ public class ClassTranslator {
 
         boolean atLeastOne = false;
         for (PsiClass loopClass : innerClasses) {
-            boolean ignoreClass = false;
-            PsiDocComment comment = loopClass.getDocComment();
-            if (comment != null) {
-                PsiDocTag[] tags = comment.getTags();
-                if (tags != null) {
-                    for (PsiDocTag tag : tags) {
-                        if (tag.getName().equals(NativeTsTranslator.TAG_IGNORE) && tag.getValueElement() != null && tag.getValueElement().getText().equals(NativeTsTranslator.TAG_VAL_TS)) {
-                            ignoreClass = true;
-                        }
-                    }
-                }
-            }
-            if (!ignoreClass) {
+            DocMeta docMeta = DocHelper.process(loopClass.getDocComment());
+            if (!docMeta.ignored) {
                 atLeastOne = true;
             }
         }
 
         if (innerClasses.length > 0 && atLeastOne) {
-            ctx.print("export module ").append(element.getName()).append(" { \n");
+            ctx.print("export module ");
+            ctx.append(element.getName());
+            ctx.append(" {\n");
             ctx.increaseIdent();
-            for (PsiClass innerClass : innerClasses) {
+            for (int i=0; i < innerClasses.length; i++) {
+                PsiClass innerClass = innerClasses[i];
                 translate(innerClass, ctx);
-                ctx.append("\n");
+                if (i < innerClasses.length-1) {
+                    ctx.append("\n");
+                }
             }
             ctx.decreaseIdent();
             ctx.print("}\n");
@@ -127,23 +101,36 @@ public class ClassTranslator {
         for (PsiClassInitializer initializer : initializers) {
             if (initializer.hasModifierProperty("static")) {
                 ctx.print("//TODO Resolve static initializer\n");
-                ctx.print("static {\n");
+                ctx.print("static {");
             } else {
                 ctx.print("//TODO Resolve instance initializer\n");
-                ctx.print("{\n");
+                ctx.print("{");
             }
-            ctx.increaseIdent();
-            CodeBlockTranslator.translate(initializer.getBody(), ctx);
-            ctx.decreaseIdent();
-            ctx.print("}\n");
+            if (initializer.getBody().getStatements().length > 0) {
+                ctx.append("\n");
+                ctx.increaseIdent();
+                CodeBlockTranslator.translate(initializer.getBody(), ctx);
+                ctx.decreaseIdent();
+                ctx.print("}\n");
+            } else {
+                ctx.append("}\n");
+            }
         }
         PsiMethod[] methods = clazz.getMethods();
         if (TypeHelper.isCallbackClass(clazz)) {
-            if(methods.length > 0){
-                MethodTranslator.translate(methods[0], ctx, true);
-            }
+            MethodTranslator.translate(methods[0], ctx, true);
         } else {
-            for (PsiMethod method : methods) {
+            // TODO handle method with same name but different signature
+//            Map<String, List<PsiMethod>> methodsByName = new HashMap<>();
+//            for (PsiMethod method : methods) {
+//                List<PsiMethod> mList = methodsByName.get(method.getName());
+//                if (mList == null) {
+//                    mList = new ArrayList<>();
+//                    methodsByName.put(method.getName(), mList);
+//                }
+//                mList.add(method);
+//            }
+            for (PsiMethod method: methods) {
                 MethodTranslator.translate(method, ctx, false);
             }
         }
@@ -192,7 +179,7 @@ public class ClassTranslator {
     private static void writeTypeList(TranslationContext ctx, PsiClassType[] typeList) {
         for (int i = 0; i < typeList.length; i++) {
             PsiClassType type = typeList[i];
-            ctx.append(TypeHelper.printType(type, ctx, true, true, false));
+            ctx.append(TypeHelper.printType(type, ctx, false, false));
             if (i != typeList.length - 1) {
                 ctx.append(", ");
             }

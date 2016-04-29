@@ -3,11 +3,9 @@ package org.kevoree.modeling.java2typescript.translators;
 
 import com.google.common.base.*;
 import com.intellij.psi.*;
-import com.intellij.psi.impl.compiled.ClsMethodImpl;
-import com.intellij.psi.impl.java.stubs.PsiMethodStub;
-import org.kevoree.modeling.java2typescript.TranslationContext;
-import org.kevoree.modeling.java2typescript.TypeHelper;
-import org.kevoree.modeling.java2typescript.translators.expression.ExpressionTranslator;
+import org.kevoree.modeling.java2typescript.context.TranslationContext;
+import org.kevoree.modeling.java2typescript.helper.KeywordHelper;
+import org.kevoree.modeling.java2typescript.helper.TypeHelper;
 
 import java.util.*;
 
@@ -21,9 +19,9 @@ public class AnonymousClassTranslator {
             PsiParameter[] parameters = method.getParameterList().getParameters();
             String[] methodParameters = new String[parameters.length];
             for (int i = 0; i < methodParameters.length; i++) {
-                methodParameters[i] = parameters[i].getName() + " : " + TypeHelper.printType(parameters[i].getTypeElement().getType(), ctx);
+                methodParameters[i] = KeywordHelper.process(parameters[i].getName(), ctx) + " : " + TypeHelper.printType(parameters[i].getTypeElement().getType(), ctx);
             }
-            ctx.append(" (" + String.join(", ", methodParameters) + ") => {\n");
+            ctx.append("(" + String.join(", ", methodParameters) + ") => {\n");
             if (method.getBody() != null) {
                 ctx.increaseIdent();
                 CodeBlockTranslator.translate(method.getBody(), ctx);
@@ -31,7 +29,7 @@ public class AnonymousClassTranslator {
             }
             ctx.print("}");
         } else {
-            ctx.append("{");
+            ctx.append("{\n");
             ctx.increaseIdent();
             printClassMembers(element, ctx);
             ctx.decreaseIdent();
@@ -40,46 +38,24 @@ public class AnonymousClassTranslator {
     }
 
     private static void printClassMembers(PsiClass element, TranslationContext ctx) {
-        boolean isFirst = true;
-        PsiMethod[] methods = element.getAllMethods();
+        PsiMethod[] methods = element.getMethods();
         for (int i = 0; i < methods.length; i++) {
-            PsiMethod method = methods[i];
-            if (method instanceof ClsMethodImpl) {
-
+            ctx.print(methods[i].getName());
+            ctx.append(": function (");
+            printParameterList(methods[i], ctx);
+            ctx.append(") {\n");
+            if (methods[i].getBody() != null) {
+                ctx.increaseIdent();
+                CodeBlockTranslator.translate(methods[i].getBody(), ctx);
+                ctx.decreaseIdent();
+            }
+            ctx.print("}");
+            if (i < methods.length - 1) {
+                ctx.append(",\n");
             } else {
-                if (!isFirst) {
-                    ctx.append(", ");
-                } else {
-                    isFirst = false;
-                }
-                ctx.append(method.getName());
-                ctx.append(":function(");
-                printParameterList(method, ctx);
-                ctx.append("){\n");
-                if (method.getBody() != null) {
-                    CodeBlockTranslator.translate(method.getBody(), ctx);
-                }
-                ctx.append("}");
+                ctx.append("\n");
             }
         }
-        /*
-        PsiField[] fields = element.getAllFields();
-        for (int i = 0; i < fields.length; i++) {
-            PsiField field = fields[i];
-            if (!isFirst) {
-                ctx.append(", ");
-            } else {
-                isFirst = false;
-            }
-            ctx.append(field.getName());
-            ctx.append(": ");
-            ctx.append(TypeHelper.printType(field.getType(), ctx));
-            if (field.hasInitializer()) {
-                ctx.append(" = ");
-                ExpressionTranslator.translate(field.getInitializer(), ctx);
-                ctx.append(";\n");
-            }
-        }*/
     }
 
     private static void printParameterList(PsiMethod element, TranslationContext ctx) {
@@ -90,7 +66,7 @@ public class AnonymousClassTranslator {
             if (parameter.isVarArgs()) {
                 paramSB.append("...");
             }
-            paramSB.append(parameter.getName());
+            paramSB.append(KeywordHelper.process(parameter.getName(), ctx));
             paramSB.append(": ");
             paramSB.append(TypeHelper.printType(parameter.getType(), ctx));
             params.add(paramSB.toString());

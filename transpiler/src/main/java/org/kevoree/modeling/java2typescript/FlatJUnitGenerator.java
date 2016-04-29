@@ -4,17 +4,10 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.psi.*;
 import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.javadoc.PsiDocTag;
-import org.jetbrains.annotations.NotNull;
-import org.kevoree.modeling.java2typescript.translators.ClassTranslator;
-import org.kevoree.modeling.java2typescript.translators.NativeTsTranslator;
+import org.kevoree.modeling.java2typescript.translators.DocTagTranslator;
 
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.FileVisitResult;
-import java.nio.file.FileVisitor;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.attribute.BasicFileAttributes;
 
 /**
  * Created by gregory.nain on 03/12/14.
@@ -44,7 +37,7 @@ public class FlatJUnitGenerator {
                             PsiDocTag[] tags = comment.getTags();
                             if(tags != null) {
                                 for(PsiDocTag tag : tags) {
-                                    if (tag.getName().equals(NativeTsTranslator.TAG_IGNORE) && tag.getValueElement()!=null && tag.getValueElement().getText().equals(NativeTsTranslator.TAG_VAL_TS)) {
+                                    if (tag.getName().equals(DocTagTranslator.IGNORE) && tag.getValueElement()!=null && tag.getValueElement().getText().equals(DocTagTranslator.TS)) {
                                         ignore = true;
                                     }
                                 }
@@ -91,7 +84,7 @@ public class FlatJUnitGenerator {
                 PsiDocTag[] tags = comment.getTags();
                 if(tags != null) {
                     for(PsiDocTag tag : tags) {
-                        if (tag.getName().equals(NativeTsTranslator.TAG_IGNORE) && tag.getValueElement()!=null && tag.getValueElement().getText().equals(NativeTsTranslator.TAG_VAL_TS)) {
+                        if (tag.getName().equals(DocTagTranslator.IGNORE) && tag.getValueElement()!=null && tag.getValueElement().getText().equals(DocTagTranslator.TS)) {
                             ignore = true;
                         }
                     }

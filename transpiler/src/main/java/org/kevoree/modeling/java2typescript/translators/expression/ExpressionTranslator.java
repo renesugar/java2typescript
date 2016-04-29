@@ -1,7 +1,7 @@
 package org.kevoree.modeling.java2typescript.translators.expression;
 
 import com.intellij.psi.*;
-import org.kevoree.modeling.java2typescript.TranslationContext;
+import org.kevoree.modeling.java2typescript.context.TranslationContext;
 
 /**
  * Created by duke on 11/6/14.
@@ -45,6 +45,8 @@ public class ExpressionTranslator {
             SuperExpressionTranslator.translate((PsiSuperExpression) expression, ctx);
         } else if (expression instanceof PsiClassObjectAccessExpression) {
             ClassObjectAccessExpressionTranslator.translate((PsiClassObjectAccessExpression) expression, ctx);
+        } else if (expression instanceof PsiLambdaExpression) {
+            LambaExpressionTranslator.translate((PsiLambdaExpression) expression, ctx);
         } else {
             System.err.println("EXPR " + expression);
         }
