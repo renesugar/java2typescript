@@ -17,7 +17,7 @@ public class TranslationContext {
     private PsiJavaFile file;
     private Set<String> javaClasses = new HashSet<>();
     private String srcPath;
-    private List<ModuleImport> moduleImports = new ArrayList<>();
+    private List<String> moduleImports = new ArrayList<>();
     private Map<String, String> pkgTransforms = new HashMap<>();
     private ArrayList<String> genericParameterNames;
 
@@ -68,10 +68,7 @@ public class TranslationContext {
 
     public void needsJava(String clazz) {
         if (this.javaClasses.isEmpty()) {
-            ModuleImport java = new ModuleImport();
-            java.setName("java2ts-java");
-            java.importAll("* as java");
-            this.addModuleImport(java);
+            this.addModuleImport("* as java from './jre.ts'");
         }
         this.javaClasses.add(clazz);
     }
@@ -84,9 +81,10 @@ public class TranslationContext {
     public String toString() {
         StringBuilder importsBuilder = new StringBuilder();
 
-        for (ModuleImport moduleImport : moduleImports) {
+        for (String moduleImport : moduleImports) {
+            importsBuilder.append("import ");
             importsBuilder.append(moduleImport.toString());
-            importsBuilder.append("\n");
+            importsBuilder.append(";\n");
         }
 
         if (!moduleImports.isEmpty()) {
@@ -123,7 +121,7 @@ public class TranslationContext {
         return srcPath;
     }
 
-    public void addModuleImport(ModuleImport moduleImport) {
+    public void addModuleImport(String moduleImport) {
         this.moduleImports.add(moduleImport);
     }
 

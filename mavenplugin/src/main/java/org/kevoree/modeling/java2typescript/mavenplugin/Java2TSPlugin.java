@@ -14,6 +14,10 @@ import org.kevoree.modeling.java2typescript.context.ModuleImport;
 import org.kevoree.modeling.java2typescript.json.packagejson.PackageJson;
 
 import java.io.*;
+import java.nio.file.CopyOption;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -48,10 +52,13 @@ public class Java2TSPlugin extends AbstractMojo {
     private List<Dependency> dependencies = new ArrayList<Dependency>();
 
     @Parameter
-    private List<ModuleImport> moduleImports = new ArrayList<ModuleImport>();
+    private List<String> moduleImports = new ArrayList<String>();
 
     @Parameter
     private Map<String, String> pkgTransforms = new HashMap<String, String>();
+
+    @Parameter(defaultValue = "false")
+    private boolean copyJRE;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -87,5 +94,13 @@ public class Java2TSPlugin extends AbstractMojo {
         }
 
         sourceTranslator.generate();
+        if (copyJRE) {
+            try {
+                Files.copy(getClass().getClassLoader().getResourceAsStream("java.ts"), Paths.get(target.getAbsolutePath(),"src","main","jre.ts"), StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 }

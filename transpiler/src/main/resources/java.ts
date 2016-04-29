@@ -22,6 +22,7 @@ export namespace lang {
 
     insert(position: number, val: any): StringBuilder {
       this._buffer = this._buffer.slice(0, position) + val + this._buffer.slice(position);
+      
       return this;
     }
 

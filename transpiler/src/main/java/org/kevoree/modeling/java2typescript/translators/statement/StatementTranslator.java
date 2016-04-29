@@ -44,6 +44,8 @@ public class StatementTranslator {
             ExpressionListStatementTranslator.translate((PsiExpressionListStatement) statement, ctx);
         } else if (statement instanceof PsiSynchronizedStatement) {
             SynchronizedStatementTranslator.translate((PsiSynchronizedStatement) statement, ctx);
+        } else if (statement instanceof PsiEmptyStatement) {
+            //Ignore
         } else {
             System.err.println("STMT "+statement.toString());
         }

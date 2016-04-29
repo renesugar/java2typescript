@@ -1,4 +1,4 @@
-import * as java from 'java2ts-java';
+import * as java from './jre.ts';
 
 export class ClassFields {
   public str: string = "foo";

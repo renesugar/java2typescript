@@ -70,13 +70,14 @@ public class SourceTranslator {
                 throw new IllegalArgumentException("Source path is not a directory");
             }
         } else {
-            throw new IllegalArgumentException("Source path "+srcPath+" does not exists");
+            throw new IllegalArgumentException("Source path " + srcPath + " does not exists");
         }
         File outFolder = new File(this.outPath);
-        if (outFolder.exists()) {
-            FileUtil.delete(outFolder);
+
+        if (!outFolder.exists()) {
+            //FileUtil.delete(outFolder);
+            outFolder.mkdirs();
         }
-        outFolder.mkdirs();
 
         PsiDirectory root = analyzer.analyze(srcFolder);
         root.acceptChildren(visitor);
@@ -91,8 +92,8 @@ public class SourceTranslator {
     }
 
     public void generate() {
-        String[] testPath = new String[] { "src", "test", "test.ts" };
-        String[] modelPath = new String[] { "src", "main", name+".ts" };
+        String[] testPath = new String[]{"src", "test", "test.ts"};
+        String[] modelPath = new String[]{"src", "main", name + ".ts"};
         File testFile = Paths.get(outPath, testPath).toFile();
         File modelFile = Paths.get(outPath, modelPath).toFile();
         try {
@@ -139,13 +140,13 @@ public class SourceTranslator {
     }
 
     private void visit(PsiElement elem) {
-        System.out.println("Ignored file= "+elem);
+        System.out.println("Ignored file= " + elem);
     }
 
     private void initPackageJson() {
         pkgJson.setName(name);
         pkgJson.setMain(Paths.get("built", "main", name).toString());
-        pkgJson.setTypings(Paths.get("built", "main", name+".d.ts").toString());
+        pkgJson.setTypings(Paths.get("built", "main", name + ".d.ts").toString());
         pkgJson.addDevDependency("typescript", "1.8.9");
         pkgJson.addScript("build", "node node_modules/.bin/tsc");
     }
@@ -184,7 +185,7 @@ public class SourceTranslator {
         return this.pkgJson;
     }
 
-    public void addModuleImport(ModuleImport moduleImport) {
+    public void addModuleImport(String moduleImport) {
         ctx.addModuleImport(moduleImport);
     }
 
@@ -195,6 +196,7 @@ public class SourceTranslator {
     /**
      * Useful for tests
      * (you should not mess with this unless you know what you are doing)
+     *
      * @return ctx TranslationContext
      */
     protected TranslationContext getCtx() {

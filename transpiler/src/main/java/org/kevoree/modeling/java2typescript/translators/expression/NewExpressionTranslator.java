@@ -61,22 +61,26 @@ public class NewExpressionTranslator {
                             ctx.append("new Float64Array(");
                             ExpressionTranslator.translate(element.getArrayDimensions()[0], ctx);
                             ctx.append(")");
-                        } else {
+                        } else if (element.getClassOrAnonymousClassReference() != null) {
                             ctx.append("new Array<");
-                            if (element.getClassOrAnonymousClassReference() != null) {
-                                PsiJavaCodeReferenceElement ref = element.getClassOrAnonymousClassReference();
-                                if (ref.getReference() != null && ref.getReference().resolve() != null) {
-                                    PsiClass refClass = (PsiClass) ref.getReference().resolve();
-                                    ctx.append(GenericHelper.process(refClass));
-                                } else {
-                                    ctx.append(TypeHelper.printType(((PsiArrayType)element.getType()).getComponentType(), ctx, false, false));
-                                }
+                            PsiJavaCodeReferenceElement ref = element.getClassOrAnonymousClassReference();
+                            if (ref.getReference() != null && ref.getReference().resolve() != null) {
+                                PsiClass refClass = (PsiClass) ref.getReference().resolve();
+                                ctx.append(GenericHelper.process(refClass));
                             } else {
-                                ctx.append(TypeHelper.printType(((PsiArrayType) element).getComponentType(), ctx, false, false));
+                                ctx.append(TypeHelper.printType(((PsiArrayType) element.getType()).getComponentType(), ctx, false, false));
                             }
                             ctx.append(">(");
                             ExpressionTranslator.translate(element.getArrayDimensions()[0], ctx);
                             ctx.append(")");
+                        } else {
+                            //ctx.append(TypeHelper.printType(((PsiArrayType) element.getType()).getComponentType(), ctx, false, false));
+                            for (int i = 0; i < dimensionCount; i++) {
+                                ctx.append("[");
+                            }
+                            for (int i = 0; i < dimensionCount; i++) {
+                                ctx.append("]");
+                            }
                         }
                     } else {
                         for (int i = 0; i < dimensionCount; i++) {

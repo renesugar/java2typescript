@@ -33,4 +33,18 @@ public class SourceTranslatorTest {
                 FileUtils.readFileToString(Paths.get("src", "test", "resources", "strings", "output.ts").toFile()).trim(),
                 translator.getCtx().toString().trim());
     }
+
+    /*
+    @Test
+    public void mwdb_core() throws IOException {
+        String source = "/Users/gnain/Sources/Kevoree-Modeling/mwDB/core/src/main/java";
+        String target = Paths.get("target", "generated-sources", "core").toAbsolutePath().toString();
+
+        SourceTranslator translator = new SourceTranslator(source, target, "strings");
+        translator.addPackageTransform("sources.strings", "");
+        translator.process();
+
+    }
+    */
+
 }
