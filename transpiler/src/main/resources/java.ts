@@ -234,8 +234,8 @@ export namespace util {
   export interface ListIterator<E> extends Iterator<E> {
     hasPrevious(): boolean;
     previous(): E;
-    set(e: E);
-    add(e: E);
+    set(e: E):void;
+    add(e: E):void;
     nextIndex(): number;
     previousIndex(): number;
   }
@@ -285,10 +285,10 @@ export namespace util {
   }
 
   export interface Collection<E> {
-    add(val: E);
-    addAll(vals: Collection<E>);
+    add(val: E):void;
+    addAll(vals: Collection<E>):void;
     remove(o: any): any;
-    clear();
+    clear():void;
     isEmpty(): boolean;
     size(): number;
     contains(o: E): boolean;
@@ -302,9 +302,9 @@ export namespace util {
   export abstract class AbstractCollection<E> implements Collection<E> {
     private static MAX_ARRAY_SIZE = Number.MAX_VALUE - 8;
 
-    abstract add(val: E);
+    abstract add(val: E):void;
     abstract remove(o: any): boolean;
-    abstract clear();
+    abstract clear():void;
     abstract size(): number;
     abstract iterator(): Iterator<E>;
     abstract containsAll(c: Collection<any>): boolean;
@@ -370,8 +370,8 @@ export namespace util {
   }
 
   export interface List<E> extends Array<E>, Collection<E> {
-    add(elem: E);
-    add(index: number, elem: E);
+    add(elem: E):void;
+    add(index: number, elem: E):void;
     poll(): E;
     addAll(c: Collection<E>): boolean;
     addAll(index: number, c: Collection<E>): boolean;
@@ -660,7 +660,7 @@ export namespace util {
     keySet(): Set<K>;
     isEmpty(): boolean;
     values(): Set<V>;
-    clear();
+    clear():void;
   }
 
   export class HashMap<K, V> implements Map<K, V> {

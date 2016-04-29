@@ -11,6 +11,7 @@ export class InFunction {
   public foo(): void {
     var str: string = "foo";
     var str2: string = java.lang.String.join(", ", ...["a", "b", "c"]);
+    var str3: string = str2.trim();
   }
   public bar(): void {
     this.str = this.str2 + this.str;

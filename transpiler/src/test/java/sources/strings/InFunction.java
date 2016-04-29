@@ -8,6 +8,7 @@ public class InFunction {
     public void foo() {
         String str = new String("foo");
         String str2 = String.join(", ", new String[] { "a", "b", "c" });
+        String str3 = str2.trim();
     }
 
     public void bar() {

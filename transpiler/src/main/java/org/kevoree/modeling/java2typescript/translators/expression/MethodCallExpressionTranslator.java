@@ -32,22 +32,28 @@ public class MethodCallExpressionTranslator {
     }
 
     private static boolean tryNativeTransform(PsiMethodCallExpression element, TranslationContext ctx) {
-        if (element.getMethodExpression().getQualifierExpression() != null
-                && element.getMethodExpression().getQualifierExpression().getType() != null
-                && element.getMethodExpression().getQualifierExpression().getType().getCanonicalText().equals("String")) {
+
+        // a.b.c.method()
+        PsiReferenceExpression methodExpression = element.getMethodExpression();
+        // a.b.c
+        PsiExpression methodQualifierExpression = methodExpression.getQualifierExpression();
+
+        if (methodQualifierExpression != null
+                && methodQualifierExpression.getType() != null
+                && methodQualifierExpression.getType().getCanonicalText().equals("String")) {
             //transform .length
-            if (element.getMethodExpression().getReferenceName() != null &&
-                    element.getMethodExpression().getReferenceName().equals("length")) {
-                ExpressionTranslator.translate(element.getMethodExpression().getQualifierExpression(), ctx);
+            if (methodExpression.getReferenceName() != null &&
+                    methodExpression.getReferenceName().equals("length")) {
+                ExpressionTranslator.translate(methodQualifierExpression, ctx);
                 if (element.getArgumentList().getExpressions().length == 0) {
                     ctx.append(".length");
                     return true;
                 }
             }
             //transform .codePointAt
-            if (element.getMethodExpression().getReferenceName() != null &&
-                    element.getMethodExpression().getReferenceName().equals("codePointAt")) {
-                ExpressionTranslator.translate(element.getMethodExpression().getQualifierExpression(), ctx);
+            if (methodExpression.getReferenceName() != null &&
+                    methodExpression.getReferenceName().equals("codePointAt")) {
+                ExpressionTranslator.translate(methodQualifierExpression, ctx);
                 ctx.append(".charCodeAt(");
                 PsiExpression[] arguments = element.getArgumentList().getExpressions();
                 for (int i = 0; i < arguments.length; i++) {
@@ -58,6 +64,15 @@ public class MethodCallExpressionTranslator {
                 }
                 ctx.append(")");
                 ctx.needsJava(TypeHelper.javaTypes.get("String"));
+                return true;
+            }
+            //transform .concat
+            if (methodExpression.getReferenceName() != null &&
+                    methodExpression.getReferenceName().equals("concat")) {
+
+                ExpressionTranslator.translate(methodQualifierExpression, ctx);
+                ctx.append(" + ");
+                ExpressionTranslator.translate(element.getArgumentList().getExpressions()[0], ctx);
                 return true;
             }
         }
@@ -107,12 +122,12 @@ public class MethodCallExpressionTranslator {
             ctx.needsJava(TypeHelper.javaTypes.get("String"));
             return true;
         } else {
-            PsiReferenceExpression expr = element.getMethodExpression();
+            PsiReferenceExpression expr = methodExpression;
             if (expr.getQualifierExpression() instanceof PsiReferenceExpression) {
                 PsiElement resolvedRootElem = ((PsiReferenceExpression) expr.getQualifierExpression()).resolve();
                 if (resolvedRootElem != null) {
                     if (resolvedRootElem instanceof PsiVariable) {
-                        return processRootElem(element, ((PsiVariable) resolvedRootElem).getType(), ctx);
+                        return false;//processRootElem(element, ((PsiVariable) resolvedRootElem).getType(), ctx);
 
                     } else if (resolvedRootElem instanceof PsiMethodCallExpression) {
                         MethodCallExpressionTranslator.translate((PsiMethodCallExpression) resolvedRootElem, ctx);
@@ -120,14 +135,14 @@ public class MethodCallExpressionTranslator {
 
                     } else if (resolvedRootElem.getParent() instanceof PsiCatchSection) {
                         ctx.append("console.error(");
-                        ExpressionTranslator.translate(element.getMethodExpression().getQualifierExpression(), ctx);
+                        ExpressionTranslator.translate(methodQualifierExpression, ctx);
                         ctx.append("['stack'])");
                         return true;
                     }
                 }
             } else if (expr.getQualifierExpression() != null && expr.getQualifierExpression().getType() != null) {
                 if (expr.getQualifierExpression() instanceof PsiMethodCallExpression) {
-                    String[] parts = element.getMethodExpression().getText().split("\\.");
+                    String[] parts = methodExpression.getText().split("\\.");
                     String methodName = parts[parts.length - 1];
                     ctx.append(TypeHelper.javaTypes.get("String"));
                     ctx.append(".");
@@ -151,6 +166,7 @@ public class MethodCallExpressionTranslator {
         return false;
     }
 
+    /*
     private static boolean processRootElem(PsiMethodCallExpression methodCall, PsiType rootType, TranslationContext ctx) {
         if (rootType.getPresentableText().equals("String")) {
             String methodPath = methodCall.getText().split("\\(", 2)[0];
@@ -162,27 +178,22 @@ public class MethodCallExpressionTranslator {
                 if (rootRef.endsWith(".")) {
                     rootRef = rootRef.substring(0, rootRef.length() - 1);
                 }
-                if (methodName.equals("concat")) {
-                    ctx.append(rootRef);
-                    ctx.append(" + ");
-                    ExpressionTranslator.translate(methodCall.getArgumentList().getExpressions()[0], ctx);
-                } else {
-                    ctx.append(TypeHelper.javaTypes.get("String"));
-                    ctx.append(".");
-                    ctx.append(methodName);
-                    ctx.append("(");
-                    ctx.append(rootRef);
-                    if (methodCall.getArgumentList().getExpressions().length > 0) {
-                        ctx.append(", ");
-                    }
-                    printParameters(methodCall.getArgumentList().getExpressions(), ctx);
-                    ctx.append(")");
-                    ctx.needsJava(TypeHelper.javaTypes.get("String"));
+
+                ctx.append(TypeHelper.javaTypes.get("String"));
+                ctx.append(".");
+                ctx.append(methodName);
+                ctx.append("(");
+                ctx.append(rootRef);
+                if (methodCall.getArgumentList().getExpressions().length > 0) {
+                    ctx.append(", ");
                 }
+                printParameters(methodCall.getArgumentList().getExpressions(), ctx);
+                ctx.append(")");
+                ctx.needsJava(TypeHelper.javaTypes.get("String"));
 
                 return true;
             }
         }
         return false;
-    }
+    }*/
 }
