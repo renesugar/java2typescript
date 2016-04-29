@@ -29,4 +29,5 @@ export class UseGeneric {
     this.strList = new MyArrayList<string>();
     this.map = new MyHashMap<string, number>();
   }
+  public arrayAsGenType(list: MyList<MyList[]>): void {}
 }

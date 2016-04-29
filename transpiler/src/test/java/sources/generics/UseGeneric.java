@@ -9,4 +9,7 @@ public class UseGeneric {
         this.strList = new MyArrayList<>();
         this.map = new MyHashMap<>();
     }
+
+    public void arrayAsGenType(MyList<MyList[]> list) {
+    }
 }
