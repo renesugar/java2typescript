@@ -106,7 +106,7 @@ public class MethodTranslator {
             }
             paramSB.append(": ");
 
-            paramSB.append(TypeHelper.printType(parameter.getType(), ctx, false, true));
+            paramSB.append(TypeHelper.printType(parameter.getType(), ctx, true, true));
             params.add(paramSB.toString());
         }
         ctx.append(String.join(", ", params));

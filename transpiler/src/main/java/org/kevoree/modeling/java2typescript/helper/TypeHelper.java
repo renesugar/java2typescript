@@ -55,11 +55,11 @@ public class TypeHelper {
         } else if (element instanceof PsiArrayType) {
             PsiArrayType typedElement = (PsiArrayType) element;
             String partialResult = printType(typedElement.getComponentType(), ctx, withGenericParams, avoidNativeOptim);
-            //if (withGenericParams) {
+            if (withGenericParams) {
             result = partialResult + "[]";
-            //} else {
-            //   result = partialResult;
-            //}
+            } else {
+               result = partialResult;
+            }
             return result;
         } else if (element instanceof PsiClassReferenceType) {
             PsiClassReferenceType elementClassRefType = ((PsiClassReferenceType) element);

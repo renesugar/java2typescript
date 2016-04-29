@@ -69,7 +69,7 @@ public class NewExpressionTranslator {
                                     PsiClass refClass = (PsiClass) ref.getReference().resolve();
                                     ctx.append(GenericHelper.process(refClass));
                                 } else {
-                                    ctx.append(TypeHelper.printType(element.getType(), ctx, false, false));
+                                    ctx.append(TypeHelper.printType(((PsiArrayType)element.getType()).getComponentType(), ctx, false, false));
                                 }
                             } else {
                                 ctx.append(TypeHelper.printType(((PsiArrayType) element).getComponentType(), ctx, false, false));

@@ -50,7 +50,7 @@ public class GenericHelper {
                             generics[i] = "any";
                         }
                     } else {
-                        generics[i] = TypeHelper.printType(genericTypes[i], ctx, false, false);
+                        generics[i] = TypeHelper.printType(genericTypes[i], ctx, true, false);
                     }
                 }
                 result += "<" + String.join(", ", generics) + ">";
