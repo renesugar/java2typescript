@@ -2,6 +2,7 @@
 package org.kevoree.modeling.java2typescript.translators;
 
 import com.intellij.psi.*;
+import com.intellij.psi.javadoc.PsiDocComment;
 import org.kevoree.modeling.java2typescript.helper.DocHelper;
 import org.kevoree.modeling.java2typescript.context.TranslationContext;
 import org.kevoree.modeling.java2typescript.helper.KeywordHelper;
@@ -98,7 +99,19 @@ public class ClassTranslator {
             FieldTranslator.translate(field, ctx);
         }
         PsiClassInitializer[] initializers = clazz.getInitializers();
-        for (PsiClassInitializer initializer : initializers) {
+        initLoop : for (PsiClassInitializer initializer : initializers) {
+
+            PsiElement p = initializer.getModifierList();
+            while(p != null) {
+                if(p instanceof PsiDocComment) {
+                    DocMeta metas = DocHelper.process((PsiDocComment) p);
+                    if (metas.ignored) {
+                        continue initLoop;
+                    }
+                }
+                p = p.getPrevSibling();
+            }
+
             if (initializer.hasModifierProperty("static")) {
                 ctx.print("//TODO Resolve static initializer\n");
                 ctx.print("static {");
