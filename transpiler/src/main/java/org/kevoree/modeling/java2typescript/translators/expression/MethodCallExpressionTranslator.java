@@ -97,6 +97,15 @@ public class MethodCallExpressionTranslator {
                         ctx.append(")");
                         return true;
                     }
+                } else if(methodQualifierExpression.getType().getCanonicalText().equals("Pattern")) {
+                    if (methodExpression.getReferenceName() != null &&
+                            methodExpression.getReferenceName().equals("matcher")) {
+                        ExpressionTranslator.translate(methodQualifierExpression, ctx);
+                        ctx.append(".test(");
+                        ExpressionTranslator.translate(element.getArgumentList().getExpressions()[0], ctx);
+                        ctx.append(")");
+                        return true;
+                    }
                 }
             } else if (methodQualifierExpression instanceof PsiReferenceExpression) {
                 PsiReferenceExpression objectRef = (PsiReferenceExpression) methodQualifierExpression;
@@ -114,137 +123,30 @@ public class MethodCallExpressionTranslator {
                             return true;
                         }
                     }
-                }
-
-                /*
-                if(methodQualifierExpression.getReferenceName().)
-                if(methodQualifierExpression.getReference().getCanonicalText().equals("System.out")) {
-
-                }
-                */
-            }
-        }
-
-        /*
-        if (element.getText().matches("^(java\\.lang\\.)?System\\.out.*$")) {
-            ctx.append("console.log(");
-            PsiExpression[] arguments = element.getArgumentList().getExpressions();
-            for (int i = 0; i < arguments.length; i++) {
-                ExpressionTranslator.translate(arguments[i], ctx);
-                if (i != arguments.length - 1) {
-                    ctx.append(", ");
-                }
-            }
-            ctx.append(")");
-            return true;
-
-        } else if (element.getText().matches("^(java\\.lang\\.)?System\\.err.*$")) {
-            ctx.append("console.error(");
-            PsiExpression[] arguments = element.getArgumentList().getExpressions();
-            for (int i = 0; i < arguments.length; i++) {
-                ExpressionTranslator.translate(arguments[i], ctx);
-                if (i != arguments.length - 1) {
-                    ctx.append(", ");
-                }
-            }
-            ctx.append(")");
-            return true;
-
-        } else if (element.getText().matches("^(java\\.lang\\.)?String\\.join\\(.*$")) {
-            ctx.append(TypeHelper.javaTypes.get("String"));
-            ctx.append(".join(");
-            PsiExpression[] arguments = element.getArgumentList().getExpressions();
-            for (int i = 0; i < arguments.length; i++) {
-                PsiType type = arguments[i].getType();
-                if (type != null && type.getPresentableText().endsWith("[]")) {
-                    ctx.append("...");
-                }
-                if (arguments[i] instanceof PsiReferenceExpression) {
-                    ReferenceExpressionTranslator.translate((PsiReferenceExpression) arguments[i], ctx);
                 } else {
-                    ExpressionTranslator.translate(arguments[i], ctx);
-                }
-                if (i != arguments.length - 1) {
-                    ctx.append(", ");
-                }
-            }
-            ctx.append(")");
-            ctx.needsJava(TypeHelper.javaTypes.get("String"));
-            return true;
-        } else {
-            PsiReferenceExpression expr = methodExpression;
-            if (expr.getQualifierExpression() instanceof PsiReferenceExpression) {
-                PsiElement resolvedRootElem = ((PsiReferenceExpression) expr.getQualifierExpression()).resolve();
-                if (resolvedRootElem != null) {
-                    if (resolvedRootElem instanceof PsiVariable) {
-                        return false;//processRootElem(element, ((PsiVariable) resolvedRootElem).getType(), ctx);
-
-                    } else if (resolvedRootElem instanceof PsiMethodCallExpression) {
-                        MethodCallExpressionTranslator.translate((PsiMethodCallExpression) resolvedRootElem, ctx);
-                        return true;
-
-                    } else if (resolvedRootElem.getParent() instanceof PsiCatchSection) {
-                        ctx.append("console.error(");
-                        ExpressionTranslator.translate(methodQualifierExpression, ctx);
-                        ctx.append("['stack'])");
-                        return true;
+                    if(objectRef.getText().equals("Pattern")) {
+                        if(methodExpression.getReferenceName().equals("compile")) {
+                            ctx.append("new RegExp(");
+                            ExpressionTranslator.translate(element.getArgumentList().getExpressions()[0], ctx);
+                            ctx.append(")");
+                            return true;
+                        }
                     }
                 }
-            } else if (expr.getQualifierExpression() != null && expr.getQualifierExpression().getType() != null) {
-                if (expr.getQualifierExpression() instanceof PsiMethodCallExpression) {
-                    String[] parts = methodExpression.getText().split("\\.");
-                    String methodName = parts[parts.length - 1];
-                    ctx.append(TypeHelper.javaTypes.get("String"));
-                    ctx.append(".");
-                    ctx.append(methodName);
-                    ctx.append("(");
-                    TranslationContext innerCtx = new TranslationContext();
-                    MethodCallExpressionTranslator.translate((PsiMethodCallExpression) expr.getQualifierExpression(), innerCtx);
-                    ctx.append(innerCtx.getContent());
-                    if (element.getArgumentList().getExpressions().length > 0) {
-                        ctx.append(", ");
+            } else if (methodQualifierExpression instanceof PsiMethodCallExpression) { // remove the [] part in regEx.matcher(expr)[.matches()]
+                PsiMethodCallExpression previousMethodCall = (PsiMethodCallExpression) methodQualifierExpression;
+                PsiReferenceExpression previousMethodQualifier = (PsiReferenceExpression) previousMethodCall.getMethodExpression().getQualifier();
+                String previoudMethodName = previousMethodCall.getMethodExpression().getReferenceName();
+                if(previousMethodQualifier.getType().getCanonicalText().equals("Pattern")) {
+                    if(previoudMethodName.equals("matcher")) {
+                        ExpressionTranslator.translate(previousMethodCall, ctx);
+                        return true;
                     }
-                    printParameters(element.getArgumentList().getExpressions(), ctx);
-                    ctx.append(")");
-                    ctx.needsJava(TypeHelper.javaTypes.get("String"));
-
-                    return true;
                 }
             }
         }
-        */
 
         return false;
     }
 
-    /*
-    private static boolean processRootElem(PsiMethodCallExpression methodCall, PsiType rootType, TranslationContext ctx) {
-        if (rootType.getPresentableText().equals("String")) {
-            String methodPath = methodCall.getText().split("\\(", 2)[0];
-            PsiElement methodNameElement = methodCall.findElementAt(methodPath.lastIndexOf(".") + 1);
-            if (methodNameElement != null) {
-                String methodName = methodNameElement.getText();
-                String rootRef = ReferenceExpressionTranslator.translate(methodCall.getMethodExpression(), ctx, false);
-                rootRef = rootRef.substring(0, rootRef.length() - methodName.length());
-                if (rootRef.endsWith(".")) {
-                    rootRef = rootRef.substring(0, rootRef.length() - 1);
-                }
-
-                ctx.append(TypeHelper.javaTypes.get("String"));
-                ctx.append(".");
-                ctx.append(methodName);
-                ctx.append("(");
-                ctx.append(rootRef);
-                if (methodCall.getArgumentList().getExpressions().length > 0) {
-                    ctx.append(", ");
-                }
-                printParameters(methodCall.getArgumentList().getExpressions(), ctx);
-                ctx.append(")");
-                ctx.needsJava(TypeHelper.javaTypes.get("String"));
-
-                return true;
-            }
-        }
-        return false;
-    }*/
 }

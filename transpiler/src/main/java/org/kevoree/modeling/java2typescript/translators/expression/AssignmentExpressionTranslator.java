@@ -13,6 +13,7 @@ public class AssignmentExpressionTranslator {
         ctx.append(' ');
         ExpressionTranslator.translate(element.getRExpression(), ctx);
 
+        /*
         if (element.getLExpression().getType() != null &&
                 element.getRExpression() != null &&
                 element.getRExpression().getType() != null &&
@@ -20,6 +21,7 @@ public class AssignmentExpressionTranslator {
                 element.getRExpression().getType().getPresentableText().equals("char")) {
             ctx.append(".charCodeAt(0)");
         }
+        */
     }
 
 }

@@ -28,6 +28,9 @@ public class TypeHelper {
         if (result.equals("Throwable") || result.equals("Exception") || result.equals("RuntimeException") || result.equals("IndexOutOfBoundsException") || result.equals("ArrayIndexOutOfBoundsException")) {
             return "Error";
         }
+        if (result.equals("Pattern") || result.equals("Exception") || result.equals("RuntimeException") || result.equals("IndexOutOfBoundsException") || result.equals("ArrayIndexOutOfBoundsException")) {
+            return "RegExp";
+        }
 
         if (objects.contains(result) || classes.contains(result)) {
             return "any";
