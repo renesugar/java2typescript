@@ -41,6 +41,7 @@ public class MethodCallExpressionTranslator {
         if (methodQualifierExpression != null
                 && methodQualifierExpression.getType() != null
                 && methodQualifierExpression.getType().getCanonicalText().equals("String")) {
+
             //transform .length
             if (methodExpression.getReferenceName() != null &&
                     methodExpression.getReferenceName().equals("length")) {
@@ -50,6 +51,7 @@ public class MethodCallExpressionTranslator {
                     return true;
                 }
             }
+
             //transform .codePointAt
             if (methodExpression.getReferenceName() != null &&
                     methodExpression.getReferenceName().equals("codePointAt")) {
@@ -66,6 +68,7 @@ public class MethodCallExpressionTranslator {
                 ctx.needsJava(TypeHelper.javaTypes.get("String"));
                 return true;
             }
+
             //transform .concat
             if (methodExpression.getReferenceName() != null &&
                     methodExpression.getReferenceName().equals("concat")) {
@@ -76,6 +79,8 @@ public class MethodCallExpressionTranslator {
                 return true;
             }
         }
+
+        /*
         if (element.getText().matches("^(java\\.lang\\.)?System\\.out.*$")) {
             ctx.append("console.log(");
             PsiExpression[] arguments = element.getArgumentList().getExpressions();
@@ -162,6 +167,7 @@ public class MethodCallExpressionTranslator {
                 }
             }
         }
+        */
 
         return false;
     }
