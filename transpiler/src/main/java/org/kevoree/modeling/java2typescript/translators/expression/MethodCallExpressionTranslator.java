@@ -38,45 +38,90 @@ public class MethodCallExpressionTranslator {
         // a.b.c
         PsiExpression methodQualifierExpression = methodExpression.getQualifierExpression();
 
-        if (methodQualifierExpression != null
-                && methodQualifierExpression.getType() != null
-                && methodQualifierExpression.getType().getCanonicalText().equals("String")) {
+        if (methodQualifierExpression != null) {
+            if (methodQualifierExpression.getType() != null) {
+                if (methodQualifierExpression.getType().getCanonicalText().equals("String")) {
+                    if (methodExpression.getReferenceName() != null) {
 
-            //transform .length
-            if (methodExpression.getReferenceName() != null &&
-                    methodExpression.getReferenceName().equals("length")) {
-                ExpressionTranslator.translate(methodQualifierExpression, ctx);
-                if (element.getArgumentList().getExpressions().length == 0) {
-                    ctx.append(".length");
-                    return true;
-                }
-            }
 
-            //transform .codePointAt
-            if (methodExpression.getReferenceName() != null &&
-                    methodExpression.getReferenceName().equals("codePointAt")) {
-                ExpressionTranslator.translate(methodQualifierExpression, ctx);
-                ctx.append(".charCodeAt(");
-                PsiExpression[] arguments = element.getArgumentList().getExpressions();
-                for (int i = 0; i < arguments.length; i++) {
-                    ExpressionTranslator.translate(arguments[i], ctx);
-                    if (i != arguments.length - 1) {
-                        ctx.append(", ");
+                        if (methodExpression.getReferenceName().equals("length")) {
+                            ExpressionTranslator.translate(methodQualifierExpression, ctx);
+                            if (element.getArgumentList().getExpressions().length == 0) {
+                                ctx.append(".length");
+                                return true;
+                            }
+
+
+                        } else if (methodExpression.getReferenceName().equals("codePointAt")) {
+                            ExpressionTranslator.translate(methodQualifierExpression, ctx);
+                            ctx.append(".charCodeAt(");
+                            PsiExpression[] arguments = element.getArgumentList().getExpressions();
+                            for (int i = 0; i < arguments.length; i++) {
+                                ExpressionTranslator.translate(arguments[i], ctx);
+                                if (i != arguments.length - 1) {
+                                    ctx.append(", ");
+                                }
+                            }
+                            ctx.append(")");
+                            ctx.needsJava(TypeHelper.javaTypes.get("String"));
+                            return true;
+
+
+                        } else if (methodExpression.getReferenceName().equals("concat")) {
+
+                            ExpressionTranslator.translate(methodQualifierExpression, ctx);
+                            ctx.append(" + ");
+                            ExpressionTranslator.translate(element.getArgumentList().getExpressions()[0], ctx);
+                            return true;
+                        }
+                    }
+
+
+                } else if (methodQualifierExpression.getType().getCanonicalText().equals("Exception")
+                        || methodQualifierExpression.getType().getCanonicalText().equals("Error")
+                        || methodQualifierExpression.getType().getCanonicalText().equals("Throwable")) {
+                    //error .printStackTrace
+                    if (methodExpression.getReferenceName() != null &&
+                            methodExpression.getReferenceName().equals("printStackTrace")) {
+                        ctx.append("console.error(");
+                        ExpressionTranslator.translate(methodQualifierExpression, ctx);
+                        ctx.append(")");
+                        return true;
+                    }
+                } else if (methodQualifierExpression.getType().getCanonicalText().equals("PrintStream")) {
+                    //error .printStackTrace
+                    if (methodExpression.getReferenceName() != null &&
+                            methodExpression.getReferenceName().equals("println")) {
+                        ctx.append("console.log(");
+                        ExpressionTranslator.translate(methodQualifierExpression, ctx);
+                        ctx.append(")");
+                        return true;
                     }
                 }
-                ctx.append(")");
-                ctx.needsJava(TypeHelper.javaTypes.get("String"));
-                return true;
-            }
+            } else if (methodQualifierExpression instanceof PsiReferenceExpression) {
+                PsiReferenceExpression objectRef = (PsiReferenceExpression) methodQualifierExpression;
+                if (objectRef.getQualifier() != null) {
+                    if (objectRef.getQualifier().getText().equals("System")) {
+                        if (objectRef.getReferenceName().equals("out")) {
+                            ctx.append("console.log(");
+                            ExpressionTranslator.translate(element.getArgumentList().getExpressions()[0], ctx);
+                            ctx.append(")");
+                            return true;
+                        } else if (objectRef.getReferenceName().equals("err")) {
+                            ctx.append("console.error(");
+                            ExpressionTranslator.translate(element.getArgumentList().getExpressions()[0], ctx);
+                            ctx.append(")");
+                            return true;
+                        }
+                    }
+                }
 
-            //transform .concat
-            if (methodExpression.getReferenceName() != null &&
-                    methodExpression.getReferenceName().equals("concat")) {
+                /*
+                if(methodQualifierExpression.getReferenceName().)
+                if(methodQualifierExpression.getReference().getCanonicalText().equals("System.out")) {
 
-                ExpressionTranslator.translate(methodQualifierExpression, ctx);
-                ctx.append(" + ");
-                ExpressionTranslator.translate(element.getArgumentList().getExpressions()[0], ctx);
-                return true;
+                }
+                */
             }
         }
 
