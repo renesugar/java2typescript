@@ -34,7 +34,6 @@ public class SourceTranslatorTest {
                 translator.getCtx().toString().trim());
     }
 
-    /*
     @Test
     public void mwdb_core() throws IOException {
         String source = "/Users/gnain/Sources/Kevoree-Modeling/mwDB/core/src/main/java";
@@ -45,6 +44,7 @@ public class SourceTranslatorTest {
         translator.process();
 
     }
+    /*
     */
 
 }

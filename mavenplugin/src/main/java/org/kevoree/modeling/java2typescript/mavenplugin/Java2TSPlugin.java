@@ -71,6 +71,9 @@ public class Java2TSPlugin extends AbstractMojo {
 
         SourceTranslator sourceTranslator = new SourceTranslator(sources, target.getPath(), name);
         moduleImports.forEach(sourceTranslator::addModuleImport);
+        if(copyJRE) {
+            sourceTranslator.addModuleImport("./jre.ts");
+        }
         pkgTransforms.forEach(sourceTranslator::addPackageTransform);
 
         PackageJson pkgJson = sourceTranslator.getPkgJson();

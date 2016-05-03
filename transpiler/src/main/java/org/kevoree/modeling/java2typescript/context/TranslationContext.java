@@ -67,10 +67,12 @@ public class TranslationContext {
     }
 
     public void needsJava(String clazz) {
+       /*
         if (this.javaClasses.isEmpty()) {
             this.addModuleImport("* as java from './jre.ts'");
         }
         this.javaClasses.add(clazz);
+        */
     }
 
     public Set<String> needsJava() {
@@ -82,9 +84,9 @@ public class TranslationContext {
         StringBuilder importsBuilder = new StringBuilder();
 
         for (String moduleImport : moduleImports) {
-            importsBuilder.append("import ");
+            importsBuilder.append("/// <reference path=\"");
             importsBuilder.append(moduleImport.toString());
-            importsBuilder.append(";\n");
+            importsBuilder.append("\" />\n");
         }
 
         if (!moduleImports.isEmpty()) {
@@ -105,8 +107,12 @@ public class TranslationContext {
         return this;
     }
 
-    public void enterPackage(String pkgName) {
-        this.print("export namespace ");
+    public void enterPackage(String pkgName, boolean rootPassed) {
+        if(rootPassed) {
+            this.print("export module ");
+        } else {
+            this.print("module ");
+        }
         this.append(pkgName);
         this.append(" {\n");
         this.increaseIdent();

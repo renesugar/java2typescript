@@ -1,5 +1,3 @@
-import * as java from './jre.ts';
-
 export class ClassFields {
   public str: string = "foo";
   public str2: string = java.lang.String.join(", ", ...["a", "b", "c"]);

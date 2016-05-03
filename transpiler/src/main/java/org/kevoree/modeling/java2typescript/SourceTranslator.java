@@ -31,6 +31,7 @@ public class SourceTranslator {
     private TranslationContext ctx;
     private TsConfig tsConfig;
     private PackageJson pkgJson;
+    private boolean rootPassed = false;
 
     public SourceTranslator(String srcPath, String outPath, String name) {
         this(Lists.newArrayList(srcPath), outPath, name);
@@ -122,7 +123,10 @@ public class SourceTranslator {
     }
 
     private void visit(PsiDirectory dir) {
-        ctx.enterPackage(dir.getName());
+        ctx.enterPackage(dir.getName(), rootPassed);
+        if(!rootPassed) {
+            rootPassed = true;
+        }
         dir.acceptChildren(visitor);
         ctx.leavePackage();
     }
