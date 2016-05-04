@@ -138,6 +138,10 @@ public class TypeHelper {
         javaTypes.put("AtomicReference", "java.util.concurrent.atomic.AtomicReference");
         javaTypes.put("AtomicIntegerArray", "java.util.concurrent.atomic.AtomicIntegerArray");
 
+        javaTypes.put("ReentrantLock", "java.util.concurrent.locks.ReentrantLock");
+
+
+
         javaTypes.put("Arrays", "java.util.Arrays");
         javaTypes.put("Collections", "java.util.Collections");
         javaTypes.put("Map", "java.util.Map");

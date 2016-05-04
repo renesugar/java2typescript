@@ -236,6 +236,16 @@ namespace java {
                     }
                 }
             }
+            export namespace locks {
+                export class ReentrantLock {
+                    public lock():void {
+
+                    }
+                    public unlock():void {
+
+                    }
+                }
+            }
         }
 
         export class Random {
