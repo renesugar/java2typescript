@@ -18,23 +18,7 @@ public class NewExpressionTranslator {
             PsiJavaCodeReferenceElement classReference = element.getClassReference();
             String className;
             if (classReference != null) {
-                if (classReference.getCanonicalText().equals("AtomicBoolean")) {
-                    ctx.append("new Boolean(");
-                    if (element.getArgumentList() != null) {
-                        ExpressionListTranslator.translate(element.getArgumentList(), ctx);
-                    }
-                    ctx.append(')');
-                    return;
-                } else if (classReference.getCanonicalText().equals("AtomicInteger")) {
-                    if (element.getArgumentList() != null && element.getArgumentList().getExpressions() != null && element.getArgumentList().getExpressions().length > 0) {
-                        ExpressionListTranslator.translate(element.getArgumentList(), ctx);
-                    } else {
-                        ctx.append('0');
-                    }
-                    return;
-                } else {
-                    className = TypeHelper.printType(element.getType(), ctx);
-                }
+                className = TypeHelper.printType(element.getType(), ctx);
             } else {
                 className = TypeHelper.printType(element.getType().getDeepComponentType(), ctx);
                 arrayDefinition = true;

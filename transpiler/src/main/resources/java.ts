@@ -157,6 +157,32 @@ namespace java {
                     }
                 }
 
+                export class AtomicBoolean {
+                    _internal = false;
+
+                    constructor(init:boolean) {
+                        this._internal = init;
+                    }
+
+                    compareAndSet(expect:boolean, update:boolean):boolean {
+                        if (this._internal == expect) {
+                            this._internal = update;
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+
+                    get():boolean {
+                        return this._internal;
+                    }
+
+                    set(newVal:boolean) {
+                        this._internal = newVal
+                    }
+
+                }
+
                 export class AtomicInteger {
                     _internal = 0;
 
