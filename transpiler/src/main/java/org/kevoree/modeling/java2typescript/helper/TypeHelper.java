@@ -14,6 +14,8 @@ import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class TypeHelper {
 
@@ -188,7 +190,8 @@ public class TypeHelper {
             BigDecimal.class.getName(),
             BigDecimal.class.getSimpleName(),
             Number.class.getName(),
-            Number.class.getSimpleName()
+            Number.class.getSimpleName(),
+            AtomicInteger.class.getSimpleName()
     );
 
     public static final Set<String> strings = ImmutableSet.of(
@@ -202,7 +205,8 @@ public class TypeHelper {
     public static final Set<String> booleans = ImmutableSet.of(
             "boolean",
             Boolean.class.getName(),
-            Boolean.class.getSimpleName()
+            Boolean.class.getSimpleName(),
+            AtomicBoolean.class.getSimpleName()
     );
 
     public static final Set<String> objects = ImmutableSet.of(
