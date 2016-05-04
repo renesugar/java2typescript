@@ -434,6 +434,7 @@ module java {
         }
 
         export interface Set<E> extends Collection<E> {
+            foreach(f:(e)=>void):void;
         }
 
         export class HashSet<E> implements Set<E> {
@@ -495,6 +496,11 @@ module java {
 
             iterator():Iterator<E> {
                 return null;
+            }
+            foreach(f : (e)=>void) : void {
+                for (var p in this) {
+                    f(p);
+                }
             }
         }
 
@@ -721,6 +727,7 @@ module java {
             isEmpty():boolean;
             values():Set<V>;
             clear():void;
+            size():number;
         }
 
         export class HashMap<K, V> implements Map<K, V> {
@@ -775,6 +782,12 @@ module java {
                     }
                 }
             }
+
+            size() : number {
+                return Object.keys(this).length
+            }
+        }
+        export class ConcurrentHashMap<K, V> extends HashMap<K, V> {
         }
     }
 }

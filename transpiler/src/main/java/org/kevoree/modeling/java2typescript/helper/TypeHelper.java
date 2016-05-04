@@ -147,6 +147,7 @@ public class TypeHelper {
         javaTypes.put("Map", "java.util.Map");
         javaTypes.put("Stack", "java.util.Stack");
         javaTypes.put("HashMap", "java.util.HashMap");
+        javaTypes.put("ConcurrentHashMap", "java.util.ConcurrentHashMap");
         javaTypes.put("List", "java.util.List");
         javaTypes.put("Set", "java.util.Set");
         javaTypes.put("HashSet", "java.util.HashSet");
