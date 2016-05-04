@@ -16,7 +16,13 @@ public class InstanceOfExpressionTranslator {
             ctx.append(")");
         } else {
             ExpressionTranslator.translate(element.getOperand(), ctx);
-            ctx.append(" instanceof ").append(TypeHelper.printType(element.getCheckType().getType(), ctx, false, false));
+            ctx.append(" instanceof ");
+            String type = TypeHelper.printType(element.getCheckType().getType(), ctx, false, false);
+            if(type.equals("number") || type.equals("string") || type.equals("boolean")) {
+                ctx.append(type.substring(0, 1).toUpperCase()).append(type.substring(1));
+            } else {
+                ctx.append(type);
+            }
         }
     }
 

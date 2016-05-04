@@ -32,6 +32,7 @@ public class TypeHelper {
             return "RegExp";
         }
 
+
         if (objects.contains(result) || classes.contains(result)) {
             return "any";
         } else if (primitiveNumbers.contains(result) || objectNumbers.contains(result)) {
