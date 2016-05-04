@@ -8,8 +8,16 @@ import org.kevoree.modeling.java2typescript.helper.TypeHelper;
 public class InstanceOfExpressionTranslator {
 
     public static void translate(PsiInstanceOfExpression element, TranslationContext ctx) {
-        ExpressionTranslator.translate(element.getOperand(), ctx);
-        ctx.append(" instanceof ").append(TypeHelper.printType(element.getCheckType().getType(), ctx, false, false));
+        if (element.getCheckType().getType().getArrayDimensions() == 1) {
+            ctx.append("arrayInstanceOf(");
+            ExpressionTranslator.translate(element.getOperand(), ctx);
+            ctx.append(", ");
+            ctx.append(TypeHelper.printType(element.getCheckType().getType(), ctx, false, false));
+            ctx.append(")");
+        } else {
+            ExpressionTranslator.translate(element.getOperand(), ctx);
+            ctx.append(" instanceof ").append(TypeHelper.printType(element.getCheckType().getType(), ctx, false, false));
+        }
     }
 
 }

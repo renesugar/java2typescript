@@ -1,5 +1,8 @@
-namespace java {
-    export namespace lang {
+
+
+
+module java {
+    export module lang {
         export class System {
             static gc() {
             }
@@ -12,7 +15,7 @@ namespace java {
         }
 
         export class StringBuilder {
-            private _buffer:string = '';
+            private _buffer : string = "";
             public length = 0;
 
             append(val:any):StringBuilder {
@@ -772,6 +775,21 @@ namespace java {
                     }
                 }
             }
+        }
+    }
+}
+
+function arrayInstanceOf(arr : any, arg: Function) : boolean {
+    if(!(arr instanceof Array)) {
+        return false;
+    } else {
+        if(arr.length == 0 ) {
+            return true;
+        } else {
+            var typeName = arg.name.toLocaleLowerCase();
+            var firstInstanceType = arr[0].constructor.name.toLocaleLowerCase();
+
+            return typeName == firstInstanceType;
         }
     }
 }

@@ -135,12 +135,15 @@ public class MethodCallExpressionTranslator {
                 }
             } else if (methodQualifierExpression instanceof PsiMethodCallExpression) { // remove the [] part in regEx.matcher(expr)[.matches()]
                 PsiMethodCallExpression previousMethodCall = (PsiMethodCallExpression) methodQualifierExpression;
-                PsiReferenceExpression previousMethodQualifier = (PsiReferenceExpression) previousMethodCall.getMethodExpression().getQualifier();
-                String previoudMethodName = previousMethodCall.getMethodExpression().getReferenceName();
-                if(previousMethodQualifier.getType().getCanonicalText().equals("Pattern")) {
-                    if(previoudMethodName.equals("matcher")) {
-                        ExpressionTranslator.translate(previousMethodCall, ctx);
-                        return true;
+                PsiElement previousMethodQualifier = previousMethodCall.getMethodExpression().getQualifier();
+                if(previousMethodQualifier instanceof PsiReferenceExpression) {
+                    PsiReferenceExpression previousMethodReference = (PsiReferenceExpression)previousMethodQualifier;
+                    String previoudMethodName = previousMethodCall.getMethodExpression().getReferenceName();
+                    if (previousMethodReference.getType().getCanonicalText().equals("Pattern")) {
+                        if (previoudMethodName.equals("matcher")) {
+                            ExpressionTranslator.translate(previousMethodCall, ctx);
+                            return true;
+                        }
                     }
                 }
             }
