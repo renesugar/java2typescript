@@ -65,6 +65,12 @@ module java {
                 return elements.join(delimiter);
             }
         }
+
+        export class Thread {
+            static sleep(time:number):void {
+
+            }
+        }
     }
 
     export namespace util {
@@ -434,7 +440,7 @@ module java {
         }
 
         export interface Set<E> extends Collection<E> {
-            foreach(f:(e)=>void):void;
+            forEach(f:(e)=>void):void;
         }
 
         export class HashSet<E> implements Set<E> {
@@ -497,7 +503,7 @@ module java {
             iterator():Iterator<E> {
                 return null;
             }
-            foreach(f : (e)=>void) : void {
+            forEach(f : (e)=>void) : void {
                 for (var p in this) {
                     f(p);
                 }

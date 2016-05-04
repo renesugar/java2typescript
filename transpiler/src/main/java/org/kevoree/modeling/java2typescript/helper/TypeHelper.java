@@ -140,8 +140,6 @@ public class TypeHelper {
 
         javaTypes.put("ReentrantLock", "java.util.concurrent.locks.ReentrantLock");
 
-
-
         javaTypes.put("Arrays", "java.util.Arrays");
         javaTypes.put("Collections", "java.util.Collections");
         javaTypes.put("Map", "java.util.Map");
@@ -166,6 +164,7 @@ public class TypeHelper {
         javaTypes.put("String", "java.lang.String");
         javaTypes.put("StringBuilder", "java.lang.StringBuilder");
 
+        javaTypes.put("Thread", "java.lang.Thread");
         javaTypes.put("Throwable", "java.lang.Throwable");
         javaTypes.put("Exception", "java.lang.Exception");
         javaTypes.put("Runnable", "java.lang.Runnable");
