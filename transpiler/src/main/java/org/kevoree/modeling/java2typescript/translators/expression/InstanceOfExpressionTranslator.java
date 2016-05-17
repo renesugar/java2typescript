@@ -9,11 +9,17 @@ public class InstanceOfExpressionTranslator {
 
     public static void translate(PsiInstanceOfExpression element, TranslationContext ctx) {
         if (element.getCheckType().getType().getArrayDimensions() == 1) {
-            ctx.append("arrayInstanceOf(");
-            ExpressionTranslator.translate(element.getOperand(), ctx);
-            ctx.append(", ");
-            ctx.append(TypeHelper.printType(element.getCheckType().getType(), ctx, false, false));
-            ctx.append(")");
+            if(element.getCheckType().getText().equals("Object[]")){
+                ctx.append("Array.isArray(");
+                ExpressionTranslator.translate(element.getOperand(), ctx);
+                ctx.append(")");
+            } else {
+                ctx.append("arrayInstanceOf(");
+                ExpressionTranslator.translate(element.getOperand(), ctx);
+                ctx.append(", ");
+                ctx.append(TypeHelper.printType(element.getCheckType().getType(), ctx, false, false));
+                ctx.append(")");
+            }
         } else {
             ExpressionTranslator.translate(element.getOperand(), ctx);
             ctx.append(" instanceof ");
