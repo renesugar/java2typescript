@@ -139,7 +139,7 @@ public class MethodCallExpressionTranslator {
                 if(previousMethodQualifier instanceof PsiReferenceExpression) {
                     PsiReferenceExpression previousMethodReference = (PsiReferenceExpression)previousMethodQualifier;
                     String previoudMethodName = previousMethodCall.getMethodExpression().getReferenceName();
-                    if (previousMethodReference.getType().getCanonicalText().equals("Pattern")) {
+                    if (previousMethodReference.getType() != null && previousMethodReference.getType().getCanonicalText().equals("Pattern")) {
                         if (previoudMethodName.equals("matcher")) {
                             ExpressionTranslator.translate(previousMethodCall, ctx);
                             return true;
