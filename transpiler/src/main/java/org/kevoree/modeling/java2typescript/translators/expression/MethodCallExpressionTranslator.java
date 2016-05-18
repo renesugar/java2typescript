@@ -131,6 +131,11 @@ public class MethodCallExpressionTranslator {
                             ctx.append(")");
                             return true;
                         }
+                    } else if(objectRef.getText().equals("System")) {
+                        if(methodExpression.getReferenceName().equals("currentTimeMillis")) {
+                            ctx.append("Date.now()");
+                            return true;
+                        }
                     }
                 }
             } else if (methodQualifierExpression instanceof PsiMethodCallExpression) { // remove the [] part in regEx.matcher(expr)[.matches()]

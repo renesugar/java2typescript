@@ -8,6 +8,7 @@ import org.kevoree.modeling.java2typescript.translators.DocTagTranslator;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Paths;
 
 /**
  * Created by gregory.nain on 03/12/14.
@@ -113,7 +114,7 @@ public class FlatJUnitGenerator {
 
     public static void main(String[] args) {
         FlatJUnitGenerator generator = new FlatJUnitGenerator();
-        generator.generate(new File("/Users/gregory.nain/Sources/KevoreeRepos/kevoree-modeling-framework/org.kevoree.modeling.microframework/src/test/java"), new File("/Users/gregory.nain/Sources/KevoreeRepos/kevoree-modeling-framework/org.kevoree.modeling.microframework.typescript/src/test/java"));
+        generator.generate(new File("/Users/gnain/Sources/Kevoree-Modeling/mwDB/core/src/test/java"), Paths.get("./transpiler/target", "generated-test-sources", "gentest").toFile());
     }
 
 

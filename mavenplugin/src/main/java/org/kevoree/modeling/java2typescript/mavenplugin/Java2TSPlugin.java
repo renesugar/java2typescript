@@ -60,6 +60,9 @@ public class Java2TSPlugin extends AbstractMojo {
     @Parameter(defaultValue = "false")
     private boolean copyJRE;
 
+    @Parameter(defaultValue = "false")
+    private boolean copyJunit;
+
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
         List<String> sources = new ArrayList<>();
@@ -73,6 +76,9 @@ public class Java2TSPlugin extends AbstractMojo {
         moduleImports.forEach(sourceTranslator::addModuleImport);
         if(copyJRE) {
             sourceTranslator.addModuleImport("./jre.ts");
+        }
+        if(copyJunit) {
+            sourceTranslator.addModuleImport("./junit.ts");
         }
         pkgTransforms.forEach(sourceTranslator::addPackageTransform);
 
@@ -100,6 +106,14 @@ public class Java2TSPlugin extends AbstractMojo {
         if (copyJRE) {
             try {
                 Files.copy(getClass().getClassLoader().getResourceAsStream("java.ts"), Paths.get(target.getAbsolutePath(),"src","main","jre.ts"), StandardCopyOption.REPLACE_EXISTING);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        if (copyJunit) {
+            try {
+                Files.copy(getClass().getClassLoader().getResourceAsStream("junit.ts"), Paths.get(target.getAbsolutePath(),"src","main","junit.ts"), StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
                 e.printStackTrace();
             }

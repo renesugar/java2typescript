@@ -2,10 +2,8 @@
 package org.kevoree.modeling.java2typescript.helper;
 
 import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Maps;
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
-import com.sun.org.apache.xpath.internal.SourceTree;
 import org.kevoree.modeling.java2typescript.context.TranslationContext;
 import org.kevoree.modeling.java2typescript.metas.DocMeta;
 
@@ -28,7 +26,7 @@ public class TypeHelper {
         if (result.equals("Throwable") || result.equals("Exception") || result.equals("RuntimeException") || result.equals("IndexOutOfBoundsException") || result.equals("ArrayIndexOutOfBoundsException")) {
             return "Error";
         }
-        if (result.equals("Pattern") || result.equals("Exception") || result.equals("RuntimeException") || result.equals("IndexOutOfBoundsException") || result.equals("ArrayIndexOutOfBoundsException")) {
+        if (result.equals("Pattern")) {
             return "RegExp";
         }
 
@@ -130,6 +128,8 @@ public class TypeHelper {
     public static final HashMap<String, String> javaTypes = new HashMap<String, String>();
 
     static {
+
+        javaTypes.put("Assert", "org.junit.Assert");
 
         javaTypes.put("System", "java.lang.System");
 

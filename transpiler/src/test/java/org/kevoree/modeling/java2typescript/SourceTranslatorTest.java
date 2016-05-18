@@ -44,6 +44,18 @@ public class SourceTranslatorTest {
         translator.process();
 
     }
+
+    @Test
+    public void mwdb__core_test() throws IOException {
+        String source = "/Users/gnain/Sources/Kevoree-Modeling/mwDB/core/src/test/java";
+        String target = Paths.get("target", "generated-test-sources", "test").toAbsolutePath().toString();
+
+        SourceTranslator translator = new SourceTranslator(source, target, "test");
+        translator.addPackageTransform("sources.strings", "");
+        translator.process();
+
+    }
+
     /*
     */
 
