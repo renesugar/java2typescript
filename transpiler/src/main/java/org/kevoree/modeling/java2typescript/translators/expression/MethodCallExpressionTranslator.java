@@ -40,9 +40,8 @@ public class MethodCallExpressionTranslator {
 
         if (methodQualifierExpression != null) {
             if (methodQualifierExpression.getType() != null) {
-                if (methodQualifierExpression.getType().getCanonicalText().equals("String")) {
+                if (methodQualifierExpression.getType().getCanonicalText().contains("String")) {
                     if (methodExpression.getReferenceName() != null) {
-
 
                         if (methodExpression.getReferenceName().equals("length")) {
                             ExpressionTranslator.translate(methodQualifierExpression, ctx);
@@ -73,6 +72,17 @@ public class MethodCallExpressionTranslator {
                             ctx.append(" + ");
                             ExpressionTranslator.translate(element.getArgumentList().getExpressions()[0], ctx);
                             return true;
+                        } else if (methodExpression.getReferenceName().equals("equals")) {
+
+                            ExpressionTranslator.translate(methodQualifierExpression, ctx);
+                            ctx.append(" === ");
+                            ExpressionTranslator.translate(element.getArgumentList().getExpressions()[0], ctx);
+                            return true;
+                        } else if (methodExpression.getReferenceName().equals("getBytes")) {
+
+                            ExpressionTranslator.translate(methodQualifierExpression, ctx);
+                            ctx.append(".split('').map(e->e.charCodeAt(0))");
+                            return true;
                         }
                     }
 
@@ -87,6 +97,11 @@ public class MethodCallExpressionTranslator {
                         ExpressionTranslator.translate(methodQualifierExpression, ctx);
                         ctx.append(")");
                         return true;
+                    } else if (methodExpression.getReferenceName() != null &&
+                            methodExpression.getReferenceName().equals("getMessage")) {
+                        ExpressionTranslator.translate(methodQualifierExpression, ctx);
+                        ctx.append(".message");
+                        return true;
                     }
                 } else if (methodQualifierExpression.getType().getCanonicalText().equals("PrintStream")) {
                     //error .printStackTrace
@@ -97,7 +112,7 @@ public class MethodCallExpressionTranslator {
                         ctx.append(")");
                         return true;
                     }
-                } else if(methodQualifierExpression.getType().getCanonicalText().equals("Pattern")) {
+                } else if (methodQualifierExpression.getType().getCanonicalText().equals("Pattern")) {
                     if (methodExpression.getReferenceName() != null &&
                             methodExpression.getReferenceName().equals("matcher")) {
                         ExpressionTranslator.translate(methodQualifierExpression, ctx);
@@ -124,31 +139,56 @@ public class MethodCallExpressionTranslator {
                         }
                     }
                 } else {
-                    if(objectRef.getText().equals("Pattern")) {
-                        if(methodExpression.getReferenceName().equals("compile")) {
+                    if (objectRef.getText().equals("Pattern")) {
+                        if (methodExpression.getReferenceName().equals("compile")) {
                             ctx.append("new RegExp(");
                             ExpressionTranslator.translate(element.getArgumentList().getExpressions()[0], ctx);
                             ctx.append(")");
                             return true;
                         }
-                    } else if(objectRef.getText().equals("System")) {
-                        if(methodExpression.getReferenceName().equals("currentTimeMillis")) {
+                    } else if (objectRef.getText().equals("System")) {
+                        if (methodExpression.getReferenceName().equals("currentTimeMillis")) {
                             ctx.append("Date.now()");
                             return true;
+                        }
+                    } else if (objectRef.getText().equals("Assert")) {
+                        if (methodExpression.getReferenceName().equals("assertEquals")) {
+                            if(element.getArgumentList().getExpressions().length == 3) {
+                                ExpressionTranslator.translate(methodQualifierExpression, ctx);
+                                ctx.append("." + methodExpression.getReferenceName() + "(");
+                                ExpressionTranslator.translate(element.getArgumentList().getExpressions()[1], ctx);
+                                ctx.append(",");
+                                ExpressionTranslator.translate(element.getArgumentList().getExpressions()[2], ctx);
+                                ctx.append(",");
+                                ExpressionTranslator.translate(element.getArgumentList().getExpressions()[0], ctx);
+                                ctx.append(")");
+                                return true;
+                            }
                         }
                     }
                 }
             } else if (methodQualifierExpression instanceof PsiMethodCallExpression) { // remove the [] part in regEx.matcher(expr)[.matches()]
                 PsiMethodCallExpression previousMethodCall = (PsiMethodCallExpression) methodQualifierExpression;
+
+                if (previousMethodCall.getMethodExpression().getReferenceName().equals("toString")) {
+                    if (methodExpression.getReferenceName().equals("length")) {
+                        ExpressionTranslator.translate(previousMethodCall, ctx);
+                        ctx.append(".length");
+                        return true;
+                    }
+                }
+
                 PsiElement previousMethodQualifier = previousMethodCall.getMethodExpression().getQualifier();
-                if(previousMethodQualifier instanceof PsiReferenceExpression) {
-                    PsiReferenceExpression previousMethodReference = (PsiReferenceExpression)previousMethodQualifier;
+                if (previousMethodQualifier instanceof PsiReferenceExpression) {
+                    PsiReferenceExpression previousMethodReference = (PsiReferenceExpression) previousMethodQualifier;
                     String previoudMethodName = previousMethodCall.getMethodExpression().getReferenceName();
                     if (previousMethodReference.getType() != null && previousMethodReference.getType().getCanonicalText().equals("Pattern")) {
                         if (previoudMethodName.equals("matcher")) {
                             ExpressionTranslator.translate(previousMethodCall, ctx);
                             return true;
                         }
+                    } else if (previousMethodReference.getType() != null && previousMethodReference.getType().getCanonicalText().equals("String")) {
+
                     }
                 }
             }

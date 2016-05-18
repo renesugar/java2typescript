@@ -38,28 +38,28 @@ module org {
                 }
             }
 
-            public static assertEquals(p:any, p2:any):void {
+            public static assertEquals(p:any, p2:any, p3:string = ""):void {
                 if (p == null) {
                     if (p2 == null) {
                         return;
                     } else {
-                        throw "Assert Error \n" + p + "\n must be equal to \n" + p2 + "\n";
+                        throw "Assert Error: " + p3 + "\n" + p + "\n must be equal to \n" + p2 + "\n";
                     }
                 }
                 if (p2 == null) {
                     if (p == null) {
                         return;
                     } else {
-                        throw "Assert Error \n" + p + "\n must be equal to \n" + p2 + "\n";
+                        throw "Assert Error: " + p3 + "\n" + p + "\n must be equal to \n" + p2 + "\n";
                     }
                 }
                 if (p.equals !== undefined) {
                     if (!p.equals(p2)) {
-                        throw "Assert Error \n" + p + "\n must be equal to \n" + p2 + "\n";
+                        throw "Assert Error: " + p3 + "\n" + p + "\n must be equal to \n" + p2 + "\n";
                     }
                 } else {
                     if (p != p2) {
-                        throw "Assert Error \n" + p + "\n must be equal to \n" + p2 + "\n";
+                        throw "Assert Error: " + p3 + "\n" + p + "\n must be equal to \n" + p2 + "\n";
                     }
                 }
             }
@@ -86,6 +86,10 @@ module org {
                 if (b) {
                     throw "Assert Error " + b + " must be false";
                 }
+            }
+
+            public static fail(msg:string):void {
+                throw "Assert Error \n" + msg + "\n";
             }
         }
     }
