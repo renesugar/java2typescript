@@ -440,7 +440,7 @@ module java {
         }
 
         export interface Set<E> extends Collection<E> {
-            forEach(f:(e)=>void):void;
+            forEach(f:(e:any)=>void):void;
         }
 
         export class HashSet<E> implements Set<E> {
@@ -503,7 +503,7 @@ module java {
             iterator():Iterator<E> {
                 return null;
             }
-            forEach(f : (e)=>void) : void {
+            forEach(f : (e : any)=>void) : void {
                 for (var p in this) {
                     f(p);
                 }

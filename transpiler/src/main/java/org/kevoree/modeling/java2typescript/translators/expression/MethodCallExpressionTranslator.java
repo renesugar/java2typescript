@@ -81,7 +81,7 @@ public class MethodCallExpressionTranslator {
                         } else if (methodExpression.getReferenceName().equals("getBytes")) {
 
                             ExpressionTranslator.translate(methodQualifierExpression, ctx);
-                            ctx.append(".split('').map(e->e.charCodeAt(0))");
+                            ctx.append(".split('').map(function(e){return e.charCodeAt(0);})");
                             return true;
                         }
                     }
