@@ -9,6 +9,7 @@ import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
+import org.kevoree.modeling.java2typescript.FlatJUnitGenerator;
 import org.kevoree.modeling.java2typescript.SourceTranslator;
 import org.kevoree.modeling.java2typescript.context.ModuleImport;
 import org.kevoree.modeling.java2typescript.json.packagejson.PackageJson;
@@ -114,6 +115,9 @@ public class Java2TSPlugin extends AbstractMojo {
         if (copyJunit) {
             try {
                 Files.copy(getClass().getClassLoader().getResourceAsStream("junit.ts"), Paths.get(target.getAbsolutePath(),"src","main","junit.ts"), StandardCopyOption.REPLACE_EXISTING);
+                FlatJUnitGenerator generator = new FlatJUnitGenerator();
+                generator.addModuleImport("./" + name + ".ts");
+                generator.generate(source, Paths.get(target.getAbsolutePath(),"src","main").toFile());
             } catch (IOException e) {
                 e.printStackTrace();
             }

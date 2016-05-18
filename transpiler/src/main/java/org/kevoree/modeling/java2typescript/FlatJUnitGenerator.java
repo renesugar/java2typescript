@@ -9,20 +9,31 @@ import org.kevoree.modeling.java2typescript.translators.DocTagTranslator;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 
 /**
  * Created by gregory.nain on 03/12/14.
  */
 public class FlatJUnitGenerator {
 
+    private ArrayList<String> moduleImports = new ArrayList<>();
+
+    public void addModuleImport(String s) {
+        moduleImports.add(s);
+    }
+
     public void generate(File sourceDir, File targetDir) {
         try {
 
 
             StringBuilder sb = new StringBuilder();
-            sb.append("package gentest;\n\n");
-            sb.append("public class FlatJUnitTest {\n\n");
-            sb.append("public void run() {\n");
+
+            for(String s : moduleImports) {
+                sb.append("/// <reference path=\"");
+                sb.append(s);
+                sb.append("\" />\n");
+            }
+
 
             JavaAnalyzer javaAnalyzer = new JavaAnalyzer();
             PsiDirectory parsedDir = javaAnalyzer.analyze(sourceDir);
@@ -56,11 +67,8 @@ public class FlatJUnitGenerator {
             });
 
 
-            sb.append("}\n");
-            sb.append("}");
-
             targetDir.mkdirs();
-            File generatedTS = new File(targetDir, "FlatJUnitTest.java");
+            File generatedTS = new File(targetDir, "testsRunner.ts");
             FileUtil.writeToFile(generatedTS, sb.toString().getBytes());
 
         } catch (IOException e) {
@@ -71,7 +79,7 @@ public class FlatJUnitGenerator {
 
     private String instanciateClass(PsiClass clazz) {
 
-        return "try {\n" + clazz.getQualifiedName() + " p_" + clazz.getName().toLowerCase() + " = new " + clazz.getQualifiedName() + "();\n";
+        return "try {\n let p_" + clazz.getName().toLowerCase() + " : " + clazz.getQualifiedName() + " = new " + clazz.getQualifiedName() + "();\n";
     }
 
 
@@ -98,14 +106,14 @@ public class FlatJUnitGenerator {
                         sb.append(instanciateClass(clazz));
                         classInstanciated = true;
                     }
-                    sb.append("console.log(\"executing "+clazz.getName()+"."+method.getName()+"...\");");
+                    sb.append("console.log(\"executing "+clazz.getName()+"."+method.getName()+"...\");\n");
                     sb.append("p_").append(clazz.getName().toLowerCase()).append(".").append(method.getName()).append("();\n");
-                    sb.append("console.log(\"done\")");
+                    sb.append("console.log(\"done\")\n");
                 }
             }
         }
         if (classInstanciated) {
-            sb.append("}catch(Exception e){\n e.printStackTrace();\n}\n");
+            sb.append(" } catch ($ex$) {\nconsole.error($ex$);\n}\n");
         }
 
         return sb.toString();
