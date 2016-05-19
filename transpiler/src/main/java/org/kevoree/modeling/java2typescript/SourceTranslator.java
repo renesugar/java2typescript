@@ -16,6 +16,7 @@ import org.kevoree.modeling.java2typescript.translators.ClassTranslator;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -93,27 +94,19 @@ public class SourceTranslator {
     }
 
     public void generate() {
-        String[] testPath = new String[]{"src", "test", "test.ts"};
         String[] modelPath = new String[]{"src", "main", name + ".ts"};
-        File testFile = Paths.get(outPath, testPath).toFile();
         File modelFile = Paths.get(outPath, modelPath).toFile();
         try {
             FileUtil.writeToFile(modelFile, ctx.toString().getBytes());
-            FileUtil.writeToFile(testFile, "// TODO add some tests".getBytes());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        File tsConfigFile = Paths.get(outPath, "tsconfig.json").toFile();
-        File pkgJsonFile = Paths.get(outPath, "package.json").toFile();
-        // files
-        List<URI> files = new ArrayList<>();
-        files.add(URI.create(Paths.get("", modelPath).toString()));
-        files.add(URI.create(Paths.get("", testPath).toString()));
+            File tsConfigFile = Paths.get(outPath, "tsconfig.json").toFile();
+            File pkgJsonFile = Paths.get(outPath, "package.json").toFile();
+            // files
+            List<URI> files = new ArrayList<>();
+            files.add(URI.create(Paths.get("", modelPath).toString()));
 
-        tsConfig.withFiles(files);
-        tsConfig.withFilesGlob(Collections.singletonList(URI.create(Paths.get("src", "**", "*.ts").toString())));
-        try {
+            tsConfig.withFiles(files);
+            tsConfig.withFilesGlob(Collections.singletonList(URI.create(Paths.get("src", "**", "*.ts").toString())));
             Gson gson = new GsonBuilder().setPrettyPrinting().create();
             FileUtil.writeToFile(tsConfigFile, gson.toJson(tsConfig, TsConfig.class).getBytes());
             FileUtil.writeToFile(pkgJsonFile, gson.toJson(pkgJson, PackageJson.class).getBytes());
@@ -124,7 +117,7 @@ public class SourceTranslator {
 
     private void visit(PsiDirectory dir) {
         ctx.enterPackage(dir.getName(), rootPassed);
-        if(!rootPassed) {
+        if (!rootPassed) {
             rootPassed = true;
         }
         dir.acceptChildren(visitor);
@@ -169,7 +162,7 @@ public class SourceTranslator {
         compilerOptions.setRemoveComments(true);
         compilerOptions.setPreserveConstEnums(true);
         compilerOptions.setSuppressImplicitAnyIndexErrors(true);
-        compilerOptions.setOutDir(URI.create("built"));
+        compilerOptions.setOutDir(URI.create(".."));
         tsConfig.setCompilerOptions(compilerOptions);
         // atom
         Atom atom = new Atom();
