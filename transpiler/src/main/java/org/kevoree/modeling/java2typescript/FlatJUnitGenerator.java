@@ -28,7 +28,7 @@ public class FlatJUnitGenerator {
 
             StringBuilder sb = new StringBuilder();
 
-            for(String s : moduleImports) {
+            for (String s : moduleImports) {
                 sb.append("/// <reference path=\"");
                 sb.append(s);
                 sb.append("\" />\n");
@@ -45,11 +45,11 @@ public class FlatJUnitGenerator {
                         PsiClass clazz = (PsiClass) element;
 
                         PsiDocComment comment = clazz.getDocComment();
-                        if(comment != null) {
+                        if (comment != null) {
                             PsiDocTag[] tags = comment.getTags();
-                            if(tags != null) {
-                                for(PsiDocTag tag : tags) {
-                                    if (tag.getName().equals(DocTagTranslator.IGNORE) && tag.getValueElement()!=null && tag.getValueElement().getText().equals(DocTagTranslator.TS)) {
+                            if (tags != null) {
+                                for (PsiDocTag tag : tags) {
+                                    if (tag.getName().equals(DocTagTranslator.IGNORE) && tag.getValueElement() != null && tag.getValueElement().getText().equals(DocTagTranslator.TS)) {
                                         ignore = true;
                                     }
                                 }
@@ -68,7 +68,7 @@ public class FlatJUnitGenerator {
 
 
             targetDir.mkdirs();
-            File generatedTS = new File(targetDir, "testsRunner.ts");
+            File generatedTS = new File(targetDir, "testsRunner.js");
             FileUtil.writeToFile(generatedTS, sb.toString().getBytes());
 
         } catch (IOException e) {
@@ -79,7 +79,11 @@ public class FlatJUnitGenerator {
 
     private String instanciateClass(PsiClass clazz) {
 
-        return "try {\n let p_" + clazz.getName().toLowerCase() + " : " + clazz.getQualifiedName() + " = new " + clazz.getQualifiedName() + "();\n";
+        //return "try {\n let p_" + clazz.getName().toLowerCase() + " : " + clazz.getQualifiedName() + " = new " + clazz.getQualifiedName() + "();\n";
+        return "describe(\"" + clazz.getQualifiedName() + "\", function() {\n" +
+                "   var p_" + clazz.getName().toLowerCase() + " = new " + clazz.getQualifiedName() + "();\n";
+
+
     }
 
 
@@ -89,31 +93,31 @@ public class FlatJUnitGenerator {
         for (PsiMethod method : clazz.getAllMethods()) {
             boolean ignore = false;
             PsiDocComment comment = method.getDocComment();
-            if(comment != null) {
+            if (comment != null) {
                 PsiDocTag[] tags = comment.getTags();
-                if(tags != null) {
-                    for(PsiDocTag tag : tags) {
-                        if (tag.getName().equals(DocTagTranslator.IGNORE) && tag.getValueElement()!=null && tag.getValueElement().getText().equals(DocTagTranslator.TS)) {
+                if (tags != null) {
+                    for (PsiDocTag tag : tags) {
+                        if (tag.getName().equals(DocTagTranslator.IGNORE) && tag.getValueElement() != null && tag.getValueElement().getText().equals(DocTagTranslator.TS)) {
                             ignore = true;
                         }
                     }
                 }
             }
-            if(!ignore) {
+            if (!ignore) {
                 PsiAnnotation testAnnot = method.getModifierList().findAnnotation("Test");
                 if (testAnnot != null) {
                     if (!classInstanciated) {
                         sb.append(instanciateClass(clazz));
                         classInstanciated = true;
                     }
-                    sb.append("console.log(\"executing "+clazz.getName()+"."+method.getName()+"...\");\n");
-                    sb.append("p_").append(clazz.getName().toLowerCase()).append(".").append(method.getName()).append("();\n");
-                    sb.append("console.log(\"done\")\n");
+                    sb.append("    it(\"" + clazz.getName() + "." + method.getName() + "\", function() {\n");
+                    sb.append("        expect(p_").append(clazz.getName().toLowerCase()).append(".").append(method.getName()).append(").not.toThrow();\n");
+                    sb.append("    });\n");
                 }
             }
         }
         if (classInstanciated) {
-            sb.append(" } catch ($ex$) {\nconsole.error($ex$);\n}\n");
+            sb.append("});\n\n");
         }
 
         return sb.toString();

@@ -11,11 +11,8 @@ import org.apache.maven.plugins.annotations.ResolutionScope;
 import org.apache.maven.project.MavenProject;
 import org.kevoree.modeling.java2typescript.FlatJUnitGenerator;
 import org.kevoree.modeling.java2typescript.SourceTranslator;
-import org.kevoree.modeling.java2typescript.context.ModuleImport;
-import org.kevoree.modeling.java2typescript.json.packagejson.PackageJson;
 
 import java.io.*;
-import java.nio.file.CopyOption;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
@@ -83,7 +80,6 @@ public class Java2TSPlugin extends AbstractMojo {
         }
         pkgTransforms.forEach(sourceTranslator::addPackageTransform);
 
-        PackageJson pkgJson = sourceTranslator.getPkgJson();
 
         for (Artifact a : project.getDependencyArtifacts()) {
             File file = a.getFile();
@@ -96,12 +92,6 @@ public class Java2TSPlugin extends AbstractMojo {
         }
 
         sourceTranslator.process();
-
-        pkgJson.setName(packageName);
-        pkgJson.setVersion(packageVersion);
-        for (Dependency dep : dependencies) {
-            pkgJson.addDependency(dep.getName(), dep.getVersion());
-        }
 
         sourceTranslator.generate();
         if (copyJRE) {
