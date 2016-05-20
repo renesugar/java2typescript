@@ -61,6 +61,10 @@ public class NewExpressionTranslator {
                             ctx.append("new Float64Array(");
                             ExpressionTranslator.translate(element.getArrayDimensions()[0], ctx);
                             ctx.append(")");
+                        } else if (element.getType().equalsToText("byte[]")) {
+                            ctx.append("new Int8Array(");
+                            ExpressionTranslator.translate(element.getArrayDimensions()[0], ctx);
+                            ctx.append(")");
                         } else if (element.getClassOrAnonymousClassReference() != null) {
                             ctx.append("new Array<");
                             PsiJavaCodeReferenceElement ref = element.getClassOrAnonymousClassReference();

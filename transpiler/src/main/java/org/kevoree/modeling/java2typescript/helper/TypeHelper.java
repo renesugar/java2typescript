@@ -47,6 +47,8 @@ public class TypeHelper {
                 return "Float64Array";
             } else if (element.equalsToText("long[]")) {
                 return "Float64Array";
+            } else if (element.equalsToText("byte[]")) {
+                return "Int8Array";
             }
         }
         if (element instanceof PsiPrimitiveType) {

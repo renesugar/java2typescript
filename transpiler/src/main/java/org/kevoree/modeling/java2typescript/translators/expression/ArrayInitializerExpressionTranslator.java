@@ -17,6 +17,9 @@ public class ArrayInitializerExpressionTranslator {
         } else if (ctx.NATIVE_ARRAY && element.getType() != null && element.getType().equalsToText("long[]")) {
             ctx.append("new Float64Array([");
             hasToBeClosed = true;
+        } else if (ctx.NATIVE_ARRAY && element.getType() != null && element.getType().equalsToText("byte[]")) {
+            ctx.append("new Int8Array([");
+            hasToBeClosed = true;
         } else {
             ctx.append("[");
             hasToBeClosed = false;
