@@ -511,59 +511,56 @@ module java {
         }
 
         export class AbstractList<E> extends Array<E> implements List<E> {
-            public length:number = 0;
+            private content : E[] = [];
 
             addAll(index:any, vals?:any):boolean {
                 var tempArray = vals.toArray(null);
                 for (var i = 0; i < tempArray.length; i++) {
-                    this.push(tempArray[i]);
+                    this.content.push(tempArray[i]);
                 }
                 return false;
             }
 
             clear() {
-                this.length = 0;
+                this.content = [];
             }
 
             poll():E {
-                return this.shift();
+                return this.content.shift();
             }
 
             remove(indexOrElem:any):any {
-
-                return false;
+                this.content.splice(indexOrElem,1);
+                return true;
             }
 
             removeAll():boolean {
-                return false;
+                this.content = [];
+                return true;
             }
 
             toArray(a:Array<E>):E[] {
-                var tmp = [];
-                for(var i = 0; i < this.length; i++) {
-                    tmp.push(this[i]);
-                }
-                return <E[]><any>tmp;
+                return this.content;
             }
 
             size():number {
-                return this.length;
+                return this.content.length;
             }
 
             add(index:any, elem?:E) {
                 if (typeof elem !== 'undefined') {
-                    this.splice(index, 0, elem);
+                    this.content.splice(index, 0, elem);
                 } else {
-                    this.push(index);
+                    this.content.push(index);
                 }
             }
 
             get(index:number):E {
-                return this[index];
+                return this.content[index];
             }
 
             contains(val:E):boolean {
-                return this.indexOf(val) != -1;
+                return this.content.indexOf(val) != -1;
             }
 
             containsAll(elems:Collection<E>):boolean {
@@ -571,19 +568,20 @@ module java {
             }
 
             isEmpty():boolean {
-                return this.length == 0;
+                return this.content.length == 0;
             }
 
             set(index:number, element:E):E {
-                return null;
+                this.content[index] = element;
+                return element;
             }
 
             indexOf(element:E):number {
-                return 0;
+                return this.content.indexOf(element);
             }
 
             lastIndexOf(element:E):number {
-                return 0;
+                return this.content.lastIndexOf(element);
             }
 
             iterator():Iterator<E> {
@@ -594,7 +592,7 @@ module java {
                 if (typeof index !== 'undefined') {
                     return new AbstractList.ListItr(this, index);
                 } else {
-                    return this.listIterator(0);
+                    return new AbstractList.ListItr(this, 0);
                 }
             }
         }
