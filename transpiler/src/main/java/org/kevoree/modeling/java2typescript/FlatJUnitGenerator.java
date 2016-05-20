@@ -25,14 +25,16 @@ public class FlatJUnitGenerator {
     public void generate(File sourceDir, File targetDir) {
         try {
 
-
             StringBuilder sb = new StringBuilder();
+            StringBuilder sbDev = new StringBuilder();
 
+            /*
             for (String s : moduleImports) {
                 sb.append("/// <reference path=\"");
                 sb.append(s);
                 sb.append("\" />\n");
             }
+            */
 
 
             JavaAnalyzer javaAnalyzer = new JavaAnalyzer();
@@ -58,7 +60,7 @@ public class FlatJUnitGenerator {
 
 
                         if (!ignore && !clazz.isInterface() && !clazz.hasModifierProperty(PsiModifier.ABSTRACT)) {
-                            sb.append(generateTestSuite(clazz));
+                            generateTestSuite(sb, sbDev, clazz);
                         }
                     } else {
                         element.acceptChildren(this);
@@ -71,24 +73,19 @@ public class FlatJUnitGenerator {
             File generatedTS = new File(targetDir, "testsRunner.js");
             FileUtil.writeToFile(generatedTS, sb.toString().getBytes());
 
+            File generatedDevTS = new File(targetDir, "testsRunnerDev.js");
+            FileUtil.writeToFile(generatedDevTS, sbDev.toString().getBytes());
+
         } catch (IOException e) {
             e.printStackTrace();
         }
 
     }
 
-    private String instanciateClass(PsiClass clazz) {
-
-        //return "try {\n let p_" + clazz.getName().toLowerCase() + " : " + clazz.getQualifiedName() + " = new " + clazz.getQualifiedName() + "();\n";
-        return "describe(\"" + clazz.getQualifiedName() + "\", function() {\n" +
-                "   var p_" + clazz.getName().toLowerCase() + " = new " + clazz.getQualifiedName() + "();\n";
 
 
-    }
 
-
-    private String generateTestSuite(PsiClass clazz) {
-        StringBuilder sb = new StringBuilder();
+    private String generateTestSuite(StringBuilder sb, StringBuilder sbDev, PsiClass clazz) {
         boolean classInstanciated = false;
         for (PsiMethod method : clazz.getAllMethods()) {
             boolean ignore = false;
@@ -108,21 +105,42 @@ public class FlatJUnitGenerator {
                 if (testAnnot != null) {
                     if (!classInstanciated) {
                         sb.append(instanciateClass(clazz));
+                        sbDev.append(instanciateClassDev(clazz));
                         classInstanciated = true;
                     }
-                    sb.append("    it(\"" + clazz.getName() + "." + method.getName() + "\", function() {\n");
-                    sb.append("        expect(p_").append(clazz.getName().toLowerCase()).append(".").append(method.getName()).append(").not.toThrow();\n");
-                    sb.append("    });\n");
+                    generateTestCall(sb, clazz, method);
+                    generateTestCallDev(sbDev, clazz, method);
                 }
             }
         }
         if (classInstanciated) {
             sb.append("});\n\n");
+            sbDev.append("} catch(err) {\n" +
+                    "\tconsole.error(err.stack);\n" +
+                    "}\n\n");
         }
 
         return sb.toString();
     }
 
+    private String instanciateClass(PsiClass clazz) {
+        return "\ndescribe(\"" + clazz.getQualifiedName() + "\", function() {\n" +
+                "   var p_" + clazz.getName().toLowerCase() + " = new " + clazz.getQualifiedName() + "();\n";
+    }
+
+    private String instanciateClassDev(PsiClass clazz) {
+        return "try {\n\tvar p_" + clazz.getName().toLowerCase() + " = new " + clazz.getQualifiedName() + "();\n";
+    }
+
+    private void generateTestCall(StringBuilder sb, PsiClass clazz, PsiMethod method) {
+        sb.append("    it(\"" + clazz.getName() + "." + method.getName() + "\", function() {\n");
+        sb.append("        expect(p_").append(clazz.getName().toLowerCase()).append(".").append(method.getName()).append(").not.toThrow();\n");
+        sb.append("    });\n");
+    }
+
+    private void generateTestCallDev(StringBuilder sb, PsiClass clazz, PsiMethod method) {
+        sb.append("\tp_").append(clazz.getName().toLowerCase()).append(".").append(method.getName()).append("();\n");
+    }
 
     public static void main(String[] args) {
         FlatJUnitGenerator generator = new FlatJUnitGenerator();
