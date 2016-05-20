@@ -1,6 +1,3 @@
-
-
-
 module java {
     export module lang {
         export class System {
@@ -15,7 +12,7 @@ module java {
         }
 
         export class StringBuilder {
-            private _buffer : string = "";
+            private _buffer:string = "";
             public length = 0;
 
             append(val:any):StringBuilder {
@@ -250,6 +247,7 @@ module java {
                     public lock():void {
 
                     }
+
                     public unlock():void {
 
                     }
@@ -335,6 +333,7 @@ module java {
         export interface Collection<E> {
             add(val:E):void;
             addAll(vals:Collection<E>):void;
+            get(index:number):E;
             remove(o:any):any;
             clear():void;
             isEmpty():boolean;
@@ -345,6 +344,7 @@ module java {
             containsAll(c:Collection<any>):boolean;
             addAll(c:Collection<any>):boolean;
             removeAll(c:Collection<any>):boolean;
+
         }
 
         export abstract class AbstractCollection<E> implements Collection<E> {
@@ -424,7 +424,7 @@ module java {
             }
         }
 
-        export interface List<E> extends Array<E>, Collection<E> {
+        export interface List<E> extends Collection<E> {
             add(elem:E):void;
             add(index:number, elem:E):void;
             poll():E;
@@ -443,21 +443,52 @@ module java {
             forEach(f:(e:any)=>void):void;
         }
 
-        export class HashSet<E> implements Set<E> {
-            add(val:E) {
-                this[<any>val] = val;
+        export class Itr<E> implements Iterator<E> {
+            public cursor:number = 0;
+            public lastRet:number = -1;
+            protected list:Collection<E>;
+
+            constructor(list:Collection<E>) {
+                this.list = list;
             }
 
-            clear() {
-                for (var p in this) {
-                    if (this.hasOwnProperty(p)) {
-                        delete this[p];
+            public
+            hasNext():boolean {
+                return this.cursor != this.list.size();
+            }
+
+            public
+            next():E {
+                try {
+                    var i:number = this.cursor;
+                    var next:E = this.list.get(i);
+                    this.lastRet = i;
+                    this.cursor = i + 1;
+                    return next;
+                } catch ($ex$) {
+                    if ($ex$ instanceof Error) {
+                        var e:Error = <Error>$ex$;
+                        throw new Error("no such element exception");
+                    } else {
+                        throw $ex$;
                     }
                 }
             }
+        }
+
+        export class HashSet<E> implements Set<E> {
+            private content = {};
+
+            add(val:E) {
+                this.content[<any>val] = val;
+            }
+
+            clear() {
+                this.content = {};
+            }
 
             contains(val:E):boolean {
-                return this.hasOwnProperty(<any>val);
+                return this.content.hasOwnProperty(<any>val);
             }
 
             containsAll(elems:Collection<E>):boolean {
@@ -467,17 +498,17 @@ module java {
             addAll(vals:Collection<E>):boolean {
                 var tempArray = vals.toArray(null);
                 for (var i = 0; i < tempArray.length; i++) {
-                    this[<any>tempArray[i]] = tempArray[i];
+                    this.content[<any>tempArray[i]] = tempArray[i];
                 }
                 return true;
             }
 
             remove(val:E):boolean {
                 var b = false;
-                if (this[<any>val]) {
+                if (this.content[<any>val]) {
                     b = true;
                 }
-                delete this[<any>val];
+                delete this.content[<any>val];
                 return b;
             }
 
@@ -486,7 +517,7 @@ module java {
             }
 
             size():number {
-                return Object.keys(this).length;
+                return Object.keys(this.content).length;
             }
 
             isEmpty():boolean {
@@ -494,24 +525,27 @@ module java {
             }
 
             toArray<E>(a:Array<E>):E[] {
-                for (var ik in this) {
-                    a.push(this[ik]);
-                }
-                return a;
+                return <E[]><any>this.content;
             }
 
             iterator():Iterator<E> {
-                return null;
+                return new java.util.Itr(this);
             }
-            forEach(f : (e : any)=>void) : void {
-                for (var p in this) {
-                    f(p);
+
+            forEach(f:(e:any)=>void):void {
+                for (var p in this.content) {
+                    f(this.content[p]);
                 }
+            }
+
+            get(index:number):E {
+                return this.content[index];
             }
         }
 
-        export class AbstractList<E> extends Array<E> implements List<E> {
-            private content : E[] = [];
+
+        export class AbstractList<E> implements List<E> {
+            private content:E[] = [];
 
             addAll(index:any, vals?:any):boolean {
                 var tempArray = vals.toArray(null);
@@ -530,7 +564,7 @@ module java {
             }
 
             remove(indexOrElem:any):any {
-                this.content.splice(indexOrElem,1);
+                this.content.splice(indexOrElem, 1);
                 return true;
             }
 
@@ -791,7 +825,7 @@ module java {
                 }
             }
 
-            size() : number {
+            size():number {
                 return Object.keys(this).length
             }
         }
@@ -800,11 +834,11 @@ module java {
     }
 }
 
-function arrayInstanceOf(arr : any, arg: Function) : boolean {
-    if(!(arr instanceof Array)) {
+function arrayInstanceOf(arr:any, arg:Function):boolean {
+    if (!(arr instanceof Array)) {
         return false;
     } else {
-        if(arr.length == 0 ) {
+        if (arr.length == 0) {
             return true;
         } else {
             var typeName = arg['name'].toLocaleLowerCase();
