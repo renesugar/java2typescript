@@ -539,7 +539,11 @@ module java {
             }
 
             toArray(a:Array<E>):E[] {
-                return <E[]><any>this;
+                var tmp = [];
+                for(var i = 0; i < this.length; i++) {
+                    tmp.push(this[i]);
+                }
+                return <E[]><any>tmp;
             }
 
             size():number {
