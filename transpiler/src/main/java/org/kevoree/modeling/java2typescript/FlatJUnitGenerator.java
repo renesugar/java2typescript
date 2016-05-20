@@ -134,7 +134,7 @@ public class FlatJUnitGenerator {
 
     private void generateTestCall(StringBuilder sb, PsiClass clazz, PsiMethod method) {
         sb.append("    it(\"" + clazz.getName() + "." + method.getName() + "\", function() {\n");
-        sb.append("        expect(p_").append(clazz.getName().toLowerCase()).append(".").append(method.getName()).append(").not.toThrow();\n");
+        sb.append("        expect(p_").append(clazz.getName().toLowerCase()).append(".").append(method.getName()).append(".bind(p_" + clazz.getName().toLowerCase() + ")).not.toThrow();\n");
         sb.append("    });\n");
     }
 
