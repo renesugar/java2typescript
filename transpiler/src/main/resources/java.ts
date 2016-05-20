@@ -277,15 +277,6 @@ module java {
             next():E;
         }
 
-        export interface ListIterator<E> extends Iterator<E> {
-            hasPrevious():boolean;
-            previous():E;
-            set(e:E):void;
-            add(e:E):void;
-            nextIndex():number;
-            previousIndex():number;
-        }
-
         export class Arrays {
             public static fill(data:any, begin:number, nbElem:number, param:number):void {
                 var max = begin + nbElem;
@@ -303,31 +294,11 @@ module java {
 
         export class Collections {
 
-            public static reverse(list:List<any>) {
-                var size:number = list.size();
-                if (size < 5000) {
-                    for (var i:number = 0, mid:number = size >> 1, j:number = size - 1; i < mid; i++, j--) {
-                        Collections.swap(list, i, j);
-                    }
-                } else {
-                    var fwd = list.listIterator();
-                    var rev = list.listIterator(size);
-                    for (var i:number = 0, mid:number = list.size() >> 1; i < mid; i++) {
-                        var tmp:any = fwd.next();
-                        fwd.set(rev.previous());
-                        rev.set(tmp);
-                    }
-                }
-            }
-
             public static swap(list:List<any>, i:number, j:number) {
                 const l = list;
                 l.set(i, l.set(j, l.get(i)));
             }
 
-            public static sort<A>(p:List<A>):void {
-                p.sort();
-            }
         }
 
         export interface Collection<E> {
@@ -347,83 +318,6 @@ module java {
 
         }
 
-        export abstract class AbstractCollection<E> implements Collection<E> {
-            private static MAX_ARRAY_SIZE = Number.MAX_VALUE - 8;
-
-            abstract add(val:E):void;
-
-            abstract remove(o:any):boolean;
-
-            abstract clear():void;
-
-            abstract size():number;
-
-            abstract iterator():Iterator<E>;
-
-            abstract containsAll(c:Collection<any>):boolean;
-
-            abstract addAll(c:Collection<any>):boolean;
-
-            abstract removeAll(c:Collection<any>):boolean;
-
-            toArray<T>(a?:Array<T>):T[] {
-                var r = new Array<T>(this.size());
-                var it = this.iterator();
-                for (var i = 0; i < r.length; i++) {
-                    if (!it.hasNext()) {
-                        return Arrays.copyOf<T>(r, i);
-                    }
-                    r[i] = <any> it.next();
-                }
-                return it.hasNext() ? AbstractCollection.finishToArray(r, it) : r;
-            }
-
-            private static finishToArray<E>(r:E[], it:any):E[] {
-                var i:number = r.length;
-                while (it.hasNext()) {
-                    var cap:number = r.length;
-                    if (i == cap) {
-                        var newCap:number = cap + (cap >> 1) + 1;
-                        if (newCap - AbstractCollection.MAX_ARRAY_SIZE > 0) {
-                            newCap = AbstractCollection.hugeCapacity(cap + 1);
-                        }
-                        r = Arrays.copyOf<E>(r, newCap);
-                    }
-                    r[i++] = <E>it.next();
-                }
-                return (i == r.length) ? r : Arrays.copyOf<E>(r, i);
-            }
-
-            private static hugeCapacity(minCapacity:number):number {
-                if (minCapacity < 0) { // overflow
-                    throw new Error("Required array size too large");
-                }
-                return (minCapacity > AbstractCollection.MAX_ARRAY_SIZE) ? Number.MAX_VALUE : AbstractCollection.MAX_ARRAY_SIZE;
-            }
-
-            contains(o:any):boolean {
-                var it = this.iterator();
-                if (o === null) {
-                    while (it.hasNext()) {
-                        if (it.next() == null) {
-                            return true;
-                        }
-                    }
-                } else {
-                    while (it.hasNext()) {
-                        if (o.equals(it.next())) {
-                            return true;
-                        }
-                    }
-                }
-                return false;
-            }
-
-            isEmpty():boolean {
-                return this.size() === 0;
-            }
-        }
-
         export interface List<E> extends Collection<E> {
             add(elem:E):void;
             add(index:number, elem:E):void;
@@ -434,8 +328,6 @@ module java {
             set(index:number, element:E):E;
             indexOf(o:E):number;
             lastIndexOf(o:E):number;
-            listIterator():ListIterator<E>;
-            listIterator(index:number):ListIterator<E>;
             remove(index:number):E;
         }
 
@@ -619,125 +511,14 @@ module java {
             }
 
             iterator():Iterator<E> {
-                return new AbstractList.Itr(this);
+                return new Itr(this);
             }
-
-            listIterator(index?:number):ListIterator<E> {
-                if (typeof index !== 'undefined') {
-                    return new AbstractList.ListItr(this, index);
-                } else {
-                    return new AbstractList.ListItr(this, 0);
-                }
-            }
+            
         }
 
         export class LinkedList<E> extends AbstractList<E> {
         }
         export class ArrayList<E> extends AbstractList<E> {
-        }
-
-        export module AbstractList {
-            export class Itr<E> implements Iterator<E> {
-                public cursor:number = 0;
-                public lastRet:number = -1;
-                protected list:AbstractList<E>;
-
-                constructor(list:AbstractList<E>) {
-                    this.list = list;
-                }
-
-                public hasNext():boolean {
-                    return this.cursor != this.list.size();
-                }
-
-                public next():E {
-                    try {
-                        var i:number = this.cursor;
-                        var next:E = this.list.get(i);
-                        this.lastRet = i;
-                        this.cursor = i + 1;
-                        return next;
-                    } catch ($ex$) {
-                        if ($ex$ instanceof Error) {
-                            var e:Error = <Error>$ex$;
-                            throw new Error("no such element exception");
-                        } else {
-                            throw $ex$;
-                        }
-                    }
-                }
-
-                public remove():void {
-                    if (this.lastRet < 0) {
-                        throw new Error("illegal state exception");
-                    }
-                    try {
-                        this.list.remove(this.lastRet);
-                        if (this.lastRet < this.cursor) {
-                            this.cursor--;
-                        }
-                        this.lastRet = -1;
-                    } catch ($ex$) {
-                        throw $ex$;
-                    }
-                }
-            }
-            export class ListItr<E> extends Itr<E> implements ListIterator<E> {
-                constructor(list:AbstractList<E>, index:number) {
-                    super(list);
-                    this.cursor = index;
-                }
-
-                public hasPrevious():boolean {
-                    return this.cursor !== 0;
-                }
-
-                public previous():E {
-                    try {
-                        var i:number = this.cursor - 1;
-                        var previous:E = this.list.get(i);
-                        this.lastRet = this.cursor = i;
-                        return previous;
-                    } catch ($ex$) {
-                        if ($ex$ instanceof Error) {
-                            var e:Error = <Error>$ex$;
-                            throw new Error("no such element exception");
-                        } else {
-                            throw $ex$;
-                        }
-                    }
-                }
-
-                public nextIndex():number {
-                    return this.cursor;
-                }
-
-                public previousIndex():number {
-                    return this.cursor - 1;
-                }
-
-                public set(e:E):void {
-                    if (this.lastRet < 0) {
-                        throw new Error("illegal state exception");
-                    }
-                    try {
-                        this.list.set(this.lastRet, e);
-                    } catch ($ex$) {
-                        throw $ex$;
-                    }
-                }
-
-                public add(e:E):void {
-                    try {
-                        var i:number = this.cursor;
-                        this.list.add(i, e);
-                        this.lastRet = -1;
-                        this.cursor = i + 1;
-                    } catch ($ex$) {
-                        throw $ex$;
-                    }
-                }
-            }
         }
 
         export class Stack<E> {
