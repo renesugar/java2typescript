@@ -622,10 +622,7 @@ function arrayInstanceOf(arr:any, arg:Function):boolean {
         if (arr.length == 0) {
             return true;
         } else {
-            var typeName = arg['name'].toLocaleLowerCase();
-            var firstInstanceType = arr[0].constructor.name.toLocaleLowerCase();
-
-            return typeName == firstInstanceType;
+            return (arr[0] instanceof arg);
         }
     }
 }
