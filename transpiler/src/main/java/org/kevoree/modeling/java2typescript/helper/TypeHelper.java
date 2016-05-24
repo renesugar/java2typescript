@@ -23,7 +23,7 @@ public class TypeHelper {
     public static String printType(PsiType element, TranslationContext ctx, boolean withGenericParams, boolean avoidNativeOptim) {
         String result = element.getPresentableText();
 
-        if (result.equals("Throwable") || result.equals("Exception") || result.equals("RuntimeException") || result.equals("IndexOutOfBoundsException") || result.equals("ArrayIndexOutOfBoundsException")) {
+        if (result.equals("Throwable") || result.endsWith("Exception")) {
             return "Error";
         }
         if (result.equals("Pattern")) {
