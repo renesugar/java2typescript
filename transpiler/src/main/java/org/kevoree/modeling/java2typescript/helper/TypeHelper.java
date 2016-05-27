@@ -113,6 +113,13 @@ public class TypeHelper {
         if (clazz == null) {
             return false;
         }
+
+        PsiAnnotation[] annots = clazz.getModifierList().getAnnotations();
+        for(int i = 0; i < annots.length; i++) {
+            if(annots[i].getNameReferenceElement().getReferenceName().equals("FunctionalInterface")) {
+                return true;
+            }
+        }
         DocMeta metas = DocHelper.process(clazz.getDocComment());
         return metas.functionType;
     }

@@ -2,6 +2,7 @@
 package org.kevoree.modeling.java2typescript.translators.expression;
 
 import com.intellij.psi.*;
+import com.intellij.psi.impl.source.PsiClassReferenceType;
 import org.kevoree.modeling.java2typescript.context.TranslationContext;
 import org.kevoree.modeling.java2typescript.helper.TypeHelper;
 
@@ -9,6 +10,26 @@ public class MethodCallExpressionTranslator {
 
     public static void translate(PsiMethodCallExpression element, TranslationContext ctx) {
         PsiReferenceExpression methodExpr = element.getMethodExpression();
+        PsiExpression methodQualifierExpression = methodExpr.getQualifierExpression();
+
+        if (methodQualifierExpression != null) {
+            if (methodQualifierExpression.getType() != null) {
+                if(methodQualifierExpression.getType() instanceof PsiClassReferenceType) {
+                    PsiClass cls = ((PsiClassReferenceType)methodQualifierExpression.getType()).resolve();
+                    if(cls != null) {
+                        if(TypeHelper.isCallbackClass(cls)) {
+                            ExpressionTranslator.translate(methodQualifierExpression, ctx);
+                            ctx.append('(');
+                            printParameters(element.getArgumentList().getExpressions(), ctx);
+                            ctx.append(")");
+                            return;
+                        }
+                    }
+                }
+            }
+        }
+
+
         boolean hasBeenTransformed = tryNativeTransform(element, ctx);
         if (!hasBeenTransformed) {
             ReferenceExpressionTranslator.translate(methodExpr, ctx);
