@@ -5,6 +5,7 @@ import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class SourceTranslatorTest {
@@ -36,11 +37,15 @@ public class SourceTranslatorTest {
 
     //@Test
     public void mwdb_core() throws IOException {
-        String source = "/Users/duke/dev/mwDB/core/src/main/java";
+        String source = "/Users/gnain/Sources/Kevoree-Modeling/mwDB/core/src/main/java";
         String target = Paths.get("target", "generated-sources", "core").toAbsolutePath().toString();
 
         SourceTranslator translator = new SourceTranslator(source, target, "strings");
         translator.addPackageTransform("sources.strings", "");
+        Path classes = Paths.get(source,"../../../../api/target/api-1-SNAPSHOT.jar");
+        if(classes.toFile().exists()) {
+            translator.addToClasspath(classes.toString());
+        }
         translator.process();
 
     }
