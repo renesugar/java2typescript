@@ -344,13 +344,11 @@ module java {
                 this.list = list;
             }
 
-            public
-            hasNext():boolean {
+            public hasNext():boolean {
                 return this.cursor != this.list.size();
             }
 
-            public
-            next():E {
+            public next():E {
                 try {
                     var i:number = this.cursor;
                     var next:E = this.list.get(i);
