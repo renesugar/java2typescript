@@ -804,13 +804,13 @@ class Long {
 
         // Do several (6) digits each time through the loop, so as to
         // minimize the calls to the very expensive emulated div.
-        var radixToPower = Long.fromNumber(Long.pow_dbl(radix, 6), this.unsigned),
-            rem = this;
+        var radixToPower = Long.fromNumber(Long.pow_dbl(radix, 6), this.unsigned);
+        var rem : Long = this;
         var result = '';
         while (true) {
-            var remDiv = rem.div(radixToPower),
-                intval = rem.sub(remDiv.mul(radixToPower)).toInt() >>> 0,
-                digits = intval.toString(radix);
+            var remDiv = rem.div(radixToPower);
+            var intval = rem.sub(remDiv.mul(radixToPower)).toInt() >>> 0;
+            var digits = intval.toString(radix);
             rem = remDiv;
             if (rem.isZero())
                 return digits + result;
