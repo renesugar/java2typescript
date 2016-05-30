@@ -84,7 +84,7 @@ public class SourceTranslator {
 
             // files
             List<URI> files = new ArrayList<>();
-            files.add(URI.create(Paths.get("", modelPath).toString()));
+            files.add(Paths.get(".", modelPath).toUri());
 
         } catch (IOException e) {
             e.printStackTrace();
