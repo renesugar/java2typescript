@@ -68,6 +68,9 @@ module java {
 
             }
         }
+        export class Double {
+            public static MAX_VALUE : number = Number.MAX_VALUE;
+        }
     }
 
     export namespace util {
