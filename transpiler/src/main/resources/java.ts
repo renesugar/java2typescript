@@ -5,9 +5,13 @@ module java {
             }
 
             static arraycopy(src:any[]| Float64Array | Int32Array, srcPos:number, dest:any[]| Float64Array | Int32Array, destPos:number, numElements:number):void {
-                if ((dest instanceof Float32Array || dest instanceof Int32Array)
-                && (src instanceof Float32Array || src instanceof Int32Array)){
-                    dest.set(src.subarray(srcPos, srcPos+numElements), destPos);
+                if ((dest instanceof Float64Array || dest instanceof Int32Array)
+                && (src instanceof Float64Array || src instanceof Int32Array)){
+                    if(numElements == src.length) {
+                        dest.set(src, destPos);
+                    } else {
+                        dest.set(src.subarray(srcPos, srcPos+numElements), destPos);
+                    }
                 } else {
                     for (var i = 0; i < numElements; i++) {
                         dest[destPos + i] = src[srcPos + i];
