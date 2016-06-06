@@ -17,9 +17,13 @@ public class SourceTranslatorTest {
 
         SourceTranslator translator = new SourceTranslator(source, target, "generics");
         translator.process();
+
+        String result = translator.getCtx().toString().trim();
+        //System.out.println(result);
+
         Assert.assertEquals(
                 FileUtils.readFileToString(Paths.get("src", "test", "resources", "generics", "output.ts").toFile()).trim(),
-                translator.getCtx().toString().trim());
+                result);
     }
 
     @Test
@@ -30,9 +34,29 @@ public class SourceTranslatorTest {
         SourceTranslator translator = new SourceTranslator(source, target, "strings");
         translator.addPackageTransform("sources.strings", "");
         translator.process();
+
+        String result = translator.getCtx().toString().trim();
+        //System.out.println(result);
+
         Assert.assertEquals(
                 FileUtils.readFileToString(Paths.get("src", "test", "resources", "strings", "output.ts").toFile()).trim(),
-                translator.getCtx().toString().trim());
+                result);
+    }
+
+    @Test
+    public void arrays() throws IOException {
+        String source = Paths.get("src", "test", "java", "sources", "arrays", "test").toAbsolutePath().toString();
+        String target = Paths.get("target", "generated-sources", "java2ts").toAbsolutePath().toString();
+
+        SourceTranslator translator = new SourceTranslator(source, target, "arrays");
+        translator.process();
+
+        String result = translator.getCtx().toString().trim();
+        //System.out.println(result);
+
+        Assert.assertEquals(
+                FileUtils.readFileToString(Paths.get("src", "test", "resources", "arrays", "output.ts").toFile()).trim(),
+                result);
     }
 
     //@Test
