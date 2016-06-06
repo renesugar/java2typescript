@@ -5,8 +5,13 @@ module java {
             }
 
             static arraycopy(src:any[]| Float64Array | Int32Array, srcPos:number, dest:any[]| Float64Array | Int32Array, destPos:number, numElements:number):void {
-                for (var i = 0; i < numElements; i++) {
-                    dest[destPos + i] = src[srcPos + i];
+                if ((dest instanceof Float32Array || dest instanceof Int32Array)
+                && (src instanceof Float32Array || src instanceof Int32Array)){
+                    dest.set(src.subarray(srcPos, srcPos+numElements), destPos);
+                } else {
+                    for (var i = 0; i < numElements; i++) {
+                        dest[destPos + i] = src[srcPos + i];
+                    }
                 }
             }
         }
@@ -69,7 +74,7 @@ module java {
             }
         }
         export class Double {
-            public static MAX_VALUE : number = Number.MAX_VALUE;
+            public static MAX_VALUE:number = Number.MAX_VALUE;
         }
     }
 
@@ -808,7 +813,7 @@ class Long {
         // Do several (6) digits each time through the loop, so as to
         // minimize the calls to the very expensive emulated div.
         var radixToPower = Long.fromNumber(Long.pow_dbl(radix, 6), this.unsigned);
-        var rem : Long = this;
+        var rem:Long = this;
         var result = '';
         while (true) {
             var remDiv = rem.div(radixToPower);
