@@ -40,17 +40,10 @@ public class TypeHelper {
         } else if (booleans.contains(result)) {
             return "boolean";
         }
+        /*
         if (ctx.NATIVE_ARRAY && !avoidNativeOptim && element.getArrayDimensions() == 1) {
-            if (element.equalsToText("int[]")) {
-                return "Int32Array";
-            } else if (element.equalsToText("double[]")) {
-                return "Float64Array";
-            } else if (element.equalsToText("long[]")) {
-                return "Float64Array";
-            } else if (element.equalsToText("byte[]")) {
-                return "Int8Array";
-            }
-        }
+            return printArrayBaseType(element);
+        }*/
         if (element instanceof PsiPrimitiveType) {
             if (result.equals("null")) {
                 System.err.println("TypeHelper::printType -> Result null with elem:" + element.toString());
@@ -58,11 +51,23 @@ public class TypeHelper {
             return result;
         } else if (element instanceof PsiArrayType) {
             PsiArrayType typedElement = (PsiArrayType) element;
-            String partialResult = printType(typedElement.getComponentType(), ctx, withGenericParams, avoidNativeOptim);
-            if (withGenericParams) {
-            result = partialResult + "[]";
+            String partialResult = printArrayBaseType(typedElement);
+            if (partialResult != null) {
+                result = "";
+                for (int i = 1; i < typedElement.getArrayDimensions(); i++) {
+                    result += "Array<";
+                }
+                result += partialResult;
+                for (int i = 1; i < typedElement.getArrayDimensions(); i++) {
+                    result += ">";
+                }
             } else {
-               result = partialResult;
+                partialResult = printType(typedElement.getComponentType(), ctx, withGenericParams, avoidNativeOptim);
+                if (withGenericParams) {
+                    result = partialResult + "[]";
+                } else {
+                    result = partialResult;
+                }
             }
             return result;
         } else if (element instanceof PsiClassReferenceType) {
@@ -109,14 +114,27 @@ public class TypeHelper {
         return ctx.packageTransform(result);
     }
 
+    public static String printArrayBaseType(PsiType type) {
+        if (type.toString().contains("int[]")) {
+            return "Int32Array";
+        } else if (type.toString().contains("double[]")) {
+            return "Float64Array";
+        } else if (type.toString().contains("long[]")) {
+            return "Float64Array";
+        } else if (type.toString().contains("byte[]")) {
+            return "Int8Array";
+        }
+        return null;
+    }
+
     public static boolean isCallbackClass(PsiClass clazz) {
         if (clazz == null) {
             return false;
         }
 
         PsiAnnotation[] annots = clazz.getModifierList().getAnnotations();
-        for(int i = 0; i < annots.length; i++) {
-            if(annots[i].getNameReferenceElement().getReferenceName().equals("FunctionalInterface")) {
+        for (int i = 0; i < annots.length; i++) {
+            if (annots[i].getNameReferenceElement().getReferenceName().equals("FunctionalInterface")) {
                 return true;
             }
         }

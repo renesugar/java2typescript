@@ -47,57 +47,44 @@ public class NewExpressionTranslator {
                 if (arrayInitializer != null) {
                     ArrayInitializerExpressionTranslator.translate(arrayInitializer, ctx);
                 } else {
-                    int dimensionCount = arrayDimensions.length;
-                    if (ctx.NATIVE_ARRAY && dimensionCount == 1) {
-                        if (element.getType().equalsToText("int[]")) {
-                            ctx.append("new Int32Array(");
-                            ExpressionTranslator.translate(element.getArrayDimensions()[0], ctx);
-                            ctx.append(")");
-                        } else if (element.getType().equalsToText("double[]")) {
-                            ctx.append("new Float64Array(");
-                            ExpressionTranslator.translate(element.getArrayDimensions()[0], ctx);
-                            ctx.append(")");
-                        } else if (element.getType().equalsToText("long[]")) {
-                            ctx.append("new Float64Array(");
-                            ExpressionTranslator.translate(element.getArrayDimensions()[0], ctx);
-                            ctx.append(")");
-                        } else if (element.getType().equalsToText("byte[]")) {
-                            ctx.append("new Int8Array(");
-                            ExpressionTranslator.translate(element.getArrayDimensions()[0], ctx);
-                            ctx.append(")");
-                        } else if (element.getClassOrAnonymousClassReference() != null) {
-                            ctx.append("new Array<");
-                            PsiJavaCodeReferenceElement ref = element.getClassOrAnonymousClassReference();
-                            if (ref.getReference() != null && ref.getReference().resolve() != null) {
-                                PsiClass refClass = (PsiClass) ref.getReference().resolve();
-                                ctx.append(GenericHelper.process(refClass));
-                            } else {
-                                ctx.append(TypeHelper.printType(((PsiArrayType) element.getType()).getComponentType(), ctx, false, false));
-                            }
-                            ctx.append(">(");
-                            ExpressionTranslator.translate(element.getArrayDimensions()[0], ctx);
-                            ctx.append(")");
-                        } else {
-                            //ctx.append(TypeHelper.printType(((PsiArrayType) element.getType()).getComponentType(), ctx, false, false));
-                            for (int i = 0; i < dimensionCount; i++) {
-                                ctx.append("[");
-                            }
-                            for (int i = 0; i < dimensionCount; i++) {
-                                ctx.append("]");
-                            }
+                    String arrayBaseType = TypeHelper.printArrayBaseType(element.getType());
+
+                    int dimensionCount = element.getType().getArrayDimensions();
+                    if(arrayBaseType != null) {
+                        ctx.append("new ");
+                        for(int i = 1; i < dimensionCount; i++) {
+                            ctx.append("Array<");
                         }
+                        ctx.append(arrayBaseType);
+                        for(int i = 1; i < dimensionCount; i++) {
+                            ctx.append(">");
+                        }
+                        ctx.append("(");
+                        ExpressionTranslator.translate(element.getArrayDimensions()[0], ctx);
+                        ctx.append(")");
+                    } else if (element.getClassOrAnonymousClassReference() != null) {
+                        ctx.append("new Array<");
+                        PsiJavaCodeReferenceElement ref = element.getClassOrAnonymousClassReference();
+                        if (ref.getReference() != null && ref.getReference().resolve() != null) {
+                            PsiClass refClass = (PsiClass) ref.getReference().resolve();
+                            ctx.append(GenericHelper.process(refClass));
+                        } else {
+                            ctx.append(TypeHelper.printType(((PsiArrayType) element.getType()).getComponentType(), ctx, false, false));
+                        }
+                        ctx.append(">(");
+                        ExpressionTranslator.translate(element.getArrayDimensions()[0], ctx);
+                        ctx.append(")");
                     } else {
                         for (int i = 0; i < dimensionCount; i++) {
-                            ctx.append("[");
-                        }
-                        for (int i = 0; i < dimensionCount; i++) {
-                            ctx.append("]");
+                            ctx.append("[]");
                         }
                     }
+
                 }
             }
         }
     }
+
 }
 
 
