@@ -64,14 +64,28 @@ module org {
                 }
             }
 
-            public static assertNotEquals(p:any, p2:any):void {
+            public static assertNotEquals(p:any, p2:any, p3:string = ""):void {
+                if(p == null) {
+                    if(p2 == null) {
+                        throw new Error("Assert Error: " + p3 + "\n" + p + "\n must not be equal to \n" + p2 + "\n");
+                    } else {
+                        return;
+                    }
+                }
+                if(p2 == null) {
+                    if(p == null) {
+                        throw new Error("Assert Error: " + p3 + "\n" + p + "\n must not be equal to \n" + p2 + "\n");
+                    } else {
+                        return;
+                    }
+                }
                 if (p.equals !== undefined) {
                     if (p.equals(p2)) {
-                        throw new Error("Assert Error \n" + p + "\n must not be equal to \n" + p2 + "\n");
+                        throw new Error("Assert Error: " + p3 + "\n" + p + "\n must not be equal to \n" + p2 + "\n");
                     }
                 } else {
                     if (p == p2) {
-                        throw new Error("Assert Error \n" + p + "\n must not be equal to \n" + p2 + "\n");
+                        throw new Error("Assert Error: " + p3 + "\n" + p + "\n must not be equal to \n" + p2 + "\n");
                     }
                 }
             }
