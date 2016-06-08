@@ -146,17 +146,19 @@ public class MethodCallExpressionTranslator {
             } else if (methodQualifierExpression instanceof PsiReferenceExpression) {
                 PsiReferenceExpression objectRef = (PsiReferenceExpression) methodQualifierExpression;
                 if (objectRef.getQualifier() != null) {
-                    if (objectRef.getQualifier().getText().equals("System")) {
-                        if (objectRef.getReferenceName().equals("out")) {
-                            ctx.append("console.log(");
-                            ExpressionTranslator.translate(element.getArgumentList().getExpressions()[0], ctx);
-                            ctx.append(")");
-                            return true;
-                        } else if (objectRef.getReferenceName().equals("err")) {
-                            ctx.append("console.error(");
-                            ExpressionTranslator.translate(element.getArgumentList().getExpressions()[0], ctx);
-                            ctx.append(")");
-                            return true;
+                    if(element.getArgumentList().getExpressions().length > 0) {
+                        if (objectRef.getQualifier().getText().equals("System")) {
+                            if (objectRef.getReferenceName().equals("out")) {
+                                ctx.append("console.log(");
+                                ExpressionTranslator.translate(element.getArgumentList().getExpressions()[0], ctx);
+                                ctx.append(")");
+                                return true;
+                            } else if (objectRef.getReferenceName().equals("err")) {
+                                ctx.append("console.error(");
+                                ExpressionTranslator.translate(element.getArgumentList().getExpressions()[0], ctx);
+                                ctx.append(")");
+                                return true;
+                            }
                         }
                     }
                 } else {
