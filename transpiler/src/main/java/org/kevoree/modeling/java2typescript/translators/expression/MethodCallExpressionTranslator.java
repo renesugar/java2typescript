@@ -175,7 +175,7 @@ public class MethodCallExpressionTranslator {
                             return true;
                         }
                     } else if (objectRef.getText().equals("Assert")) {
-                        if (methodExpression.getReferenceName().equals("assertEquals")) {
+                        if (methodExpression.getReferenceName().equals("assertEquals") || methodExpression.getReferenceName().equals("assertNotEquals")) {
                             if(element.getArgumentList().getExpressions().length == 3) {
                                 ExpressionTranslator.translate(methodQualifierExpression, ctx);
                                 ctx.append("." + methodExpression.getReferenceName() + "(");
