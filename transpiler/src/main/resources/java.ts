@@ -6,11 +6,11 @@ module java {
 
             static arraycopy(src:any[]| Float64Array | Int32Array, srcPos:number, dest:any[]| Float64Array | Int32Array, destPos:number, numElements:number):void {
                 if ((dest instanceof Float64Array || dest instanceof Int32Array)
-                && (src instanceof Float64Array || src instanceof Int32Array)){
-                    if(numElements == src.length) {
+                    && (src instanceof Float64Array || src instanceof Int32Array)) {
+                    if (numElements == src.length) {
                         dest.set(src, destPos);
                     } else {
-                        dest.set(src.subarray(srcPos, srcPos+numElements), destPos);
+                        dest.set(src.subarray(srcPos, srcPos + numElements), destPos);
                     }
                 } else {
                     for (var i = 0; i < numElements; i++) {
@@ -564,30 +564,33 @@ module java {
         }
 
         export class HashMap<K, V> implements Map<K, V> {
+
+            private content = {};
+
             get(key:K):V {
-                return this[<any>key];
+                return this.content[<any>key];
             }
 
             put(key:K, value:V):V {
-                var previous_val = this[<any>key];
-                this[<any>key] = value;
+                var previous_val = this.content[<any>key];
+                this.content[<any>key] = value;
                 return previous_val;
             }
 
             containsKey(key:K):boolean {
-                return this.hasOwnProperty(<any>key);
+                return this.content.hasOwnProperty(<any>key);
             }
 
             remove(key:K):V {
-                var tmp = this[<any>key];
-                delete this[<any>key];
+                var tmp = this.content[<any>key];
+                delete this.content[<any>key];
                 return tmp;
             }
 
             keySet():Set<K> {
                 var result = new HashSet<K>();
-                for (var p in this) {
-                    if (this.hasOwnProperty(p)) {
+                for (var p in this.content) {
+                    if (this.content.hasOwnProperty(p)) {
                         result.add(<any> p);
                     }
                 }
@@ -595,32 +598,29 @@ module java {
             }
 
             isEmpty():boolean {
-                return Object.keys(this).length == 0;
+                return Object.keys(this.content).length == 0;
             }
 
             values():Set<V> {
                 var result = new HashSet<V>();
-                for (var p in this) {
-                    if (this.hasOwnProperty(p)) {
-                        result.add(this[p]);
+                for (var p in this.content) {
+                    if (this.content.hasOwnProperty(p)) {
+                        result.add(this.content[p]);
                     }
                 }
                 return <Set<V>> result;
             }
 
             clear():void {
-                for (var p in this) {
-                    if (this.hasOwnProperty(p)) {
-                        delete this[p];
-                    }
-                }
+                this.content = {};
             }
 
             size():number {
-                return Object.keys(this).length
+                return Object.keys(this.content).length
             }
         }
         export class ConcurrentHashMap<K, V> extends HashMap<K, V> {
+
         }
     }
 }
