@@ -5,7 +5,7 @@
     <parent>
         <artifactId>j2ts</artifactId>
         <groupId>org.kevoree.modeling.j2ts</groupId>
-        <version>55-SNAPSHOT</version>
+        <version>55</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <artifactId>mavenplugin</artifactId>
