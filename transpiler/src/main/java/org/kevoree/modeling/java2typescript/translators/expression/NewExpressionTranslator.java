@@ -50,18 +50,19 @@ public class NewExpressionTranslator {
                     String arrayBaseType = TypeHelper.printArrayBaseType(element.getType());
 
                     int dimensionCount = element.getType().getArrayDimensions();
-                    if(arrayBaseType != null) {
+                    if (arrayBaseType != null) {
                         ctx.append("new ");
-                        for(int i = 1; i < dimensionCount; i++) {
+                        for (int i = 1; i < dimensionCount; i++) {
                             ctx.append("Array<");
                         }
                         ctx.append(arrayBaseType);
-                        for(int i = 1; i < dimensionCount; i++) {
+                        for (int i = 1; i < dimensionCount; i++) {
                             ctx.append(">");
                         }
                         ctx.append("(");
                         ExpressionTranslator.translate(element.getArrayDimensions()[0], ctx);
                         ctx.append(")");
+                        generateInitializer(ctx, element);
                     } else if (element.getClassOrAnonymousClassReference() != null) {
                         ctx.append("new Array<");
                         PsiJavaCodeReferenceElement ref = element.getClassOrAnonymousClassReference();
@@ -85,6 +86,52 @@ public class NewExpressionTranslator {
         }
     }
 
+    private static void generateInitializer(TranslationContext ctx, PsiNewExpression element) {
+        int dimensionCount = element.getArrayDimensions().length;
+        PsiElement parentElement = element.getParent();
+        if (dimensionCount > 1 && (parentElement instanceof PsiLocalVariable || parentElement instanceof PsiAssignmentExpression)) {
+            ctx.append(";\n");
+            String arrayBaseType = TypeHelper.printArrayBaseType(element.getType());
+            String fieldName = "";
+            String prefix = "";
+            if (parentElement instanceof PsiLocalVariable) {
+                fieldName = ((PsiLocalVariable) parentElement).getNameIdentifier().getText();
+            } else if (parentElement instanceof PsiAssignmentExpression) {
+                prefix = "this.";
+                fieldName = ((PsiAssignmentExpression) parentElement).getLExpression().getText();
+            }
+
+            for (int dimension = 1; dimension < dimensionCount; dimension++) {
+                String varname = fieldName + "_d" + dimension;
+                ctx.print("for(var " + varname + " = 0; " + varname + " < " + element.getArrayDimensions()[dimension-1].getText() + "; " + varname + "++){\n");
+                ctx.increaseIdent();
+                ctx.print(prefix + fieldName);
+                for(int i = 1; i <= dimension; i++) {
+                    String prevVar = fieldName + "_d" + i;
+                    ctx.append("[" + prevVar + "]");
+                }
+                ctx.append(" = new ");
+                for (int i = 1; i < dimensionCount - dimension; i++) {
+                    ctx.append("Array<");
+                }
+                ctx.append(arrayBaseType);
+                for (int i = 1; i < dimensionCount - dimension; i++) {
+                    ctx.append(">");
+                }
+                ctx.append("(");
+                ExpressionTranslator.translate(element.getArrayDimensions()[dimension], ctx);
+                ctx.append(");\n");
+
+            }
+
+            for (int dimension = 1; dimension < dimensionCount-1; dimension++) {
+                ctx.decreaseIdent();
+                ctx.print("}\n");
+            }
+            ctx.decreaseIdent();
+            ctx.print("}");
+        }
+    }
 }
 
 
