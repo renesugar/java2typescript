@@ -14,10 +14,10 @@ public class MethodCallExpressionTranslator {
 
         if (methodQualifierExpression != null) {
             if (methodQualifierExpression.getType() != null) {
-                if(methodQualifierExpression.getType() instanceof PsiClassReferenceType) {
-                    PsiClass cls = ((PsiClassReferenceType)methodQualifierExpression.getType()).resolve();
-                    if(cls != null) {
-                        if(TypeHelper.isCallbackClass(cls)) {
+                if (methodQualifierExpression.getType() instanceof PsiClassReferenceType) {
+                    PsiClass cls = ((PsiClassReferenceType) methodQualifierExpression.getType()).resolve();
+                    if (cls != null) {
+                        if (TypeHelper.isCallbackClass(cls)) {
                             ExpressionTranslator.translate(methodQualifierExpression, ctx);
                             ctx.append('(');
                             printParameters(element.getArgumentList().getExpressions(), ctx);
@@ -104,6 +104,13 @@ public class MethodCallExpressionTranslator {
                             ExpressionTranslator.translate(methodQualifierExpression, ctx);
                             ctx.append(".split('').map(function(e){return e.charCodeAt(0);})");
                             return true;
+                        } else if (methodExpression.getReferenceName().equals("startsWith")) {
+                            ctx.append("(");
+                            ExpressionTranslator.translate(methodQualifierExpression, ctx);
+                            ctx.append(".lastIndexOf(");
+                            ExpressionTranslator.translate(element.getArgumentList().getExpressions()[0], ctx);
+                            ctx.append(", 0) === 0)");
+                            return true;
                         }
                     }
 
@@ -146,7 +153,7 @@ public class MethodCallExpressionTranslator {
             } else if (methodQualifierExpression instanceof PsiReferenceExpression) {
                 PsiReferenceExpression objectRef = (PsiReferenceExpression) methodQualifierExpression;
                 if (objectRef.getQualifier() != null) {
-                    if(element.getArgumentList().getExpressions().length > 0) {
+                    if (element.getArgumentList().getExpressions().length > 0) {
                         if (objectRef.getQualifier().getText().equals("System")) {
                             if (objectRef.getReferenceName().equals("out")) {
                                 ctx.append("console.log(");
@@ -174,9 +181,15 @@ public class MethodCallExpressionTranslator {
                             ctx.append("Date.now()");
                             return true;
                         }
+                    } else if (objectRef.getText().equals("Arrays")) {
+                        if (methodExpression.getReferenceName().equals("sort")) {
+                            ExpressionTranslator.translate(element.getArgumentList().getExpressions()[0], ctx);
+                            ctx.append(".sort()");
+                            return true;
+                        }
                     } else if (objectRef.getText().equals("Assert")) {
                         if (methodExpression.getReferenceName().equals("assertEquals") || methodExpression.getReferenceName().equals("assertNotEquals")) {
-                            if(element.getArgumentList().getExpressions().length == 3) {
+                            if (element.getArgumentList().getExpressions().length == 3) {
                                 ExpressionTranslator.translate(methodQualifierExpression, ctx);
                                 ctx.append("." + methodExpression.getReferenceName() + "(");
                                 ExpressionTranslator.translate(element.getArgumentList().getExpressions()[1], ctx);
