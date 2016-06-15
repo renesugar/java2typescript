@@ -46,8 +46,10 @@ public class StatementTranslator {
             SynchronizedStatementTranslator.translate((PsiSynchronizedStatement) statement, ctx);
         } else if (statement instanceof PsiEmptyStatement) {
             //Ignore
+        } else if (statement instanceof PsiAssertStatement) {
+            //Ignore
         } else {
-            System.err.println("STMT "+statement.toString());
+            System.err.println("StatementTranslator ! "+statement.toString());
         }
     }
 
