@@ -1,5 +1,7 @@
 package sources.arrays.test;
 
+import java.util.Arrays;
+
 /**
  * Created by gnain on 03/06/16.
  */
@@ -19,5 +21,9 @@ public class DoubleArray {
         boolean[] _back_colors = new boolean[10];
     }
 
+    public void sortTest() {
+        int[] arr = new int[]{0,1,2,3,4};
+        Arrays.sort(arr);
+    }
 
 }

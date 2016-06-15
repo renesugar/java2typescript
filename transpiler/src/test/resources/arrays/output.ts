@@ -24,4 +24,8 @@ export class DoubleArray {
     };
     var _back_colors: boolean[] = [];
   }
+  public sortTest(): void {
+    var arr: Int32Array = new Int32Array([0, 1, 2, 3, 4]);
+    arr.sort();
+  }
 }
