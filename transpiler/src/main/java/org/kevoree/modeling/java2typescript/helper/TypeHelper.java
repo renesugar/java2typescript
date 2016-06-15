@@ -73,17 +73,18 @@ public class TypeHelper {
         } else if (element instanceof PsiClassReferenceType) {
             PsiClassReferenceType elementClassRefType = ((PsiClassReferenceType) element);
             PsiClass resolvedClass = elementClassRefType.resolve();
-            if (((PsiClassReferenceType) element).getClassName().startsWith("Class")) {
-                // "Class" concept does not exists in TypeScript => any
-                result = "any";
+
+            if (resolvedClass != null) {
+                if (resolvedClass.getQualifiedName() == null) {
+                    result = resolvedClass.getName();
+                } else {
+                    result = resolvedClass.getQualifiedName();
+                    result += GenericHelper.process(elementClassRefType, ctx, withGenericParams);
+                }
             } else {
-                if (resolvedClass != null) {
-                    if (resolvedClass.getQualifiedName() == null) {
-                        result = resolvedClass.getName();
-                    } else {
-                        result = resolvedClass.getQualifiedName();
-                        result += GenericHelper.process(elementClassRefType, ctx, withGenericParams);
-                    }
+                if (((PsiClassReferenceType) element).getClassName().startsWith("Class")) {
+                    // "Class" concept does not exists in TypeScript => any
+                    result = "any";
                 } else {
                     String tryJavaUtil = javaTypes.get(elementClassRefType.getClassName());
                     if (tryJavaUtil != null) {

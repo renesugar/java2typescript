@@ -11,6 +11,8 @@ public class DoubleArray {
     public int[][] arrayI;
     public double[][][][] arrayD2 = new double[10][9][8][7];
 
+    public Class<?> c;
+
     public void set() {
         double[][] centroids = new double[1][2];
         arrayD = new double[1][2];
