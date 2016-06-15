@@ -16,6 +16,8 @@ public class InFunction {
         String s = getString();
         String s2 = getString().replace('o', 'a');
         String s3 = this.getF().getF().getString();
+
+        s3.startsWith("a");
     }
 
     public String getString() {

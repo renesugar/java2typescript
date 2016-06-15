@@ -16,6 +16,7 @@ export class InFunction {
     var s: string = this.getString();
     var s2: string = this.getString().replace('o', 'a');
     var s3: string = this.getF().getF().getString();
+    (s3.lastIndexOf("a", 0) === 0);
   }
   public getString(): string {
     return "potato";
