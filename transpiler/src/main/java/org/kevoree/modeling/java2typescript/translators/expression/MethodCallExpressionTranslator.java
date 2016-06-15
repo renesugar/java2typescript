@@ -187,6 +187,13 @@ public class MethodCallExpressionTranslator {
                             ctx.append(".sort()");
                             return true;
                         }
+                    } else if (objectRef.getText().equals("Double")) {
+                        if (methodExpression.getReferenceName().equals("parseDouble")) {
+                            ctx.append("parseFloat(");
+                            ExpressionTranslator.translate(element.getArgumentList().getExpressions()[0], ctx);
+                            ctx.append(")");
+                            return true;
+                        }
                     } else if (objectRef.getText().equals("Assert")) {
                         if (methodExpression.getReferenceName().equals("assertEquals") || methodExpression.getReferenceName().equals("assertNotEquals")) {
                             if (element.getArgumentList().getExpressions().length == 3) {
