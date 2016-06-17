@@ -18,6 +18,10 @@ public class InFunction {
         String s3 = this.getF().getF().getString();
 
         s3.startsWith("a");
+
+        String[] tt = new String[]{"f1", "f2"};
+        essay(new String[]{"f1", "f2"});
+
     }
 
     public String getString() {
@@ -27,4 +31,10 @@ public class InFunction {
     public InFunction getF() {
         return this;
     }
+
+
+    public void essay(String[] res) {
+
+    }
+
 }
