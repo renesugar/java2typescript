@@ -17,6 +17,8 @@ export class InFunction {
     var s2: string = this.getString().replace('o', 'a');
     var s3: string = this.getF().getF().getString();
     (s3.lastIndexOf("a", 0) === 0);
+    var tt: string[] = ["f1", "f2"];
+    this.essay(["f1", "f2"]);
   }
   public getString(): string {
     return "potato";
@@ -24,6 +26,7 @@ export class InFunction {
   public getF(): InFunction {
     return this;
   }
+  public essay(res: string[]): void {}
 }
 export class Primitive {
   public s: string = "a" + "b" + "c";
