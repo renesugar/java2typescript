@@ -31,7 +31,25 @@ public class ReferenceExpressionTranslator {
                 if (resolution instanceof PsiField) {
                     PsiField field = (PsiField) resolution;
                     if (field.getModifierList() != null && field.getModifierList().hasModifierProperty("static")) {
-                        qualifier = field.getContainingClass().getQualifiedName();
+                        PsiClass currentClassDef = null;
+                        PsiElement parent = element;
+                        while(parent != null) {
+                            if(parent instanceof PsiClass) {
+                                currentClassDef = (PsiClass) parent;
+                                break;
+                            } else {
+                                parent = parent.getParent();
+                            }
+                        }
+                        boolean sameClass = false;
+                        if(currentClassDef != null) {
+                            sameClass = (currentClassDef == field.getContainingClass());
+                        }
+                        if (sameClass) {
+                            qualifier = field.getContainingClass().getName();
+                        } else {
+                            qualifier = field.getContainingClass().getQualifiedName();
+                        }
                     }
                     result += qualifier + ".";
                 } else if (resolution instanceof PsiMethod) {

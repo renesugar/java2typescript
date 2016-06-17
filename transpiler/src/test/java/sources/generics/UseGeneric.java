@@ -12,4 +12,8 @@ public class UseGeneric {
 
     public void arrayAsGenType(MyList<MyList[]> list) {
     }
+
+    public static int LEVELA = 0;
+    public static int LEVELB = LEVELA;
+    public static String LEVEL = new String("" + LEVELA);
 }
