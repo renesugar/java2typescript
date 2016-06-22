@@ -428,7 +428,7 @@ module java {
             }
 
             toArray<E>(a:Array<E>):E[] {
-                return <E[]><any>Object.keys(this.content);
+                return <E[]><any>Object.keys(this.content).map(key => this.content[key]);
             }
 
             iterator():Iterator<E> {
