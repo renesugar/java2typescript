@@ -72,10 +72,10 @@ public class Java2TSPlugin extends AbstractMojo {
 
         SourceTranslator sourceTranslator = new SourceTranslator(sources, target.getPath(), name);
         moduleImports.forEach(sourceTranslator::addModuleImport);
-        if(copyJRE) {
+        if (copyJRE) {
             sourceTranslator.addModuleImport("./jre.ts");
         }
-        if(copyJunit) {
+        if (copyJunit) {
             sourceTranslator.addModuleImport("./junit.ts");
         }
         pkgTransforms.forEach(sourceTranslator::addPackageTransform);
@@ -90,13 +90,11 @@ public class Java2TSPlugin extends AbstractMojo {
                 }
             }
         }
-
         sourceTranslator.process();
-
         sourceTranslator.generate();
         if (copyJRE) {
             try {
-                Files.copy(getClass().getClassLoader().getResourceAsStream("java.ts"), Paths.get(target.getAbsolutePath(),"src","main","jre.ts"), StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(getClass().getClassLoader().getResourceAsStream("java.ts"), Paths.get(target.getAbsolutePath(), "jre.ts"), StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -104,10 +102,10 @@ public class Java2TSPlugin extends AbstractMojo {
 
         if (copyJunit) {
             try {
-                Files.copy(getClass().getClassLoader().getResourceAsStream("junit.ts"), Paths.get(target.getAbsolutePath(),"src","main","junit.ts"), StandardCopyOption.REPLACE_EXISTING);
+                Files.copy(getClass().getClassLoader().getResourceAsStream("junit.ts"), Paths.get(target.getAbsolutePath(), "junit.ts"), StandardCopyOption.REPLACE_EXISTING);
                 FlatJUnitGenerator generator = new FlatJUnitGenerator();
                 generator.addModuleImport("./" + name + ".ts");
-                generator.generate(source, Paths.get(target.getAbsolutePath(),"src","main").toFile());
+                generator.generate(source, Paths.get(target.getAbsolutePath()).toFile());
             } catch (IOException e) {
                 e.printStackTrace();
             }

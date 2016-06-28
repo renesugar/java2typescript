@@ -77,7 +77,7 @@ public class SourceTranslator {
     }
 
     public void generate() {
-        String[] modelPath = new String[]{"src", "main", name + ".ts"};
+        String[] modelPath = new String[]{name + ".ts"};
         File modelFile = Paths.get(outPath, modelPath).toFile();
         try {
             FileUtil.writeToFile(modelFile, ctx.toString().getBytes());
