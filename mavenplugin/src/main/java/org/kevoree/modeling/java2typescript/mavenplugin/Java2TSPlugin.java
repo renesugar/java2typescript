@@ -81,7 +81,7 @@ public class Java2TSPlugin extends AbstractMojo {
         pkgTransforms.forEach(sourceTranslator::addPackageTransform);
 
 
-        for (Artifact a : project.getDependencyArtifacts()) {
+        for (Artifact a : project.getArtifacts()) {
             File file = a.getFile();
             if (file != null) {
                 if (file.isFile()) {
