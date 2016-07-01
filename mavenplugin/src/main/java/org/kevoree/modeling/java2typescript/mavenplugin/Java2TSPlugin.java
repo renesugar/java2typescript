@@ -81,6 +81,15 @@ public class Java2TSPlugin extends AbstractMojo {
         pkgTransforms.forEach(sourceTranslator::addPackageTransform);
 
 
+        for (Artifact a : project.getDependencyArtifacts()) {
+            File file = a.getFile();
+            if (file != null) {
+                if (file.isFile()) {
+                    sourceTranslator.addToClasspath(file.getAbsolutePath());
+                    getLog().info(file.getAbsolutePath() + " added to Java2TS analyzer");
+                }
+            }
+        }
         for (Artifact a : project.getArtifacts()) {
             File file = a.getFile();
             if (file != null) {
