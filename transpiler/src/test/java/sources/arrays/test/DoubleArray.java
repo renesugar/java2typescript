@@ -14,6 +14,10 @@ public class DoubleArray {
     public Class<?> c;
 
     public void set() {
+
+        double d = Double.POSITIVE_INFINITY;
+        double d2 = Double.NEGATIVE_INFINITY;
+
         double[][] centroids = new double[1][2];
         arrayD = new double[1][2];
         arrayI = new int[1][];

@@ -4,6 +4,8 @@ export class DoubleArray {
   public arrayD2: Array<Array<Array<Float64Array>>> = new Array<Array<Array<Float64Array>>>(10);
   public c: any;
   public set(): void {
+    var d: number = java.lang.Double.POSITIVE_INFINITY;
+    var d2: number = java.lang.Double.NEGATIVE_INFINITY;
     var centroids: Array<Float64Array> = new Array<Float64Array>(1);
     for(var centroids_d1 = 0; centroids_d1 < 1; centroids_d1++){
       centroids[centroids_d1] = new Float64Array(2);

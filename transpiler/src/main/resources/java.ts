@@ -79,6 +79,8 @@ module java {
         }
         export class Double {
             public static MAX_VALUE:number = Number.MAX_VALUE;
+            public static POSITIVE_INFINITY : number = Number.POSITIVE_INFINITY;
+            public static NEGATIVE_INFINITY : number = Number.NEGATIVE_INFINITY;
             public static NaN = NaN;
         }
     }
