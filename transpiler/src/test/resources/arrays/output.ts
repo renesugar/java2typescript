@@ -30,5 +30,8 @@ export class DoubleArray {
   public sortTest(): void {
     var arr: Int32Array = new Int32Array([0, 1, 2, 3, 4]);
     arr.sort();
+    for (var i: number = 0; i < 10; i++) {
+      org.junit.Assert.assertEquals(2.,3.,1.);
+    }
   }
 }

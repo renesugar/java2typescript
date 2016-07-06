@@ -1,5 +1,8 @@
 package sources.arrays.test;
 
+import org.junit.Assert;
+import org.junit.Test;
+
 import java.util.Arrays;
 
 /**
@@ -28,8 +31,11 @@ public class DoubleArray {
     }
 
     public void sortTest() {
-        int[] arr = new int[]{0,1,2,3,4};
+        int[] arr = new int[]{0, 1, 2, 3, 4};
         Arrays.sort(arr);
+        for (int i = 0; i < 10; i++) {
+            Assert.assertEquals(1., 2., 3.);
+        }
     }
 
 }

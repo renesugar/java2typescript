@@ -83,6 +83,9 @@ public class SourceTranslatorTest {
         translator.addPackageTransform("sources.strings", "");
         translator.process();
 
+        String result = translator.getCtx().toString().trim();
+        System.out.println(result);
+
     }
 
     /*

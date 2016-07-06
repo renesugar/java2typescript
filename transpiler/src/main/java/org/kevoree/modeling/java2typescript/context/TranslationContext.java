@@ -97,7 +97,9 @@ public class TranslationContext {
     }
 
     public String getContent() {
-        return sb.toString();
+        String content = sb.toString();
+        sb = new StringBuilder(content);
+        return content;
     }
 
     private TranslationContext indent() {

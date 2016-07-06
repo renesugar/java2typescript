@@ -13,6 +13,9 @@ public class ReferenceExpressionTranslator {
             PsiClass clazz = (PsiClass) element.getReference().resolve();
             if (clazz != null) {
                 result += clazz.getQualifiedName();
+                if (appendToCtx) {
+                    ctx.append(result);
+                }
                 return result;
             }
         }
