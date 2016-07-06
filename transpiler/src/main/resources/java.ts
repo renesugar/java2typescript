@@ -83,6 +83,11 @@ module java {
             public static NEGATIVE_INFINITY : number = Number.NEGATIVE_INFINITY;
             public static NaN = NaN;
         }
+        export class Long {
+            public static parseLong(d:any) {
+                return parseInt(d);
+            }
+        }
     }
 
     export namespace util {
