@@ -74,7 +74,7 @@
     </dependencies>
 
     <properties>
-        <kmf.plugin.version>18</kmf.plugin.version>
+        <kmf.plugin.version>19-SNAPSHOT</kmf.plugin.version>
     </properties>
 
     <build>

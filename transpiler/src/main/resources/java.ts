@@ -79,8 +79,8 @@ module java {
         }
         export class Double {
             public static MAX_VALUE:number = Number.MAX_VALUE;
-            public static POSITIVE_INFINITY : number = Number.POSITIVE_INFINITY;
-            public static NEGATIVE_INFINITY : number = Number.NEGATIVE_INFINITY;
+            public static POSITIVE_INFINITY:number = Number.POSITIVE_INFINITY;
+            public static NEGATIVE_INFINITY:number = Number.NEGATIVE_INFINITY;
             public static NaN = NaN;
         }
         export class Long {
@@ -88,6 +88,12 @@ module java {
                 return parseInt(d);
             }
         }
+        export class Integer {
+            public static parseInt(d:any) {
+                return parseInt(d);
+            }
+        }
+
     }
 
     export namespace util {
@@ -1124,8 +1130,8 @@ class Long {
             var log2 = Math.ceil(Math.log(approx) / Math.LN2),
                 delta = (log2 <= 48) ? 1 : Long.pow_dbl(2, log2 - 48),
 
-            // Decrease the approximation until it is smaller than the remainder.  Note
-            // that if it is too large, the product overflows and is negative.
+                // Decrease the approximation until it is smaller than the remainder.  Note
+                // that if it is too large, the product overflows and is negative.
                 approxRes = Long.fromNumber(approx),
                 approxRem = approxRes.mul(divisor);
             while (approxRem.isNegative() || approxRem.gt(rem)) {

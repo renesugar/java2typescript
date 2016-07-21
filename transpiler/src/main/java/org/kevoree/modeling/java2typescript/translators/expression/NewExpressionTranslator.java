@@ -10,6 +10,7 @@ import org.kevoree.modeling.java2typescript.translators.AnonymousClassTranslator
 public class NewExpressionTranslator {
 
     public static void translate(PsiNewExpression element, TranslationContext ctx) {
+
         PsiAnonymousClass anonymousClass = element.getAnonymousClass();
         if (anonymousClass != null) {
             AnonymousClassTranslator.translate(anonymousClass, ctx);

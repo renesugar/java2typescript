@@ -11,9 +11,6 @@ import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 
-/**
- * Created by gregory.nain on 03/12/14.
- */
 public class FlatJUnitGenerator {
 
     private ArrayList<String> moduleImports = new ArrayList<>();
