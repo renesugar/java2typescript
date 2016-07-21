@@ -78,8 +78,8 @@ public class SourceTranslatorTest {
         translator.process();
 
         //TODO comment
-        String result = translator.getCtx().toString().trim();
-        //System.out.println(result);
+       // String result = translator.getCtx().toString().trim();
+       // System.out.println(result);
 
 
     }
