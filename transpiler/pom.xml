@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.kevoree.modeling.j2ts</groupId>
         <artifactId>j2ts</artifactId>
-        <version>65-SNAPSHOT</version>
+        <version>65</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -24,7 +24,7 @@
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-compiler</artifactId>
-            <version>1.0.3</version>
+            <version>0.10.195</version>
         </dependency>
 
 
