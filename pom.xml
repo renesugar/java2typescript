@@ -3,7 +3,7 @@
     <groupId>org.kevoree.modeling.j2ts</groupId>
     <artifactId>j2ts</artifactId>
     <packaging>pom</packaging>
-    <version>65</version>
+    <version>66-SNAPSHOT</version>
     <name>Kevoree :: Modeling :: J2TS :: Root</name>
     <url>https://github.com/kevoree-modeling/java2typescript</url>
     <description>Kevoree Modeling Java2TypeScript</description>
