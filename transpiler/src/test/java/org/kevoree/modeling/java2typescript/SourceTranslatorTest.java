@@ -59,15 +59,17 @@ public class SourceTranslatorTest {
                 result);
     }
 
-    @Test
+    //@Test
     public void mwdb_core() throws IOException {
-        String source = "/Users/duke/dev/mwDB/core/src/main/java";
+        String source = "/Users/gnain/Sources/Kevoree-Modeling/mwDB/core/src/main/java";
         String target = Paths.get("target", "generated-sources", "core").toAbsolutePath().toString();
 
         SourceTranslator translator = new SourceTranslator(source, target, "strings");
         translator.addPackageTransform("sources.strings", "");
-        Path classes = Paths.get(source,"../../../../api/target/api-7-SNAPSHOT.jar");
+        Path classes = Paths.get("/Users/gnain/Sources/Kevoree-Modeling/mwDB/api/target/api-7-SNAPSHOT.jar");
+
         if(classes.toFile().exists()) {
+            System.out.println("DepAdded");
             translator.addToClasspath(classes.toString());
         }
 
@@ -77,7 +79,7 @@ public class SourceTranslatorTest {
 
         //TODO comment
         String result = translator.getCtx().toString().trim();
-        System.out.println(result);
+        //System.out.println(result);
 
 
     }
