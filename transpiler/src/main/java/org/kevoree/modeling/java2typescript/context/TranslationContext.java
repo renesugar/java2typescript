@@ -109,11 +109,11 @@ public class TranslationContext {
         return this;
     }
 
-    public void enterPackage(String pkgName, boolean rootPassed) {
-        if(rootPassed) {
-            this.print("export module ");
-        } else {
+    public void enterPackage(String pkgName, boolean isRoot) {
+        if(isRoot) {
             this.print("module ");
+        } else {
+            this.print("export module ");
         }
         this.append(pkgName);
         this.append(" {\n");

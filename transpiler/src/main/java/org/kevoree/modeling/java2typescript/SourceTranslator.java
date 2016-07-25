@@ -3,6 +3,7 @@ package org.kevoree.modeling.java2typescript;
 import com.google.common.collect.Lists;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.psi.*;
+import com.intellij.util.containers.ComparatorUtil;
 import org.kevoree.modeling.java2typescript.context.TranslationContext;
 import org.kevoree.modeling.java2typescript.translators.ClassTranslator;
 
@@ -11,6 +12,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SourceTranslator {
@@ -19,7 +21,6 @@ public class SourceTranslator {
     private List<String> srcPaths;
     private String outPath;
     private String name;
-    private PsiElementVisitor visitor;
     private TranslationContext ctx;
     private boolean rootPassed = false;
 
@@ -33,21 +34,6 @@ public class SourceTranslator {
         this.outPath = outPath;
         this.name = name;
         this.ctx = new TranslationContext();
-
-        this.visitor = new PsiElementVisitor() {
-            @Override
-            public void visitElement(PsiElement element) {
-                if (element instanceof PsiDirectory) {
-                    visit((PsiDirectory) element);
-
-                } else if (element instanceof PsiJavaFile) {
-                    visit((PsiJavaFile) element);
-
-                } else {
-                    visit(element);
-                }
-            }
-        };
     }
 
     private void process(String srcPath) {
@@ -63,13 +49,27 @@ public class SourceTranslator {
         File outFolder = new File(this.outPath);
 
         if (!outFolder.exists()) {
-            //FileUtil.delete(outFolder);
             outFolder.mkdirs();
         }
 
         PsiDirectory root = analyzer.analyze(srcFolder);
-        root.acceptChildren(visitor);
-
+        PsiFile[] containedFiles = root.getFiles();
+        Arrays.sort(containedFiles, (f1, f2) -> f1.getName().compareTo(f2.getName()));
+        for (PsiFile file : containedFiles) {
+            if (file instanceof PsiJavaFile) {
+                visit((PsiJavaFile) file);
+            } else {
+                visit(file);
+            }
+        }
+        PsiDirectory[] subDirectories = root.getSubdirectories();
+        Arrays.sort(subDirectories, (f1, f2) -> f1.getName().compareTo(f2.getName()) );
+        for (PsiDirectory subDir : subDirectories) {
+            visit(subDir, !rootPassed);
+            if(!rootPassed) {
+                rootPassed = true;
+            }
+        }
     }
 
     public void process() {
@@ -91,12 +91,25 @@ public class SourceTranslator {
         }
     }
 
-    private void visit(PsiDirectory dir) {
-        ctx.enterPackage(dir.getName(), rootPassed);
-        if (!rootPassed) {
-            rootPassed = true;
+    private void visit(PsiDirectory dir, boolean isRoot) {
+        ctx.enterPackage(dir.getName(), isRoot);
+
+        PsiFile[] containedFiles = dir.getFiles();
+        Arrays.sort(containedFiles, (f1, f2) -> f1.getName().compareTo(f2.getName()) );
+        for (PsiFile file : containedFiles) {
+            if (file instanceof PsiJavaFile) {
+                visit((PsiJavaFile) file);
+            } else {
+                visit(file);
+            }
         }
-        dir.acceptChildren(visitor);
+
+        PsiDirectory[] subDirectories = dir.getSubdirectories();
+        Arrays.sort(subDirectories, (f1, f2) -> f1.getName().compareTo(f2.getName()) );
+        for (PsiDirectory subDir : subDirectories) {
+            visit(subDir, false);
+        }
+
         ctx.leavePackage();
     }
 
@@ -115,7 +128,6 @@ public class SourceTranslator {
     private void visit(PsiElement elem) {
         System.out.println("Ignored file= " + elem);
     }
-
 
 
     public void addToClasspath(String path) {
