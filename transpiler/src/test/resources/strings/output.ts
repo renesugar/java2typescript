@@ -30,4 +30,9 @@ export class InFunction {
 }
 export class Primitive {
   public s: string = "a" + "b" + "c";
+  private static p: Primitive = Primitive.newPrim();
+  private static newPrim(): Primitive {
+    var p: Primitive = new Primitive();
+    return p;
+  }
 }

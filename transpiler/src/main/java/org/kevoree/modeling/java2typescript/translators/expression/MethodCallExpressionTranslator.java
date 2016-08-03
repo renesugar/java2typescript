@@ -29,14 +29,33 @@ public class MethodCallExpressionTranslator {
             }
         }
 
-
         boolean hasBeenTransformed = tryNativeTransform(element, ctx);
         if (!hasBeenTransformed) {
-            ReferenceExpressionTranslator.translate(methodExpr, ctx);
+
+            if ((methodExpr.getQualifier() == null)
+                    && (element.getParent() instanceof PsiField)
+                    && (methodExpr.resolve().getParent() == ((PsiField) element.getParent()).getParent())) {
+
+                ctx.append(((PsiClass) methodExpr.getReference().resolve().getParent()).getName());
+                ctx.append('.');
+                ctx.append(methodExpr.getReferenceName());
+            } else {
+                ReferenceExpressionTranslator.translate(methodExpr, ctx);
+            }
             ctx.append('(');
             printParameters(element.getArgumentList().getExpressions(), ctx);
             ctx.append(")");
         }
+        /*
+        if (element.getParent() instanceof PsiField && ((PsiField) element.getParent()).getModifierList().hasModifierProperty("static")) {
+            ctx.append(((PsiClass) (element.getParent()).getParent()).getName());
+            ctx.append('.');
+            ctx.append(element.getMethodExpression().getReferenceName());
+            ctx.append('(');
+            printParameters(element.getArgumentList().getExpressions(), ctx);
+            ctx.append(")");
+        } else {
+         */
     }
 
     private static void printParameters(PsiExpression[] arguments, TranslationContext ctx) {
