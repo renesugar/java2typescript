@@ -1,9 +1,10 @@
 package org.kevoree.modeling.java2typescript;
 
-import org.apache.commons.io.FileUtils;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -12,6 +13,7 @@ public class SourceTranslatorTest {
 
     @Test
     public void generics() throws IOException {
+
         String source = Paths.get("src", "test", "java", "sources", "generics").toAbsolutePath().toString();
         String target = Paths.get("target", "generated-sources", "java2ts").toAbsolutePath().toString();
 
@@ -21,9 +23,17 @@ public class SourceTranslatorTest {
         String result = translator.getCtx().toString().trim();
         //System.out.println(result);
 
+        BufferedReader br = new BufferedReader(new FileReader(Paths.get("src", "test", "resources", "generics", "output.ts").toFile()));
+        StringBuilder sb = new StringBuilder();
+        String line = null;
+        while ((line = br.readLine()) != null){
+            sb.append('\n').append(line);
+        }
+
         Assert.assertEquals(
-                FileUtils.readFileToString(Paths.get("src", "test", "resources", "generics", "output.ts").toFile()).trim(),
+                sb.toString().substring(1),
                 result);
+
     }
 
     @Test
@@ -38,8 +48,15 @@ public class SourceTranslatorTest {
         String result = translator.getCtx().toString().trim();
         //System.out.println(result);
 
+        BufferedReader br = new BufferedReader(new FileReader(Paths.get("src", "test", "resources", "strings", "output.ts").toFile()));
+        StringBuilder sb = new StringBuilder();
+        String line = null;
+        while ((line = br.readLine()) != null){
+            sb.append('\n').append(line);
+        }
+
         Assert.assertEquals(
-                FileUtils.readFileToString(Paths.get("src", "test", "resources", "strings", "output.ts").toFile()).trim(),
+                sb.toString().substring(1),
                 result);
     }
 
@@ -54,8 +71,15 @@ public class SourceTranslatorTest {
         String result = translator.getCtx().toString().trim();
         //System.out.println(result);
 
+        BufferedReader br = new BufferedReader(new FileReader(Paths.get("src", "test", "resources", "arrays", "output.ts").toFile()));
+        StringBuilder sb = new StringBuilder();
+        String line = null;
+        while ((line = br.readLine()) != null){
+            sb.append('\n').append(line);
+        }
+
         Assert.assertEquals(
-                FileUtils.readFileToString(Paths.get("src", "test", "resources", "arrays", "output.ts").toFile()).trim(),
+                sb.toString().substring(1),
                 result);
     }
 
