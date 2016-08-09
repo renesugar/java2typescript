@@ -282,20 +282,49 @@ module java {
         }
 
         export class Random {
+            private seed:number = undefined;
+
             public nextInt(max?:number):number {
                 if (typeof max === 'undefined') {
                     max = Math.pow(2, 32);
                 }
-                return Math.floor(Math.random() * max);
+                if (this.seed == undefined) {
+                    return Math.floor(Math.random() * max);
+                } else {
+                    return Math.floor(this.nextSeeded(0, max));
+                }
             }
 
             public nextDouble():number {
-                return Math.random();
+                if (this.seed == undefined) {
+                    return Math.random();
+                } else {
+                    return this.nextSeeded(Number.MIN_VALUE, Number.MAX_VALUE);
+                }
             }
 
             public nextBoolean():boolean {
-                return Math.random() >= 0.5;
+                if (this.seed == undefined) {
+                    return Math.random() >= 0.5;
+                } else {
+                    return this.nextSeeded() >= 0.5;
+                }
             }
+
+            public setSeed(seed:number):void {
+                this.seed = seed;
+            }
+
+            private nextSeeded(min?:number, max?:number) {
+                var max = max || 1;
+                var min = min || 0;
+
+                this.seed = (this.seed * 9301 + 49297) % 233280;
+                var rnd = this.seed / 233280;
+
+                return min + rnd * (max - min);
+            }
+
         }
 
         export interface Iterator<E> {
