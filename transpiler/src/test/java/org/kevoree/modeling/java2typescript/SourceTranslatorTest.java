@@ -92,7 +92,7 @@ public class SourceTranslatorTest {
         translator.process();
 
         String result = translator.getCtx().toString().trim();
-        System.out.println(result);
+       // System.out.println(result);
 
         BufferedReader br = new BufferedReader(new FileReader(Paths.get("src", "test", "resources", "closures", "output.ts").toFile()));
         StringBuilder sb = new StringBuilder();

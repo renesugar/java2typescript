@@ -9,7 +9,7 @@ public class Closures {
     private ClosureInterface ci = () -> { };
     private ClosureInterface ci2 = () -> System.out.println("super !!");
 
-    private ClosureInterfaceWithParam cip = (b) -> {System.out.println("super !!");};
+    private ClosureInterfaceWithParam cip = (b) -> {System.out.println("Another");System.out.println("super !!");};
 
     private ClosureInterfaceWithParamAndResult cipr = (b) -> b && true;
 

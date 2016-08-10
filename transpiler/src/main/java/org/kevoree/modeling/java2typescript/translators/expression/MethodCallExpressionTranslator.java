@@ -31,11 +31,9 @@ public class MethodCallExpressionTranslator {
 
         boolean hasBeenTransformed = tryNativeTransform(element, ctx);
         if (!hasBeenTransformed) {
-
             if ((methodExpr.getQualifier() == null)
                     && (element.getParent() instanceof PsiField)
                     && (methodExpr.resolve().getParent() == ((PsiField) element.getParent()).getParent())) {
-
                 ctx.append(((PsiClass) methodExpr.getReference().resolve().getParent()).getName());
                 ctx.append('.');
                 ctx.append(methodExpr.getReferenceName());
@@ -46,16 +44,6 @@ public class MethodCallExpressionTranslator {
             printParameters(element.getArgumentList().getExpressions(), ctx);
             ctx.append(")");
         }
-        /*
-        if (element.getParent() instanceof PsiField && ((PsiField) element.getParent()).getModifierList().hasModifierProperty("static")) {
-            ctx.append(((PsiClass) (element.getParent()).getParent()).getName());
-            ctx.append('.');
-            ctx.append(element.getMethodExpression().getReferenceName());
-            ctx.append('(');
-            printParameters(element.getArgumentList().getExpressions(), ctx);
-            ctx.append(")");
-        } else {
-         */
     }
 
     private static void printParameters(PsiExpression[] arguments, TranslationContext ctx) {

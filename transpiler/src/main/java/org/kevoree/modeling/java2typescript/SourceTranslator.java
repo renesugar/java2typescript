@@ -53,6 +53,7 @@ public class SourceTranslator {
         }
 
         PsiDirectory root = analyzer.analyze(srcFolder);
+        root.getResolveScope().accept(root.getVirtualFile());
         PsiFile[] containedFiles = root.getFiles();
         Arrays.sort(containedFiles, (f1, f2) -> f1.getName().compareTo(f2.getName()));
         for (PsiFile file : containedFiles) {
@@ -114,6 +115,7 @@ public class SourceTranslator {
     }
 
     private void visit(PsiJavaFile file) {
+
         ctx.setFile(file);
         file.acceptChildren(new PsiElementVisitor() {
             @Override

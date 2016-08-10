@@ -14,7 +14,6 @@ import java.util.HashSet;
 import java.util.List;
 
 /**
- *
  * Created by duke on 11/6/14.
  */
 public class MethodTranslator {
@@ -60,7 +59,7 @@ public class MethodTranslator {
             if (!genericParams.isEmpty()) {
                 genericParams = "<" + genericParams;
             }
-            for (int i=0; i < method.getParameterList().getParameters().length; i++) {
+            for (int i = 0; i < method.getParameterList().getParameters().length; i++) {
                 PsiParameter param = method.getParameterList().getParameters()[i];
                 if (param.getType() instanceof PsiClassReferenceType) {
                     PsiClassReferenceType paramClassRef = (PsiClassReferenceType) param.getType();
@@ -92,25 +91,7 @@ public class MethodTranslator {
             }
             ctx.append(genericParams);
         }
-        ctx.append('(');
-        List<String> params = new ArrayList<>();
-        StringBuilder paramSB = new StringBuilder();
-        for (PsiParameter parameter : method.getParameterList().getParameters()) {
-            paramSB.setLength(0);
-            if (parameter.isVarArgs()) {
-                paramSB.append("...");
-            }
-            paramSB.append(KeywordHelper.process(parameter.getName(), ctx));
-            if (docMeta.optional.contains(parameter.getName())) {
-                paramSB.append("?");
-            }
-            paramSB.append(": ");
-
-            paramSB.append(TypeHelper.printType(parameter.getType(), ctx, true, false));
-            params.add(paramSB.toString());
-        }
-        ctx.append(String.join(", ", params));
-        ctx.append(')');
+        translateMethodParametersDeclaration(method, ctx);
         if (!method.isConstructor()) {
             ctx.append(": ");
             ctx.append(TypeHelper.printType(method.getReturnType(), ctx));
@@ -142,5 +123,34 @@ public class MethodTranslator {
             ctx.append(";\n");
         }
         ctx.removeGenericParameterNames();
+    }
+
+    public static void translateToLambdaType(PsiMethod method, TranslationContext ctx) {
+        translateMethodParametersDeclaration(method, ctx);
+        ctx.append("=>");
+        ctx.append(TypeHelper.printType(method.getReturnType(), ctx));
+    }
+
+    private static void translateMethodParametersDeclaration(PsiMethod method, TranslationContext ctx) {
+        DocMeta docMeta = DocHelper.process(method.getDocComment());
+        ctx.append('(');
+        List<String> params = new ArrayList<>();
+        StringBuilder paramSB = new StringBuilder();
+        for (PsiParameter parameter : method.getParameterList().getParameters()) {
+            paramSB.setLength(0);
+            if (parameter.isVarArgs()) {
+                paramSB.append("...");
+            }
+            paramSB.append(KeywordHelper.process(parameter.getName(), ctx));
+            if (docMeta.optional.contains(parameter.getName())) {
+                paramSB.append("?");
+            }
+            paramSB.append(": ");
+
+            paramSB.append(TypeHelper.printType(parameter.getType(), ctx, true, false));
+            params.add(paramSB.toString());
+        }
+        ctx.append(String.join(", ", params));
+        ctx.append(')');
     }
 }
