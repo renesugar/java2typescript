@@ -46,7 +46,7 @@ public class ExpressionTranslator {
         } else if (expression instanceof PsiClassObjectAccessExpression) {
             ClassObjectAccessExpressionTranslator.translate((PsiClassObjectAccessExpression) expression, ctx);
         } else if (expression instanceof PsiLambdaExpression) {
-            LambaExpressionTranslator.translate((PsiLambdaExpression) expression, ctx);
+            LambdaExpressionTranslator.translate((PsiLambdaExpression) expression, ctx);
         } else {
             System.err.println("EXPR " + expression);
         }

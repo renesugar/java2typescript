@@ -1,19 +1,17 @@
 
 package org.kevoree.modeling.java2typescript.translators.expression;
 
-import com.intellij.psi.PsiCodeBlock;
-import com.intellij.psi.PsiLambdaExpression;
-import com.intellij.psi.PsiParameter;
+import com.intellij.psi.*;
 import org.kevoree.modeling.java2typescript.context.TranslationContext;
 import org.kevoree.modeling.java2typescript.helper.KeywordHelper;
 import org.kevoree.modeling.java2typescript.translators.CodeBlockTranslator;
 
-public class LambaExpressionTranslator {
+public class LambdaExpressionTranslator {
 
     public static void translate(PsiLambdaExpression element, TranslationContext ctx) {
         ctx.append("(");
         PsiParameter[] paramList = element.getParameterList().getParameters();
-        for (int i=0; i < paramList.length; i++) {
+        for (int i = 0; i < paramList.length; i++) {
             PsiParameter param = paramList[i];
             ctx.append(KeywordHelper.process(param.getName(), ctx));
             if (i < paramList.length - 1) {
@@ -22,7 +20,14 @@ public class LambaExpressionTranslator {
         }
         ctx.append(") => {\n");
         ctx.increaseIdent();
-        CodeBlockTranslator.translate((PsiCodeBlock) element.getBody(), ctx);
+        PsiElement body = element.getBody();
+        if (body instanceof PsiCodeBlock) {
+            CodeBlockTranslator.translate((PsiCodeBlock) body, ctx);
+        } else if (body instanceof PsiMethodCallExpression) {
+            MethodCallExpressionTranslator.translate((PsiMethodCallExpression) body, ctx);
+        } else {
+            System.err.println("LambdaExpressionTranslator:: Unsupported body type:" + body.getClass().getName());
+        }
         ctx.decreaseIdent();
         ctx.print("}");
     }
