@@ -23,10 +23,11 @@ public class LambdaExpressionTranslator {
         PsiElement body = element.getBody();
         if (body instanceof PsiCodeBlock) {
             CodeBlockTranslator.translate((PsiCodeBlock) body, ctx);
-        } else if (body instanceof PsiMethodCallExpression) {
-            MethodCallExpressionTranslator.translate((PsiMethodCallExpression) body, ctx);
+        /*} else if (body instanceof PsiMethodCallExpression) {
+            MethodCallExpressionTranslator.translate((PsiMethodCallExpression) body, ctx);*/
         } else {
-            System.err.println("LambdaExpressionTranslator:: Unsupported body type:" + body.getClass().getName());
+            ExpressionTranslator.translate((PsiExpression)body, ctx);
+            //System.err.println("LambdaExpressionTranslator:: Unsupported body type:" + body.getClass().getName());
         }
         ctx.decreaseIdent();
         ctx.print("}");
