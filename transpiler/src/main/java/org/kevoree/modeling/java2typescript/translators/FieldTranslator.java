@@ -2,6 +2,7 @@
 package org.kevoree.modeling.java2typescript.translators;
 
 import com.intellij.psi.*;
+import com.intellij.psi.impl.source.PsiClassReferenceType;
 import org.kevoree.modeling.java2typescript.helper.DocHelper;
 import org.kevoree.modeling.java2typescript.context.TranslationContext;
 import org.kevoree.modeling.java2typescript.helper.KeywordHelper;
@@ -9,6 +10,7 @@ import org.kevoree.modeling.java2typescript.helper.TypeHelper;
 import org.kevoree.modeling.java2typescript.metas.DocMeta;
 import org.kevoree.modeling.java2typescript.translators.expression.ExpressionListTranslator;
 import org.kevoree.modeling.java2typescript.translators.expression.ExpressionTranslator;
+import org.kevoree.modeling.java2typescript.translators.expression.MethodCallExpressionTranslator;
 
 public class FieldTranslator {
 
@@ -51,7 +53,18 @@ public class FieldTranslator {
             ctx.append("static ");
         }
         ctx.append(element.getName()).append(": ");
-        ctx.append(TypeHelper.printType(element.getType(), ctx));
+
+        if (element.hasInitializer() && (element.getInitializer() instanceof PsiLambdaExpression)) {
+            if(element.getType() instanceof PsiClassReferenceType) {
+                MethodTranslator.translateToLambdaType(((PsiClassReferenceType)element.getType()).rawType().resolve().getMethods()[0], ctx);
+            } else {
+                System.err.println("FieldTranslator:: Type not instance of PsiClassReferenceType. Could not translate lambda expression. (" + element.getType().getClass().getName() + ")");
+            }
+
+        } else {
+            ctx.append(TypeHelper.printType(element.getType(), ctx));
+        }
+
         if (element.hasInitializer()) {
             ctx.append(" = ");
             ExpressionTranslator.translate(element.getInitializer(), ctx);
