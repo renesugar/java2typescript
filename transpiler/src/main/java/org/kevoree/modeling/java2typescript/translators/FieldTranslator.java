@@ -24,10 +24,10 @@ public class FieldTranslator {
             if (element instanceof PsiEnumConstant) {
                 translateEnumConstant((PsiEnumConstant) element, ctx);
             } else {
-                translateClassField(element, ctx);
+                translateClassField(element, ctx, docMeta);
             }
         } else {
-            DocTagTranslator.translate(element.getDocComment(), ctx);
+            DocTagTranslator.translate(docMeta, ctx);
         }
     }
 
@@ -42,7 +42,7 @@ public class FieldTranslator {
         ctx.append(");\n");
     }
 
-    private static void translateClassField(PsiField element, TranslationContext ctx) {
+    private static void translateClassField(PsiField element, TranslationContext ctx, DocMeta docMeta) {
         PsiModifierList modifierList = element.getModifierList();
         if (modifierList != null && modifierList.hasModifierProperty("private")) {
             ctx.print("private ");
@@ -56,7 +56,7 @@ public class FieldTranslator {
 
         if (element.hasInitializer() && (element.getInitializer() instanceof PsiLambdaExpression)) {
             if(element.getType() instanceof PsiClassReferenceType) {
-                MethodTranslator.translateToLambdaType(((PsiClassReferenceType)element.getType()).rawType().resolve().getMethods()[0], ctx);
+                MethodTranslator.translateToLambdaType(((PsiClassReferenceType)element.getType()).rawType().resolve().getMethods()[0], ctx, docMeta);
             } else {
                 System.err.println("FieldTranslator:: Type not instance of PsiClassReferenceType. Could not translate lambda expression. (" + element.getType().getClass().getName() + ")");
             }

@@ -91,7 +91,7 @@ public class MethodTranslator {
             }
             ctx.append(genericParams);
         }
-        translateMethodParametersDeclaration(method, ctx);
+        translateMethodParametersDeclaration(method, ctx, docMeta);
         if (!method.isConstructor()) {
             ctx.append(": ");
             ctx.append(TypeHelper.printType(method.getReturnType(), ctx));
@@ -111,7 +111,7 @@ public class MethodTranslator {
                             CodeBlockTranslator.translate(method.getBody(), ctx);
                         }
                     } else {
-                        DocTagTranslator.translate(method.getDocComment(), ctx);
+                        DocTagTranslator.translate(docMeta, ctx);
                     }
                     ctx.decreaseIdent();
                     ctx.print("}\n");
@@ -125,14 +125,13 @@ public class MethodTranslator {
         ctx.removeGenericParameterNames();
     }
 
-    public static void translateToLambdaType(PsiMethod method, TranslationContext ctx) {
-        translateMethodParametersDeclaration(method, ctx);
+    public static void translateToLambdaType(PsiMethod method, TranslationContext ctx, DocMeta docMeta) {
+        translateMethodParametersDeclaration(method, ctx, docMeta);
         ctx.append("=>");
         ctx.append(TypeHelper.printType(method.getReturnType(), ctx));
     }
 
-    private static void translateMethodParametersDeclaration(PsiMethod method, TranslationContext ctx) {
-        DocMeta docMeta = DocHelper.process(method.getDocComment());
+    private static void translateMethodParametersDeclaration(PsiMethod method, TranslationContext ctx, DocMeta docMeta) {
         ctx.append('(');
         List<String> params = new ArrayList<>();
         StringBuilder paramSB = new StringBuilder();
@@ -142,7 +141,7 @@ public class MethodTranslator {
                 paramSB.append("...");
             }
             paramSB.append(KeywordHelper.process(parameter.getName(), ctx));
-            if (docMeta.optional.contains(parameter.getName())) {
+            if (docMeta != null && docMeta.optional.contains(parameter.getName())) {
                 paramSB.append("?");
             }
             paramSB.append(": ");

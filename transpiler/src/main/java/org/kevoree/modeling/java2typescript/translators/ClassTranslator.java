@@ -54,7 +54,7 @@ public class ClassTranslator {
 
         if (metas.nativeActivated) {
             ctx.increaseIdent();
-            DocTagTranslator.translate(clazz.getDocComment(), ctx);
+            DocTagTranslator.translate(metas, ctx);
             ctx.decreaseIdent();
         } else {
             printClassMembers(clazz, ctx);

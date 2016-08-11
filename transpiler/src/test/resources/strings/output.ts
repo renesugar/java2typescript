@@ -35,4 +35,10 @@ export class Primitive {
     var p: Primitive = new Primitive();
     return p;
   }
+  public funct(t: string): string {
+    return "bbb";
+  }
+  public funct2(y: string): string {
+    return "bbbb";
+  }
 }

@@ -12,6 +12,24 @@ public class Primitive {
     }
 
 
+    /**
+     * {@native ts
+     * return "bbb";
+     * }
+     */
+    public String funct(String t) {
+        return "aaa";
+    }
+
+
+    /**
+     * @native ts
+     * return "bbbb";
+     */
+    public String funct2(String y) {
+        return "aaaa";
+    }
+
 
 
 }

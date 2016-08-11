@@ -2,6 +2,7 @@ package org.kevoree.modeling.java2typescript.translators;
 
 import com.intellij.psi.javadoc.*;
 import org.kevoree.modeling.java2typescript.context.TranslationContext;
+import org.kevoree.modeling.java2typescript.metas.DocMeta;
 
 /**
  * Created by gregory.nain on 08/01/15.
@@ -20,23 +21,10 @@ public class DocTagTranslator {
     public static final String OPTIONAL = "optional";
 
 
-    public static void translate(PsiDocComment comment, TranslationContext ctx) {
-        PsiDocTag[] tags = comment.getTags();
-        for (PsiDocTag tag : tags) {
-            if (tag.getName().equals(NATIVE) && tag.getValueElement() != null && tag.getValueElement().getText().equals(TS)) {
-                String value = tag.getText();
-                String[] lines = value.split("\n");
-                for (String line : lines) {
-                    String trimmedLine = line.trim();
-                    if (trimmedLine.length() > 0 && !trimmedLine.contains("@" + NATIVE) && !trimmedLine.contains("@" + IGNORE)) {
-                        if (trimmedLine.charAt(0) == '*') {
-                            trimmedLine = trimmedLine.substring(1);
-                        }
-                        if (!trimmedLine.isEmpty()) {
-                            ctx.print(trimmedLine).append("\n");
-                        }
-                    }
-                }
+    public static void translate(DocMeta docMeta, TranslationContext ctx) {
+        if(docMeta.nativeActivated && docMeta.nativeBodyLines != null) {
+            for(String line : docMeta.nativeBodyLines) {
+                ctx.print(line);
             }
         }
     }
