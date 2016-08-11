@@ -131,41 +131,44 @@ module java {
                 }
 
                 export class AtomicLongArray {
-                    _internal:Array<Long> = new Array<Long>();
+                    _internal:Float64Array;
 
-                    constructor(p:Array<Long>) {
-                        this._internal = p;
+                    constructor(initialCapacity:number) {
+                        this._internal = new Float64Array(initialCapacity);
                     }
 
                     set(index:number, newVal:number) {
-                        this._internal[index] = Long.fromNumber(newVal, false);
+                        this._internal[index] = newVal;
                     }
 
                     get(index:number) {
-                        return this._internal[index].toNumber();
+                        return this._internal[index];
                     }
 
                     getAndSet(index:number, newVal:number) {
                         var temp = this._internal[index];
-                        this._internal[index] = Long.fromNumber(newVal);
-                        return temp.toNumber();
+                        this._internal[index] = newVal;
+                        return temp;
                     }
 
                     compareAndSet(index:number, expect:number, update:number):boolean {
-                        if (this._internal[index].equals(Long.fromNumber(expect))) {
-                            this._internal[index] = Long.fromNumber(update);
+                        if (this._internal[index] == expect) {
+                            this._internal[index] = update;
                             return true;
                         } else {
                             return false;
                         }
                     }
+                    length():number {
+                        return this._internal.length;
+                    }
                 }
 
                 export class AtomicReferenceArray<A> {
-                    _internal:Array<A> = new Array<A>();
+                    _internal:Array<A>;
 
-                    constructor(p:Array<A>) {
-                        this._internal = p;
+                    constructor(initialCapacity:number) {
+                        this._internal = new Array<A>();
                     }
 
                     set(index:number, newVal:A) {
@@ -189,6 +192,10 @@ module java {
                         } else {
                             return false;
                         }
+                    }
+
+                    length():number {
+                        return this._internal.length;
                     }
                 }
 

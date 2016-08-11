@@ -166,6 +166,8 @@ public class TypeHelper {
         javaTypes.put("AtomicLong", "java.util.concurrent.atomic.AtomicLong");
         javaTypes.put("AtomicReference", "java.util.concurrent.atomic.AtomicReference");
         javaTypes.put("AtomicIntegerArray", "java.util.concurrent.atomic.AtomicIntegerArray");
+        javaTypes.put("AtomicLongArray", "java.util.concurrent.atomic.AtomicLongArray");
+        javaTypes.put("AtomicReferenceArray", "java.util.concurrent.atomic.AtomicReferenceArray");
 
         javaTypes.put("ReentrantLock", "java.util.concurrent.locks.ReentrantLock");
 
