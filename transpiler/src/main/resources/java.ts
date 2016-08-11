@@ -128,7 +128,68 @@ module java {
                             return false;
                         }
                     }
+                }
 
+                export class AtomicLongArray {
+                    _internal:Array<Long> = new Array<Long>();
+
+                    constructor(p:Array<Long>) {
+                        this._internal = p;
+                    }
+
+                    set(index:number, newVal:number) {
+                        this._internal[index] = Long.fromNumber(newVal, false);
+                    }
+
+                    get(index:number) {
+                        return this._internal[index].toNumber();
+                    }
+
+                    getAndSet(index:number, newVal:number) {
+                        var temp = this._internal[index];
+                        this._internal[index] = Long.fromNumber(newVal);
+                        return temp.toNumber();
+                    }
+
+                    compareAndSet(index:number, expect:number, update:number):boolean {
+                        if (this._internal[index].equals(Long.fromNumber(expect))) {
+                            this._internal[index] = Long.fromNumber(update);
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
+                }
+
+                export class AtomicReferenceArray<A> {
+                    _internal:Array<A> = new Array<A>();
+
+                    constructor(p:Array<A>) {
+                        this._internal = p;
+                    }
+
+                    set(index:number, newVal:A) {
+                        this._internal[index] = newVal;
+                    }
+
+                    get(index:number):A {
+                        return this._internal[index];
+                    }
+
+                    getAndSet(index:number, newVal:A) {
+                        var temp = this._internal[index];
+                        this._internal[index] = newVal;
+                        return temp;
+                    }
+
+                    compareAndSet(index:number, expect:A, update:A):boolean {
+                        if (this._internal[index] == expect) {
+                            this._internal[index] = update;
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    }
                 }
 
                 export class AtomicReference<A> {
