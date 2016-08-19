@@ -5,7 +5,7 @@
     <parent>
         <artifactId>j2ts</artifactId>
         <groupId>org.kevoree.modeling.j2ts</groupId>
-        <version>71</version>
+        <version>72-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
