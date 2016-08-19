@@ -4,7 +4,7 @@ module java {
             static gc() {
             }
 
-            static arraycopy(src:any[]| Float64Array | Int32Array, srcPos:number, dest:any[]| Float64Array | Int32Array, destPos:number, numElements:number):void {
+            static arraycopy(src: any[]| Float64Array | Int32Array, srcPos: number, dest: any[]| Float64Array | Int32Array, destPos: number, numElements: number): void {
                 if ((dest instanceof Float64Array || dest instanceof Int32Array)
                     && (src instanceof Float64Array || src instanceof Int32Array)) {
                     if (numElements == src.length) {
@@ -21,28 +21,28 @@ module java {
         }
 
         export class StringBuilder {
-            private _buffer:string = "";
+            private _buffer: string = "";
             public length = 0;
 
-            append(val:any):StringBuilder {
+            append(val: any): StringBuilder {
                 this._buffer = this._buffer + val;
                 this.length = this._buffer.length;
                 return this;
             }
 
-            insert(position:number, val:any):StringBuilder {
+            insert(position: number, val: any): StringBuilder {
                 this._buffer = this._buffer.slice(0, position) + val + this._buffer.slice(position);
 
                 return this;
             }
 
-            toString():string {
+            toString(): string {
                 return this._buffer;
             }
         }
 
         export class String {
-            static valueOf(data:any, offset?:number, count?:number):string {
+            static valueOf(data: any, offset?: number, count?: number): string {
                 if (typeof offset === 'undefined' && typeof count === 'undefined') {
                     return data + '';
                 } else {
@@ -50,12 +50,12 @@ module java {
                 }
             }
 
-            static hashCode(str:string):number {
-                var h:number = str['_hashCode'] ? str['_hashCode'] : 0;
+            static hashCode(str: string): number {
+                var h: number = str['_hashCode'] ? str['_hashCode'] : 0;
                 if (h === 0 && str.length > 0) {
-                    var val:string = str;
+                    var val: string = str;
 
-                    for (var i:number = 0; i < str.length; i++) {
+                    for (var i: number = 0; i < str.length; i++) {
                         h = 31 * h + str.charCodeAt(i);
                     }
                     str['_hashCode'] = h;
@@ -63,33 +63,33 @@ module java {
                 return h;
             }
 
-            static isEmpty(str:string):boolean {
+            static isEmpty(str: string): boolean {
                 return str.length === 0;
             }
 
-            static join(delimiter:string, ...elements:string[]):string {
+            static join(delimiter: string, ...elements: string[]): string {
                 return elements.join(delimiter);
             }
         }
 
         export class Thread {
-            static sleep(time:number):void {
+            static sleep(time: number): void {
 
             }
         }
         export class Double {
-            public static MAX_VALUE:number = Number.MAX_VALUE;
-            public static POSITIVE_INFINITY:number = Number.POSITIVE_INFINITY;
-            public static NEGATIVE_INFINITY:number = Number.NEGATIVE_INFINITY;
+            public static MAX_VALUE: number = Number.MAX_VALUE;
+            public static POSITIVE_INFINITY: number = Number.POSITIVE_INFINITY;
+            public static NEGATIVE_INFINITY: number = Number.NEGATIVE_INFINITY;
             public static NaN = NaN;
         }
         export class Long {
-            public static parseLong(d:any) {
+            public static parseLong(d: any) {
                 return parseInt(d);
             }
         }
         export class Integer {
-            public static parseInt(d:any) {
+            public static parseInt(d: any) {
                 return parseInt(d);
             }
         }
@@ -100,27 +100,27 @@ module java {
         export namespace concurrent {
             export namespace atomic {
                 export class AtomicIntegerArray {
-                    _internal:Int32Array;
+                    _internal: Int32Array;
 
-                    constructor(p:Int32Array) {
-                        this._internal = p;
+                    constructor(initialCapacity: number) {
+                        this._internal = new Int32Array(initialCapacity);
                     }
 
-                    set(index:number, newVal:number) {
+                    set(index: number, newVal: number) {
                         this._internal[index] = newVal;
                     }
 
-                    get(index:number) {
+                    get(index: number) {
                         return this._internal[index];
                     }
 
-                    getAndSet(index:number, newVal:number) {
+                    getAndSet(index: number, newVal: number) {
                         var temp = this._internal[index];
                         this._internal[index] = newVal;
                         return temp;
                     }
 
-                    compareAndSet(index:number, expect:number, update:number):boolean {
+                    compareAndSet(index: number, expect: number, update: number): boolean {
                         if (this._internal[index] == expect) {
                             this._internal[index] = update;
                             return true;
@@ -131,27 +131,27 @@ module java {
                 }
 
                 export class AtomicLongArray {
-                    _internal:Float64Array;
+                    _internal: Float64Array;
 
-                    constructor(initialCapacity:number) {
+                    constructor(initialCapacity: number) {
                         this._internal = new Float64Array(initialCapacity);
                     }
 
-                    set(index:number, newVal:number) {
+                    set(index: number, newVal: number) {
                         this._internal[index] = newVal;
                     }
 
-                    get(index:number) {
+                    get(index: number) {
                         return this._internal[index];
                     }
 
-                    getAndSet(index:number, newVal:number) {
+                    getAndSet(index: number, newVal: number) {
                         var temp = this._internal[index];
                         this._internal[index] = newVal;
                         return temp;
                     }
 
-                    compareAndSet(index:number, expect:number, update:number):boolean {
+                    compareAndSet(index: number, expect: number, update: number): boolean {
                         if (this._internal[index] == expect) {
                             this._internal[index] = update;
                             return true;
@@ -159,33 +159,34 @@ module java {
                             return false;
                         }
                     }
-                    length():number {
+
+                    length(): number {
                         return this._internal.length;
                     }
                 }
 
                 export class AtomicReferenceArray<A> {
-                    _internal:Array<A>;
+                    _internal: Array<A>;
 
-                    constructor(initialCapacity:number) {
+                    constructor(initialCapacity: number) {
                         this._internal = new Array<A>();
                     }
 
-                    set(index:number, newVal:A) {
+                    set(index: number, newVal: A) {
                         this._internal[index] = newVal;
                     }
 
-                    get(index:number):A {
+                    get(index: number): A {
                         return this._internal[index];
                     }
 
-                    getAndSet(index:number, newVal:A) {
+                    getAndSet(index: number, newVal: A) {
                         var temp = this._internal[index];
                         this._internal[index] = newVal;
                         return temp;
                     }
 
-                    compareAndSet(index:number, expect:A, update:A):boolean {
+                    compareAndSet(index: number, expect: A, update: A): boolean {
                         if (this._internal[index] == expect) {
                             this._internal[index] = update;
                             return true;
@@ -194,15 +195,15 @@ module java {
                         }
                     }
 
-                    length():number {
+                    length(): number {
                         return this._internal.length;
                     }
                 }
 
                 export class AtomicReference<A> {
-                    _internal:A = null;
+                    _internal: A = null;
 
-                    compareAndSet(expect:A, update:A):boolean {
+                    compareAndSet(expect: A, update: A): boolean {
                         if (this._internal == expect) {
                             this._internal = update;
                             return true;
@@ -211,15 +212,15 @@ module java {
                         }
                     }
 
-                    get():A {
+                    get(): A {
                         return this._internal
                     }
 
-                    set(newRef:A) {
+                    set(newRef: A) {
                         this._internal = newRef;
                     }
 
-                    getAndSet(newVal:A):A {
+                    getAndSet(newVal: A): A {
                         var temp = this._internal;
                         this._internal = newVal;
                         return temp;
@@ -229,11 +230,11 @@ module java {
                 export class AtomicLong {
                     _internal = 0;
 
-                    constructor(init:number) {
+                    constructor(init: number) {
                         this._internal = init;
                     }
 
-                    compareAndSet(expect:number, update:number):boolean {
+                    compareAndSet(expect: number, update: number): boolean {
                         if (this._internal == expect) {
                             this._internal = update;
                             return true;
@@ -242,16 +243,16 @@ module java {
                         }
                     }
 
-                    get():number {
+                    get(): number {
                         return this._internal;
                     }
 
-                    incrementAndGet():number {
+                    incrementAndGet(): number {
                         this._internal++;
                         return this._internal;
                     }
 
-                    decrementAndGet():number {
+                    decrementAndGet(): number {
                         this._internal--;
                         return this._internal;
                     }
@@ -260,11 +261,11 @@ module java {
                 export class AtomicBoolean {
                     _internal = false;
 
-                    constructor(init:boolean) {
+                    constructor(init: boolean) {
                         this._internal = init;
                     }
 
-                    compareAndSet(expect:boolean, update:boolean):boolean {
+                    compareAndSet(expect: boolean, update: boolean): boolean {
                         if (this._internal == expect) {
                             this._internal = update;
                             return true;
@@ -273,11 +274,11 @@ module java {
                         }
                     }
 
-                    get():boolean {
+                    get(): boolean {
                         return this._internal;
                     }
 
-                    set(newVal:boolean) {
+                    set(newVal: boolean) {
                         this._internal = newVal
                     }
 
@@ -286,11 +287,11 @@ module java {
                 export class AtomicInteger {
                     _internal = 0;
 
-                    constructor(init:number) {
+                    constructor(init: number) {
                         this._internal = init;
                     }
 
-                    compareAndSet(expect:number, update:number):boolean {
+                    compareAndSet(expect: number, update: number): boolean {
                         if (this._internal == expect) {
                             this._internal = update;
                             return true;
@@ -299,37 +300,37 @@ module java {
                         }
                     }
 
-                    get():number {
+                    get(): number {
                         return this._internal;
                     }
 
-                    set(newVal:number) {
+                    set(newVal: number) {
                         this._internal = newVal
                     }
 
-                    getAndSet(newVal:number):number {
+                    getAndSet(newVal: number): number {
                         var temp = this._internal;
                         this._internal = newVal;
                         return temp;
                     }
 
-                    incrementAndGet():number {
+                    incrementAndGet(): number {
                         this._internal++;
                         return this._internal;
                     }
 
-                    decrementAndGet():number {
+                    decrementAndGet(): number {
                         this._internal--;
                         return this._internal;
                     }
 
-                    getAndIncrement():number {
+                    getAndIncrement(): number {
                         var temp = this._internal;
                         this._internal++;
                         return temp;
                     }
 
-                    getAndDecrement():number {
+                    getAndDecrement(): number {
                         var temp = this._internal;
                         this._internal--;
                         return temp;
@@ -338,11 +339,11 @@ module java {
             }
             export namespace locks {
                 export class ReentrantLock {
-                    public lock():void {
+                    public lock(): void {
 
                     }
 
-                    public unlock():void {
+                    public unlock(): void {
 
                     }
                 }
@@ -350,9 +351,9 @@ module java {
         }
 
         export class Random {
-            private seed:number = undefined;
+            private seed: number = undefined;
 
-            public nextInt(max?:number):number {
+            public nextInt(max?: number): number {
                 if (typeof max === 'undefined') {
                     max = Math.pow(2, 32);
                 }
@@ -363,7 +364,7 @@ module java {
                 }
             }
 
-            public nextDouble():number {
+            public nextDouble(): number {
                 if (this.seed == undefined) {
                     return Math.random();
                 } else {
@@ -371,7 +372,7 @@ module java {
                 }
             }
 
-            public nextBoolean():boolean {
+            public nextBoolean(): boolean {
                 if (this.seed == undefined) {
                     return Math.random() >= 0.5;
                 } else {
@@ -379,11 +380,11 @@ module java {
                 }
             }
 
-            public setSeed(seed:number):void {
+            public setSeed(seed: number): void {
                 this.seed = seed;
             }
 
-            private nextSeeded(min?:number, max?:number) {
+            private nextSeeded(min?: number, max?: number) {
                 var max = max || 1;
                 var min = min || 0;
 
@@ -396,19 +397,19 @@ module java {
         }
 
         export interface Iterator<E> {
-            hasNext():boolean;
-            next():E;
+            hasNext(): boolean;
+            next(): E;
         }
 
         export class Arrays {
-            public static fill(data:any, begin:number, nbElem:number, param:number):void {
+            public static fill(data: any, begin: number, nbElem: number, param: number): void {
                 var max = begin + nbElem;
                 for (var i = begin; i < max; i++) {
                     data[i] = param;
                 }
             }
 
-            public static copyOf<T>(original:any[], newLength:number, ignore?:any):T[] {
+            public static copyOf<T>(original: any[], newLength: number, ignore?: any): T[] {
                 var copy = new Array<T>(newLength);
                 lang.System.arraycopy(original, 0, copy, 0, Math.min(original.length, newLength));
                 return copy;
@@ -417,7 +418,7 @@ module java {
 
         export class Collections {
 
-            public static swap(list:List<any>, i:number, j:number) {
+            public static swap(list: List<any>, i: number, j: number) {
                 const l = list;
                 l.set(i, l.set(j, l.get(i)));
             }
@@ -425,62 +426,62 @@ module java {
         }
 
         export interface Collection<E> {
-            add(val:E):void;
-            addAll(vals:Collection<E>):void;
-            get(index:number):E;
-            remove(o:any):any;
-            clear():void;
-            isEmpty():boolean;
-            size():number;
-            contains(o:E):boolean;
-            toArray<E>(a:Array<E>):E[];
-            iterator():Iterator<E>;
-            containsAll(c:Collection<any>):boolean;
-            addAll(c:Collection<any>):boolean;
-            removeAll(c:Collection<any>):boolean;
+            add(val: E): void;
+            addAll(vals: Collection<E>): void;
+            get(index: number): E;
+            remove(o: any): any;
+            clear(): void;
+            isEmpty(): boolean;
+            size(): number;
+            contains(o: E): boolean;
+            toArray<E>(a: Array<E>): E[];
+            iterator(): Iterator<E>;
+            containsAll(c: Collection<any>): boolean;
+            addAll(c: Collection<any>): boolean;
+            removeAll(c: Collection<any>): boolean;
 
         }
 
         export interface List<E> extends Collection<E> {
-            add(elem:E):void;
-            add(index:number, elem:E):void;
-            poll():E;
-            addAll(c:Collection<E>):boolean;
-            addAll(index:number, c:Collection<E>):boolean;
-            get(index:number):E;
-            set(index:number, element:E):E;
-            indexOf(o:E):number;
-            lastIndexOf(o:E):number;
-            remove(index:number):E;
+            add(elem: E): void;
+            add(index: number, elem: E): void;
+            poll(): E;
+            addAll(c: Collection<E>): boolean;
+            addAll(index: number, c: Collection<E>): boolean;
+            get(index: number): E;
+            set(index: number, element: E): E;
+            indexOf(o: E): number;
+            lastIndexOf(o: E): number;
+            remove(index: number): E;
         }
 
         export interface Set<E> extends Collection<E> {
-            forEach(f:(e:any)=>void):void;
+            forEach(f: (e: any)=>void): void;
         }
 
         export class Itr<E> implements Iterator<E> {
-            public cursor:number = 0;
-            public lastRet:number = -1;
-            protected list:Collection<E>;
+            public cursor: number = 0;
+            public lastRet: number = -1;
+            protected list: Collection<E>;
 
-            constructor(list:Collection<E>) {
+            constructor(list: Collection<E>) {
                 this.list = list;
             }
 
-            public hasNext():boolean {
+            public hasNext(): boolean {
                 return this.cursor != this.list.size();
             }
 
-            public next():E {
+            public next(): E {
                 try {
-                    var i:number = this.cursor;
-                    var next:E = this.list.get(i);
+                    var i: number = this.cursor;
+                    var next: E = this.list.get(i);
                     this.lastRet = i;
                     this.cursor = i + 1;
                     return next;
                 } catch ($ex$) {
                     if ($ex$ instanceof Error) {
-                        var e:Error = <Error>$ex$;
+                        var e: Error = <Error>$ex$;
                         throw new Error("no such element exception");
                     } else {
                         throw $ex$;
@@ -492,7 +493,7 @@ module java {
         export class HashSet<E> implements Set<E> {
             private content = {};
 
-            add(val:E) {
+            add(val: E) {
                 this.content[<any>val] = val;
             }
 
@@ -500,15 +501,15 @@ module java {
                 this.content = {};
             }
 
-            contains(val:E):boolean {
+            contains(val: E): boolean {
                 return this.content.hasOwnProperty(<any>val);
             }
 
-            containsAll(elems:Collection<E>):boolean {
+            containsAll(elems: Collection<E>): boolean {
                 return false;
             }
 
-            addAll(vals:Collection<E>):boolean {
+            addAll(vals: Collection<E>): boolean {
                 var tempArray = vals.toArray(null);
                 for (var i = 0; i < tempArray.length; i++) {
                     this.content[<any>tempArray[i]] = tempArray[i];
@@ -516,7 +517,7 @@ module java {
                 return true;
             }
 
-            remove(val:E):boolean {
+            remove(val: E): boolean {
                 var b = false;
                 if (this.content[<any>val]) {
                     b = true;
@@ -525,42 +526,42 @@ module java {
                 return b;
             }
 
-            removeAll():boolean {
+            removeAll(): boolean {
                 return false;
             }
 
-            size():number {
+            size(): number {
                 return Object.keys(this.content).length;
             }
 
-            isEmpty():boolean {
+            isEmpty(): boolean {
                 return this.size() == 0;
             }
 
-            toArray<E>(a:Array<E>):E[] {
+            toArray<E>(a: Array<E>): E[] {
                 return <E[]><any>Object.keys(this.content).map(key => this.content[key]);
             }
 
-            iterator():Iterator<E> {
+            iterator(): Iterator<E> {
                 return new java.util.Itr(this);
             }
 
-            forEach(f:(e:any)=>void):void {
+            forEach(f: (e: any)=>void): void {
                 for (var p in this.content) {
                     f(this.content[p]);
                 }
             }
 
-            get(index:number):E {
+            get(index: number): E {
                 return this.content[index];
             }
         }
 
 
         export class AbstractList<E> implements List<E> {
-            private content:E[] = [];
+            private content: E[] = [];
 
-            addAll(index:any, vals?:any):boolean {
+            addAll(index: any, vals?: any): boolean {
                 var tempArray = vals.toArray(null);
                 for (var i = 0; i < tempArray.length; i++) {
                     this.content.push(tempArray[i]);
@@ -572,29 +573,29 @@ module java {
                 this.content = [];
             }
 
-            poll():E {
+            poll(): E {
                 return this.content.shift();
             }
 
-            remove(indexOrElem:any):any {
+            remove(indexOrElem: any): any {
                 this.content.splice(indexOrElem, 1);
                 return true;
             }
 
-            removeAll():boolean {
+            removeAll(): boolean {
                 this.content = [];
                 return true;
             }
 
-            toArray(a:Array<E>):E[] {
+            toArray(a: Array<E>): E[] {
                 return this.content;
             }
 
-            size():number {
+            size(): number {
                 return this.content.length;
             }
 
-            add(index:any, elem?:E) {
+            add(index: any, elem?: E) {
                 if (typeof elem !== 'undefined') {
                     this.content.splice(index, 0, elem);
                 } else {
@@ -602,36 +603,36 @@ module java {
                 }
             }
 
-            get(index:number):E {
+            get(index: number): E {
                 return this.content[index];
             }
 
-            contains(val:E):boolean {
+            contains(val: E): boolean {
                 return this.content.indexOf(val) != -1;
             }
 
-            containsAll(elems:Collection<E>):boolean {
+            containsAll(elems: Collection<E>): boolean {
                 return false;
             }
 
-            isEmpty():boolean {
+            isEmpty(): boolean {
                 return this.content.length == 0;
             }
 
-            set(index:number, element:E):E {
+            set(index: number, element: E): E {
                 this.content[index] = element;
                 return element;
             }
 
-            indexOf(element:E):number {
+            indexOf(element: E): number {
                 return this.content.indexOf(element);
             }
 
-            lastIndexOf(element:E):number {
+            lastIndexOf(element: E): number {
                 return this.content.lastIndexOf(element);
             }
 
-            iterator():Iterator<E> {
+            iterator(): Iterator<E> {
                 return new Itr(this);
             }
 
@@ -645,60 +646,60 @@ module java {
         export class Stack<E> {
             content = new Array();
 
-            pop():E {
+            pop(): E {
                 return this.content.pop();
             }
 
-            push(t:E):void {
+            push(t: E): void {
                 this.content.push(t);
             }
 
-            isEmpty():boolean {
+            isEmpty(): boolean {
                 return this.content.length == 0;
             }
 
-            peek():E {
+            peek(): E {
                 return this.content.slice(-1)[0];
             }
         }
 
         export interface Map<K, V> {
-            get(key:K):V;
-            put(key:K, value:V):V;
-            containsKey(key:K):boolean;
-            remove(key:K):V;
-            keySet():Set<K>;
-            isEmpty():boolean;
-            values():Set<V>;
-            clear():void;
-            size():number;
+            get(key: K): V;
+            put(key: K, value: V): V;
+            containsKey(key: K): boolean;
+            remove(key: K): V;
+            keySet(): Set<K>;
+            isEmpty(): boolean;
+            values(): Set<V>;
+            clear(): void;
+            size(): number;
         }
 
         export class HashMap<K, V> implements Map<K, V> {
 
             private content = {};
 
-            get(key:K):V {
+            get(key: K): V {
                 return this.content[<any>key];
             }
 
-            put(key:K, value:V):V {
+            put(key: K, value: V): V {
                 var previous_val = this.content[<any>key];
                 this.content[<any>key] = value;
                 return previous_val;
             }
 
-            containsKey(key:K):boolean {
+            containsKey(key: K): boolean {
                 return this.content.hasOwnProperty(<any>key);
             }
 
-            remove(key:K):V {
+            remove(key: K): V {
                 var tmp = this.content[<any>key];
                 delete this.content[<any>key];
                 return tmp;
             }
 
-            keySet():Set<K> {
+            keySet(): Set<K> {
                 var result = new HashSet<K>();
                 for (var p in this.content) {
                     if (this.content.hasOwnProperty(p)) {
@@ -708,11 +709,11 @@ module java {
                 return <Set<K>> result;
             }
 
-            isEmpty():boolean {
+            isEmpty(): boolean {
                 return Object.keys(this.content).length == 0;
             }
 
-            values():Set<V> {
+            values(): Set<V> {
                 var result = new HashSet<V>();
                 for (var p in this.content) {
                     if (this.content.hasOwnProperty(p)) {
@@ -722,11 +723,11 @@ module java {
                 return <Set<V>> result;
             }
 
-            clear():void {
+            clear(): void {
                 this.content = {};
             }
 
-            size():number {
+            size(): number {
                 return Object.keys(this.content).length
             }
         }
@@ -736,7 +737,7 @@ module java {
     }
 }
 
-function arrayInstanceOf(arr:any, arg:Function):boolean {
+function arrayInstanceOf(arr: any, arg: Function): boolean {
     if (!(arr instanceof Array)) {
         return false;
     } else {
@@ -757,9 +758,9 @@ class Long {
      see: https://github.com/dcodeIO/long.js for details
      */
 
-    private high:number = 0;
-    private low:number = 0;
-    private unsigned:boolean = false;
+    private high: number = 0;
+    private low: number = 0;
+    private unsigned: boolean = false;
 
     private static INT_CACHE = {};
     private static UINT_CACHE = {};
@@ -773,17 +774,17 @@ class Long {
     private static TWO_PWR_63_DBL = Long.TWO_PWR_64_DBL / 2;
     private static TWO_PWR_24 = Long.fromInt(Long.TWO_PWR_24_DBL);
 
-    public static ZERO:Long = Long.fromInt(0);
-    public static UZERO:Long = Long.fromInt(0, true);
-    public static ONE:Long = Long.fromInt(1);
-    public static UONE:Long = Long.fromInt(1, true);
-    public static NEG_ONE:Long = Long.fromInt(-1);
-    public static MAX_VALUE:Long = Long.fromBits(0x7FFFFFFF, 0xFFFFFFFF, false);
-    public static MAX_UNSIGNED_VALUE:Long = Long.fromBits(0xFFFFFFFF, 0xFFFFFFFF, true);
-    public static MIN_VALUE:Long = Long.fromBits(0x80000000, 0, false);
+    public static ZERO: Long = Long.fromInt(0);
+    public static UZERO: Long = Long.fromInt(0, true);
+    public static ONE: Long = Long.fromInt(1);
+    public static UONE: Long = Long.fromInt(1, true);
+    public static NEG_ONE: Long = Long.fromInt(-1);
+    public static MAX_VALUE: Long = Long.fromBits(0x7FFFFFFF, 0xFFFFFFFF, false);
+    public static MAX_UNSIGNED_VALUE: Long = Long.fromBits(0xFFFFFFFF, 0xFFFFFFFF, true);
+    public static MIN_VALUE: Long = Long.fromBits(0x80000000, 0, false);
 
 
-    constructor(low ?:number, high ?:number, unsigned ?:boolean) {
+    constructor(low ?: number, high ?: number, unsigned ?: boolean) {
         if (!(high == undefined)) {
             this.high = high;
         }
@@ -795,11 +796,11 @@ class Long {
         }
     }
 
-    public static isLong(obj:any):boolean {
+    public static isLong(obj: any): boolean {
         return (obj && obj["__isLong__"]) === true;
     }
 
-    public static fromInt(value:number, unsigned ?:boolean):Long {
+    public static fromInt(value: number, unsigned ?: boolean): Long {
         var obj, cachedObj, cache;
         if (unsigned) {
             value >>>= 0;
@@ -826,7 +827,7 @@ class Long {
         }
     }
 
-    public static fromNumber(value:number, unsigned ?:boolean):Long {
+    public static fromNumber(value: number, unsigned ?: boolean): Long {
         if (isNaN(value) || !isFinite(value))
             return unsigned ? Long.UZERO : Long.ZERO;
         if (unsigned) {
@@ -845,11 +846,11 @@ class Long {
         return Long.fromBits((value % Long.TWO_PWR_32_DBL) | 0, (value / Long.TWO_PWR_32_DBL) | 0, unsigned);
     }
 
-    public static fromBits(lowBits ?:number, highBits ?:number, unsigned ?:boolean):Long {
+    public static fromBits(lowBits ?: number, highBits ?: number, unsigned ?: boolean): Long {
         return new Long(lowBits, highBits, unsigned);
     }
 
-    public static fromString(str:string, radix:number = 10, unsigned:boolean = false):Long {
+    public static fromString(str: string, radix: number = 10, unsigned: boolean = false): Long {
         if (str.length === 0)
             throw Error('empty string');
         if (str === "NaN" || str === "Infinity" || str === "+Infinity" || str === "-Infinity")
@@ -885,7 +886,7 @@ class Long {
         return result;
     }
 
-    public static  fromValue(val:any):Long {
+    public static  fromValue(val: any): Long {
         if (val /* is compatible */ instanceof Long)
             return val;
         if (typeof val === 'number')
@@ -897,17 +898,17 @@ class Long {
     }
 
 
-    public toInt():number {
+    public toInt(): number {
         return this.unsigned ? this.low >>> 0 : this.low;
     };
 
-    public toNumber():number {
+    public toNumber(): number {
         if (this.unsigned)
             return ((this.high >>> 0) * Long.TWO_PWR_32_DBL) + (this.low >>> 0);
         return this.high * Long.TWO_PWR_32_DBL + (this.low >>> 0);
     };
 
-    public toString(radix:number):string {
+    public toString(radix: number): string {
         radix = radix || 10;
         if (radix < 2 || 36 < radix)
             throw RangeError('radix');
@@ -928,7 +929,7 @@ class Long {
         // Do several (6) digits each time through the loop, so as to
         // minimize the calls to the very expensive emulated div.
         var radixToPower = Long.fromNumber(Long.pow_dbl(radix, 6), this.unsigned);
-        var rem:Long = this;
+        var rem: Long = this;
         var result = '';
         while (true) {
             var remDiv = rem.div(radixToPower);
@@ -945,23 +946,23 @@ class Long {
         }
     };
 
-    public getHighBits():number {
+    public getHighBits(): number {
         return this.high;
     };
 
-    public getHighBitsUnsigned():number {
+    public getHighBitsUnsigned(): number {
         return this.high >>> 0;
     };
 
-    public getLowBits():number {
+    public getLowBits(): number {
         return this.low;
     };
 
-    public getLowBitsUnsigned():number {
+    public getLowBitsUnsigned(): number {
         return this.low >>> 0;
     };
 
-    public getNumBitsAbs():number {
+    public getNumBitsAbs(): number {
         if (this.isNegative()) // Unsigned Longs are never negative
             return this.eq(Long.MIN_VALUE) ? 64 : this.neg().getNumBitsAbs();
         var val = this.high != 0 ? this.high : this.low;
@@ -971,27 +972,27 @@ class Long {
         return this.high != 0 ? bit + 33 : bit + 1;
     };
 
-    public isZero():boolean {
+    public isZero(): boolean {
         return this.high === 0 && this.low === 0;
     };
 
-    public isNegative():boolean {
+    public isNegative(): boolean {
         return !this.unsigned && this.high < 0;
     };
 
-    public isPositive():boolean {
+    public isPositive(): boolean {
         return this.unsigned || this.high >= 0;
     };
 
-    public isOdd():boolean {
+    public isOdd(): boolean {
         return (this.low & 1) === 1;
     };
 
-    public isEven():boolean {
+    public isEven(): boolean {
         return (this.low & 1) === 0;
     };
 
-    public equals(other:any):boolean {
+    public equals(other: any): boolean {
         if (!Long.isLong(other))
             other = Long.fromValue(other);
         if (this.unsigned !== other.unsigned && (this.high >>> 31) === 1 && (other.high >>> 31) === 1)
@@ -1001,37 +1002,37 @@ class Long {
 
     public eq = this.equals;
 
-    public notEquals(other:any):boolean {
+    public notEquals(other: any): boolean {
         return !this.eq(other);
     };
 
     public neq = this.notEquals;
 
-    public lessThan(other:any):boolean {
+    public lessThan(other: any): boolean {
         return this.comp(other) < 0;
     };
 
     public lt = this.lessThan;
 
-    public lessThanOrEqual(other:any):boolean {
+    public lessThanOrEqual(other: any): boolean {
         return this.comp(other) <= 0;
     };
 
     public lte = this.lessThanOrEqual;
 
-    public greaterThan(other:any):boolean {
+    public greaterThan(other: any): boolean {
         return this.comp(other) > 0;
     };
 
     public gt = this.greaterThan;
 
-    public greaterThanOrEqual(other:any):boolean {
+    public greaterThanOrEqual(other: any): boolean {
         return this.comp(other) >= 0;
     };
 
     public gte = this.greaterThanOrEqual;
 
-    public compare(other:any):number {
+    public compare(other: any): number {
         if (!Long.isLong(other))
             other = Long.fromValue(other);
         if (this.eq(other))
@@ -1051,7 +1052,7 @@ class Long {
 
     public comp = this.compare;
 
-    public negate():Long {
+    public negate(): Long {
         if (!this.unsigned && this.eq(Long.MIN_VALUE))
             return Long.MIN_VALUE;
         return this.not().add(Long.ONE);
@@ -1059,7 +1060,7 @@ class Long {
 
     public neg = this.negate;
 
-    public add(addend:any):Long {
+    public add(addend: any): Long {
         if (!Long.isLong(addend)) {
             addend = Long.fromValue(addend);
         }
@@ -1091,7 +1092,7 @@ class Long {
         return Long.fromBits((c16 << 16) | c00, (c48 << 16) | c32, this.unsigned);
     };
 
-    public subtract(subtrahend:any):Long {
+    public subtract(subtrahend: any): Long {
         if (!Long.isLong(subtrahend))
             subtrahend = Long.fromValue(subtrahend);
         return this.add(subtrahend.neg());
@@ -1099,7 +1100,7 @@ class Long {
 
     public sub = this.subtract;
 
-    public multiply(multiplier:any):Long {
+    public multiply(multiplier: any): Long {
         if (this.isZero())
             return Long.ZERO;
         if (!Long.isLong(multiplier))
@@ -1162,7 +1163,7 @@ class Long {
 
     public mul = this.multiply;
 
-    public divide(divisor:any):Long {
+    public divide(divisor: any): Long {
         if (!Long.isLong(divisor))
             divisor = Long.fromValue(divisor);
         if (divisor.isZero())
@@ -1250,7 +1251,7 @@ class Long {
 
     public div = this.divide;
 
-    public modulo(divisor:any):Long {
+    public modulo(divisor: any): Long {
         if (!Long.isLong(divisor))
             divisor = Long.fromValue(divisor);
         return this.sub(this.div(divisor).mul(divisor));
@@ -1258,29 +1259,29 @@ class Long {
 
     public mod = this.modulo;
 
-    public not():Long {
+    public not(): Long {
         return Long.fromBits(~this.low, ~this.high, this.unsigned);
     };
 
-    public and(other:any):Long {
+    public and(other: any): Long {
         if (!Long.isLong(other))
             other = Long.fromValue(other);
         return Long.fromBits(this.low & other.low, this.high & other.high, this.unsigned);
     };
 
-    public or(other:any):Long {
+    public or(other: any): Long {
         if (!Long.isLong(other))
             other = Long.fromValue(other);
         return Long.fromBits(this.low | other.low, this.high | other.high, this.unsigned);
     };
 
-    public xor(other:any):Long {
+    public xor(other: any): Long {
         if (!Long.isLong(other))
             other = Long.fromValue(other);
         return Long.fromBits(this.low ^ other.low, this.high ^ other.high, this.unsigned);
     };
 
-    public shiftLeft(numBits):Long {
+    public shiftLeft(numBits): Long {
         if (Long.isLong(numBits))
             numBits = numBits.toInt();
         if ((numBits &= 63) === 0)
@@ -1293,7 +1294,7 @@ class Long {
 
     public shl = this.shiftLeft;
 
-    public shiftRight(numBits):Long {
+    public shiftRight(numBits): Long {
         if (Long.isLong(numBits))
             numBits = numBits.toInt();
         if ((numBits &= 63) === 0)
@@ -1306,7 +1307,7 @@ class Long {
 
     public shr = this.shiftRight;
 
-    public shiftRightUnsigned(numBits):Long {
+    public shiftRightUnsigned(numBits): Long {
         if (Long.isLong(numBits))
             numBits = numBits.toInt();
         numBits &= 63;
@@ -1326,13 +1327,13 @@ class Long {
 
     public shru = this.shiftRightUnsigned;
 
-    public toSigned():Long {
+    public toSigned(): Long {
         if (!this.unsigned)
             return this;
         return Long.fromBits(this.low, this.high, false);
     };
 
-    public toUnsigned():Long {
+    public toUnsigned(): Long {
         if (this.unsigned)
             return this;
         return Long.fromBits(this.low, this.high, true);
