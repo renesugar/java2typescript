@@ -55,6 +55,12 @@ This project can be compiled through the following command
 mvn clean install
 ```
 
+> Make sure you have NodeJS, NPM and TypeScript installed on your system. To install TypeScript just tape the following command in your console:
+
+```
+npm i -g typescript
+```
+
 Then go to the ```target/classes``` directory and open the ```index.html``` in you browser to see how to use the generated code.
 
 ### Limitations
