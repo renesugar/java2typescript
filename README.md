@@ -56,3 +56,23 @@ mvn clean install
 ```
 
 Then go to the ```target/classes``` directory and open the ```index.html``` in you browser to see how to use the generated code.
+
+### Limitations
+
+Currently, in order to keep the JRE.js as lightweight as possible, only a subSet of the JRE is supported.
+For instance, we support most common structures sucj as ArrayList and HashMap, but not all advanced once such as ConcurrentQueue and so on.
+However, if you face a limitation due to the lake of one JRE class, don't worry this is very easy to extend.
+
+In a nutshell, update the base JRE.TS file here: 
+```
+https://github.com/kevoree-modeling/java2typescript/blob/master/transpiler/src/main/resources/java.ts
+```
+
+To add your class with the same name than in Java.
+Finally in case of inferred package please also update this class:
+
+```
+https://github.com/kevoree-modeling/java2typescript/blob/master/transpiler/src/main/java/org/kevoree/modeling/java2typescript/helper/TypeHelper.java#L162
+```
+
+Finally to provide a new JRE class permanently, please do a push request.
