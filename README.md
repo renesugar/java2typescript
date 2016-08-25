@@ -65,14 +65,14 @@ However, if you face a limitation due to the lake of one JRE class, don't worry 
 
 In a nutshell, update the base JRE.TS file here: 
 ```
-https://github.com/kevoree-modeling/java2typescript/blob/master/transpiler/src/main/resources/java.ts
+transpiler/src/main/resources/java.ts
 ```
 
 To add your class with the same name than in Java.
 Finally in case of inferred package please also update this class:
 
 ```
-https://github.com/kevoree-modeling/java2typescript/blob/master/transpiler/src/main/java/org/kevoree/modeling/java2typescript/helper/TypeHelper.java#L162
+transpiler/src/main/java/org/kevoree/modeling/java2typescript/helper/TypeHelper.java#L162
 ```
 
 Finally to provide a new JRE class permanently, please do a push request.
