@@ -41,16 +41,16 @@ By default the Java source directory is ```src/main/java``` and the generated-so
 
 To override this value, the value configuration help you:
 
-```xml 
+```xml
 <source>${basedir}/../api/src/main/java</source>
 <target>${basedir}/target/generated-sources</target>
 ```
 
 ### Sample project
 
-A full sample project is hosted [here](sample.zip)
+A full sample project is hosted [here](https://github.com/kevoree-modeling/java2typescript/raw/master/sample.zip)
 
-This project can be compiled through the following command 
+This project can be compiled through the following command
 ```sh
 mvn clean install
 ```
