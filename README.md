@@ -1,4 +1,4 @@
-# Java To TypeScript transpiler
+# Java To TypeScript Transpiler
 
 This project is a transpiler able to transform your Java codebase to TypeScript and then to JavaScript to ultimatly run Java code in the browser.
 
