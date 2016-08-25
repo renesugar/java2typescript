@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.kevoree.j2ts</groupId>
+    <artifactId>sample</artifactId>
+    <name>j2ts :: sample</name>
+    <version>1-SNAPSHOT</version>
+
+    <!-- REPLACE BY LAST VERSION in http://search.maven.org/#search%7Cga%7C1%7Ca%3A%22j2ts%22 -->
+    <properties>
+        <j2ts.version>71</j2ts.version>
+    </properties>
+
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.kevoree.modeling.j2ts</groupId>
+                <artifactId>mavenplugin</artifactId>
+                <version>${j2ts.version}</version>
+                <executions>
+                    <execution>
+                        <id>transpile</id>
+                        <goals>
+                            <goal>java2ts</goal>
+                        </goals>
+                        <configuration>
+                            <name>sample</name>
+                            <copyJRE>true</copyJRE>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <configuration>
+                            <target>
+                                <exec executable="tsc" failonerror="true">
+                                    <arg value="-d"/>
+                                    <arg value="--sourceMap"/>
+                                    <arg value="--target"/>
+                                    <arg value="es5"/>
+                                    <arg value="${basedir}/target/generated-sources/java2ts/sample.ts"/>
+                                    <arg value="--out"/>
+                                    <arg value="${basedir}/target/classes/sample.js"/>
+                                </exec>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+        </plugins>
+    </build>
+
+</project>

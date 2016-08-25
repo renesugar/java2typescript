@@ -1,0 +1,14 @@
+<html>
+<body>
+<div id="result"></div>
+</body>
+
+<script src="sample.js"></script>
+<script>
+    var obj = new sample.HelloWorld();
+    obj.sayHello();
+    document.getElementById("result").innerHTML = obj.sayHello();
+    //sample to call main method
+    sample.HelloWorld.main(null);
+</script>
+</html>
