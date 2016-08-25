@@ -1,20 +1,20 @@
 # Java To TypeScript transpiler
 
-This project is a transpiler able to transform your Java codebase to TypeScript then to JavaScript to ultimatly run Java code in the browser.
+This project is a transpiler able to transform your Java codebase to TypeScript and then to JavaScript to ultimatly run Java code in the browser.
 
-### What is for ?
+### What is it for ?
 
-The goal of J2TS is to share codebase between Java and TypeScript and Javascript.
-This is especially suitable to share domain classes that define data structures or complex algorithms that have to be maintain and shared.
+The goal of J2TS is to share a codebase between Java, TypeScript and Javascript.
+This is especially helpful for sharing domain classes, data structures, and complex algorithms.
 
-### What is not for ?
+### What is it not for ?
 
-The goal of J2TS is not to code UI through Java code, for this there is better project.
+The goal of J2TS is not to develop a UI in Java. There are better projects for this.
 J2TS focus on performance and readability of the generated TypeScript code.
 
 ### Getting Started
 
-The easiest way to get started with J2TS is the maven plugin.
+The easiest way to get started with J2TS is using the maven plugin.
 Hereafter is a simple snippet of usage:
 
 ```xml
@@ -39,7 +39,7 @@ Hereafter is a simple snippet of usage:
 
 By default the Java source directory is ```src/main/java``` and the generated-sources is ```target/generated-sources/java2ts```.
 
-To override this value, the value configuration help you:
+These values can be overriden as follows:
 
 ```xml
 <source>${basedir}/../api/src/main/java</source>
