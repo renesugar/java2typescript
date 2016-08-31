@@ -27,8 +27,12 @@ export class Closures {
     this.localMethod(((() => {var r:any=()=>{};r.methodParam=(bool)=>{
       return bool;
     };return r;})()));
+    this.localMethod2((() => {var r:any=()=>{};r.methodParam=(bool)=>(bool);return r;})(), true);
   }
   private localMethod(clos: ClosureInterfaceWithParamAndResult): void {
+    clos.methodParam(false);
+  }
+  private localMethod2(clos: ClosureInterfaceWithParamAndResult, c: boolean): void {
     clos.methodParam(false);
   }
 }

@@ -19,10 +19,16 @@ public class Closures {
         this.localMethod(bool->{return bool;});
         this.localMethod((bool)->{return bool;});
         this.localMethod(((bool)->{return bool;}));
+
+        this.localMethod2(bool->bool, true);
     }
 
 
     private void localMethod(ClosureInterfaceWithParamAndResult clos) {
+        clos.methodParam(false);
+    }
+
+    private void localMethod2(ClosureInterfaceWithParamAndResult clos, boolean c) {
         clos.methodParam(false);
     }
 
