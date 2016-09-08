@@ -27,7 +27,8 @@ public class JavaAnalyzer {
 
     public JavaAnalyzer() {
 
-        Disposable parentDisposable = ()->{};
+        Disposable parentDisposable = () -> {
+        };
 
         CoreApplicationEnvironment.registerExtensionPoint(Extensions.getRootArea(), ContainerProvider.EP_NAME, ContainerProvider.class);
 
@@ -43,9 +44,7 @@ public class JavaAnalyzer {
         javaApplicationEnvironment.registerExtensionPoint(Extensions.getRootArea(), ClassFileDecompilers.EP_NAME, ClassFileDecompilers.Decompiler.class);
 
 
-
-
-        environment = new JavaCoreProjectEnvironment(parentDisposable, javaApplicationEnvironment){
+        environment = new JavaCoreProjectEnvironment(parentDisposable, javaApplicationEnvironment) {
             @Override
             protected void preregisterServices() {
 
@@ -61,10 +60,12 @@ public class JavaAnalyzer {
 
     public void addClasspath(String filePath) {
         File f = new File(filePath);
-        if(f.isDirectory()) {
-            environment.addSourcesToClasspath(environment.getEnvironment().getLocalFileSystem().findFileByIoFile(f));
-        } else {
-            environment.addJarToClassPath(f);
+        if (f.exists()) {
+            if (f.isDirectory()) {
+                environment.addSourcesToClasspath(environment.getEnvironment().getLocalFileSystem().findFileByIoFile(f));
+            } else {
+                environment.addJarToClassPath(f);
+            }
         }
     }
 
