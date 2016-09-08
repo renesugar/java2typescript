@@ -16,6 +16,12 @@ public class MethodCallExpressionTranslator {
             if (methodQualifierExpression.getType() != null) {
                 if (methodQualifierExpression.getType() instanceof PsiClassReferenceType) {
                     PsiClass cls = ((PsiClassReferenceType) methodQualifierExpression.getType()).resolve();
+                    if(cls == null) {
+                        PsiClassType rawType = ((PsiClassReferenceType)methodQualifierExpression.getType()).rawType();
+                        if(rawType != null) {
+                            cls = rawType.resolve();
+                        }
+                    }
                     if (cls != null) {
                         if (TypeHelper.isCallbackClass(cls)) {
                             ExpressionTranslator.translate(methodQualifierExpression, ctx);
@@ -24,6 +30,8 @@ public class MethodCallExpressionTranslator {
                             ctx.append(")");
                             return;
                         }
+                    } else {
+
                     }
                 }
             }

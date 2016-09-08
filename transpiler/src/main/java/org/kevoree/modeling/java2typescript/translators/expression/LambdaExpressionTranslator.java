@@ -5,6 +5,7 @@ import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
 import org.kevoree.modeling.java2typescript.context.TranslationContext;
 import org.kevoree.modeling.java2typescript.helper.KeywordHelper;
+import org.kevoree.modeling.java2typescript.helper.TypeHelper;
 import org.kevoree.modeling.java2typescript.translators.CodeBlockTranslator;
 
 public class LambdaExpressionTranslator {
@@ -12,11 +13,13 @@ public class LambdaExpressionTranslator {
     public static void translate(PsiLambdaExpression element, TranslationContext ctx) {
         boolean asFunctionParameter = false;
         PsiElement parent = element.getParent();
-        while(parent != null && !(parent instanceof PsiExpressionList)){
+        while (parent != null && !(parent instanceof PsiExpressionList)) {
             parent = parent.getParent();
         }
-        if(parent!= null && parent.getParent() != null && parent.getParent() instanceof PsiMethodCallExpression) {
-            asFunctionParameter = true;
+        if (parent != null && parent.getParent() != null && parent.getParent() instanceof PsiMethodCallExpression) {
+            if (!TypeHelper.isCallbackClass(((PsiClassReferenceType) element.getFunctionalInterfaceType()).rawType().resolve())) {
+                asFunctionParameter = true;
+            }
         }
         if (asFunctionParameter) {
             ctx.append("(() => {var r:any=()=>{};r.");
