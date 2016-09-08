@@ -60,7 +60,12 @@ public class JavaAnalyzer {
     }
 
     public void addClasspath(String filePath) {
-        environment.addJarToClassPath(new File(filePath));
+        File f = new File(filePath);
+        if(f.isDirectory()) {
+            environment.addSourcesToClasspath(environment.getEnvironment().getLocalFileSystem().findFileByIoFile(f));
+        } else {
+            environment.addJarToClassPath(f);
+        }
     }
 
     public PsiDirectory analyze(File srcDir) {
