@@ -3,15 +3,6 @@ export class ClassFields {
   public str2: string = java.lang.String.join(", ", ["a", "b", "c"]);
   public values: string[] = new Array<string>(0);
 }
-export class ForScope {
-  public myFunc(): void {
-    for (var i: number = 0; i < 2; i++) {
-      (function(i){
-        console.log(i);
-      }).call(this,i);
-    }
-  }
-}
 export class InFunction {
   private str: string;
   private str2: string;

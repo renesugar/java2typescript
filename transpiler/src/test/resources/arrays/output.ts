@@ -31,9 +31,7 @@ export class DoubleArray {
     var arr: Int32Array = new Int32Array([0, 1, 2, 3, 4]);
     arr.sort();
     for (var i: number = 0; i < 10; i++) {
-      (function(i){
-        org.junit.Assert.assertEquals(2.,3.,1.);
-      }).call(this,i);
+      org.junit.Assert.assertEquals(2.,3.,1.);
     }
   }
 }
