@@ -104,7 +104,7 @@ public class NewExpressionTranslator {
 
             for (int dimension = 1; dimension < dimensionCount; dimension++) {
                 String varname = fieldName + "_d" + dimension;
-                ctx.print("for(var " + varname + " = 0; " + varname + " < " + element.getArrayDimensions()[dimension-1].getText() + "; " + varname + "++){\n");
+                ctx.print("for(let " + varname + " = 0; " + varname + " < " + element.getArrayDimensions()[dimension-1].getText() + "; " + varname + "++){\n");
                 ctx.increaseIdent();
                 ctx.print(prefix + fieldName);
                 for(int i = 1; i <= dimension; i++) {

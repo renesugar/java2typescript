@@ -7,17 +7,17 @@ export class InFunction {
   private str: string;
   private str2: string;
   public foo(): void {
-    var str: string = "foo";
-    var str2: string = java.lang.String.join(", ", ["a", "b", "c"]);
-    var str3: string = str2.trim();
+    let str: string = "foo";
+    let str2: string = java.lang.String.join(", ", ["a", "b", "c"]);
+    let str3: string = str2.trim();
   }
   public bar(): void {
     this.str = this.str2 + this.str;
-    var s: string = this.getString();
-    var s2: string = this.getString().replace('o', 'a');
-    var s3: string = this.getF().getF().getString();
+    let s: string = this.getString();
+    let s2: string = this.getString().replace('o', 'a');
+    let s3: string = this.getF().getF().getString();
     (s3.lastIndexOf("a", 0) === 0);
-    var tt: string[] = ["f1", "f2"];
+    let tt: string[] = ["f1", "f2"];
     this.essay(["f1", "f2"]);
   }
   public getString(): string {
@@ -32,7 +32,7 @@ export class Primitive {
   public s: string = "a" + "b" + "c";
   private static p: Primitive = Primitive.newPrim();
   private static newPrim(): Primitive {
-    var p: Primitive = new Primitive();
+    let p: Primitive = new Primitive();
     return p;
   }
   public funct(t: string): string {

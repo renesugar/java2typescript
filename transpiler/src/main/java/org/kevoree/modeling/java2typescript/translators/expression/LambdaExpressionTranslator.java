@@ -22,7 +22,7 @@ public class LambdaExpressionTranslator {
             }
         }
         if (asFunctionParameter) {
-            ctx.append("(() => {var r:any=()=>{};r.");
+            ctx.append("(() => {let r:any=()=>{};r.");
             ctx.append(((PsiClassType.Stub) element.getFunctionalInterfaceType()).rawType().resolve().getMethods()[0].getName());
             ctx.append("=");
         }
