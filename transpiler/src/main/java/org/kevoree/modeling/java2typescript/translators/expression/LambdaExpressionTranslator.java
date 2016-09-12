@@ -17,13 +17,13 @@ public class LambdaExpressionTranslator {
             parent = parent.getParent();
         }
         if (parent != null && parent.getParent() != null && parent.getParent() instanceof PsiMethodCallExpression) {
-            if (!TypeHelper.isCallbackClass(((PsiClassReferenceType) element.getFunctionalInterfaceType()).rawType().resolve())) {
+            if (!TypeHelper.isCallbackClass(((PsiClassType.Stub) element.getFunctionalInterfaceType()).rawType().resolve())) {
                 asFunctionParameter = true;
             }
         }
         if (asFunctionParameter) {
             ctx.append("(() => {var r:any=()=>{};r.");
-            ctx.append(((PsiClassReferenceType) element.getFunctionalInterfaceType()).rawType().resolve().getMethods()[0].getName());
+            ctx.append(((PsiClassType.Stub) element.getFunctionalInterfaceType()).rawType().resolve().getMethods()[0].getName());
             ctx.append("=");
         }
         ctx.append("(");
