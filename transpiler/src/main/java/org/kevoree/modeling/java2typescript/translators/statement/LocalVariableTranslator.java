@@ -20,9 +20,9 @@ public class LocalVariableTranslator {
         }
         if (element.getPrevSibling() == null) {
             if (loopDeclaration) {
-                ctx.append("var ");
+                ctx.append("let ");
             } else {
-                ctx.print("var ");
+                ctx.print("let ");
             }
         }
 
