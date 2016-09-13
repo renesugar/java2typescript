@@ -8,12 +8,10 @@ import org.kevoree.modeling.java2typescript.translators.expression.ExpressionTra
 public class DoWhileStatementTranslator {
 
   public static void translate(PsiDoWhileStatement element, TranslationContext ctx) {
-    ctx.print("do {\n");
-    ctx.increaseIdent();
+    ctx.print("do ");
     StatementTranslator.translate(element.getBody(), ctx);
-    ctx.decreaseIdent();
-    ctx.print("} while (");
+    ctx.append(" while (");
     ExpressionTranslator.translate(element.getCondition(),ctx);
-    ctx.append(")\n");
+    ctx.append(");\n");
   }
 }

@@ -96,7 +96,7 @@ public class MethodTranslator {
             ctx.append(": ");
             ctx.append(TypeHelper.printType(method.getReturnType(), ctx));
         }
-        if(containingClass.isInterface()){
+        if(containingClass.isInterface() || method.getModifierList().hasModifierProperty("abstract")){
             ctx.append(";\n");
         } else {
             ctx.append(" ");

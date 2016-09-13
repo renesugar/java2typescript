@@ -7,7 +7,7 @@ import org.kevoree.modeling.java2typescript.context.TranslationContext;
 public class BreakStatementTranslator {
 
     public static void translate(PsiBreakStatement element, TranslationContext ctx) {
-        ctx.print("break");
+        ctx.append("break");
         if (element.getLabelIdentifier() != null) {
             ctx.append(' ');
             ctx.append(element.getLabelIdentifier().getText().trim());

@@ -13,7 +13,7 @@ public class StatementTranslator {
         if (statement instanceof PsiExpressionStatement) {
             ExpressionStatementTranslator.translate((PsiExpressionStatement) statement, ctx);
         } else if (statement instanceof PsiIfStatement) {
-            IfStatementTranslator.translate((PsiIfStatement) statement, ctx);
+            IfStatementTranslator.translate((PsiIfStatement) statement, ctx, false);
         } else if (statement instanceof PsiReturnStatement) {
             ReturnStatementTranslator.translate((PsiReturnStatement) statement, ctx);
         } else if (statement instanceof PsiWhileStatement) {
@@ -36,8 +36,6 @@ public class StatementTranslator {
             SwitchStatementTranslator.translate((PsiSwitchStatement) statement, ctx);
         } else if (statement instanceof PsiForeachStatement) {
             ForEachStatementTranslator.translate((PsiForeachStatement) statement, ctx);
-        } else if (statement instanceof PsiSwitchLabelStatement) {
-            SwitchLabelStatementTranslator.translate((PsiSwitchLabelStatement) statement, ctx);
         } else if (statement instanceof PsiDeclarationStatement) {
             DeclarationStatementTranslator.translate((PsiDeclarationStatement) statement, ctx);
         } else if (statement instanceof PsiExpressionListStatement) {

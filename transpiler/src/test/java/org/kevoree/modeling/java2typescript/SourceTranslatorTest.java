@@ -106,10 +106,34 @@ public class SourceTranslatorTest {
                 result);
     }
 
+    @Test
+    public void baseElements() throws IOException {
+        String source = Paths.get("src", "test", "java", "sources", "base").toAbsolutePath().toString();
+        String target = Paths.get("target", "generated-sources", "java2ts").toAbsolutePath().toString();
 
-    //@Test
+        SourceTranslator translator = new SourceTranslator(source, target, "base");
+        translator.process();
+
+        String result = translator.getCtx().toString().trim();
+        //System.out.println(result);
+
+        BufferedReader br = new BufferedReader(new FileReader(Paths.get("src", "test", "resources", "base", "output.ts").toFile()));
+        StringBuilder sb = new StringBuilder();
+        String line = null;
+        while ((line = br.readLine()) != null){
+            sb.append('\n').append(line);
+        }
+
+        Assert.assertEquals(
+                sb.toString().substring(1),
+                result);
+    }
+
+    @Test
     public void mwdb_core() throws IOException {
-        String source = "/Users/gnain/Sources/Kevoree-Modeling/mwDB/core/src/main/java";
+        //String source = "/Users/gnain/Sources/Kevoree-Modeling/mwDB/core/src/main/java";
+        String source = "/Users/gnain/Sources/Kevoree-Modeling/mwDB/api/src/main/java";
+
         String target = Paths.get("target", "generated-sources", "core").toAbsolutePath().toString();
 
         SourceTranslator translator = new SourceTranslator(source, target, "strings");

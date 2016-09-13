@@ -10,11 +10,9 @@ public class WhileStatementTranslator {
     public static void translate(PsiWhileStatement element, TranslationContext ctx) {
         ctx.print("while (");
         ExpressionTranslator.translate(element.getCondition(), ctx);
-        ctx.append("){\n");
-        ctx.increaseIdent();
+        ctx.append(") ");
         StatementTranslator.translate(element.getBody(), ctx);
-        ctx.decreaseIdent();
-        ctx.print("}\n");
+        ctx.append("\n");
     }
 
 }

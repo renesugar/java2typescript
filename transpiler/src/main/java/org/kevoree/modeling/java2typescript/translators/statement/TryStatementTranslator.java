@@ -13,11 +13,8 @@ public class TryStatementTranslator {
     private static final String EXCEPTION_VAR = "$ex$";
 
     public static void translate(PsiTryStatement element, TranslationContext ctx) {
-        ctx.print("try {\n");
-        ctx.increaseIdent();
+        ctx.print("try ");
         CodeBlockTranslator.translate(element.getTryBlock(), ctx);
-        ctx.decreaseIdent();
-        ctx.print("}");
         PsiCatchSection[] catchSections = element.getCatchSections();
         if (catchSections.length > 0) {
             ctx.append(" catch (").append(EXCEPTION_VAR).append(") {\n");

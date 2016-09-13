@@ -1,8 +1,11 @@
 
 package org.kevoree.modeling.java2typescript.translators.statement;
 
+import com.intellij.psi.PsiBlockStatement;
+import com.intellij.psi.PsiCodeBlock;
 import com.intellij.psi.PsiForStatement;
 import org.kevoree.modeling.java2typescript.context.TranslationContext;
+import org.kevoree.modeling.java2typescript.translators.CodeBlockTranslator;
 import org.kevoree.modeling.java2typescript.translators.expression.ExpressionTranslator;
 
 public class ForStatementTranslator {
@@ -20,13 +23,21 @@ public class ForStatementTranslator {
         if (element.getUpdate() != null) {
             StatementTranslator.translate(element.getUpdate(), ctx);
         }
-        //ctx.append(") {\n");
-        ctx.append(") ");
-        //ctx.increaseIdent();
-        StatementTranslator.translate(element.getBody(), ctx);
+
+        ctx.append(")");
+        if(element.getBody() != null) {
+            if( !(element.getBody() instanceof PsiBlockStatement)) {
+                ctx.append("\n");
+                ctx.increaseIdent();
+                StatementTranslator.translate(element.getBody(), ctx);
+                ctx.decreaseIdent();
+            } else {
+                ctx.append(" ");
+                StatementTranslator.translate(element.getBody(), ctx);
+            }
+        }
         ctx.append("\n");
-        //ctx.decreaseIdent();
-        //ctx.print("}\n");
+
     }
 
 }
