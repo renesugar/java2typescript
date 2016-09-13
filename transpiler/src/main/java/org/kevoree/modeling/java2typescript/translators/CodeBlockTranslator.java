@@ -12,9 +12,13 @@ import org.kevoree.modeling.java2typescript.translators.statement.StatementTrans
 public class CodeBlockTranslator {
 
     public static void translate(PsiCodeBlock block, TranslationContext ctx) {
+        ctx.append("{\n");
+        ctx.increaseIdent();
         for (PsiStatement statement : block.getStatements()) {
             StatementTranslator.translate(statement, ctx);
         }
+        ctx.decreaseIdent();
+        ctx.print("}");
     }
 
 }

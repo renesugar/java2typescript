@@ -38,11 +38,11 @@ public class LambdaExpressionTranslator {
         ctx.append(")=>");
         PsiElement body = element.getBody();
         if (body instanceof PsiCodeBlock) {
-            ctx.append("{\n");
-            ctx.increaseIdent();
+            //ctx.append("{\n");
+            //ctx.increaseIdent();
             CodeBlockTranslator.translate((PsiCodeBlock) body, ctx);
-            ctx.decreaseIdent();
-            ctx.print("}");
+            //ctx.decreaseIdent();
+            //ctx.print("}");
         } else {
             ctx.append("(");
             ExpressionTranslator.translate((PsiExpression) body, ctx);

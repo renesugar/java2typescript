@@ -96,31 +96,33 @@ public class MethodTranslator {
             ctx.append(": ");
             ctx.append(TypeHelper.printType(method.getReturnType(), ctx));
         }
-        if (!containingClass.isInterface()) {
+        if(containingClass.isInterface()){
+            ctx.append(";\n");
+        } else {
+            ctx.append(" ");
             if (method.getBody() == null) {
-                ctx.append(";\n");
+                ctx.append("{\n");
+                ctx.increaseIdent();
+                ctx.print("throw \"Empty body\";\n");
+                ctx.decreaseIdent();
+                ctx.print("}\n");
             } else {
-                ctx.append(" {");
                 if (method.getBody().getStatements().length > 0) {
-                    ctx.append("\n");
-                    ctx.increaseIdent();
                     if (!docMeta.nativeActivated) {
-                        if (method.getBody() == null) {
-                            ctx.print("throw \"Empty body\";\n");
-                        } else {
-                            CodeBlockTranslator.translate(method.getBody(), ctx);
-                        }
+
+                        CodeBlockTranslator.translate(method.getBody(), ctx);
+                        ctx.append("\n");
                     } else {
+                        ctx.append("{\n");
+                        ctx.increaseIdent();
                         DocTagTranslator.translate(docMeta, ctx);
+                        ctx.decreaseIdent();
+                        ctx.print("}\n");
                     }
-                    ctx.decreaseIdent();
-                    ctx.print("}\n");
                 } else {
-                    ctx.append("}\n");
+                    ctx.append("{}\n");
                 }
             }
-        } else {
-            ctx.append(";\n");
         }
         ctx.removeGenericParameterNames();
     }

@@ -20,11 +20,13 @@ public class ForStatementTranslator {
         if (element.getUpdate() != null) {
             StatementTranslator.translate(element.getUpdate(), ctx);
         }
-        ctx.append(") {\n");
-        ctx.increaseIdent();
+        //ctx.append(") {\n");
+        ctx.append(") ");
+        //ctx.increaseIdent();
         StatementTranslator.translate(element.getBody(), ctx);
-        ctx.decreaseIdent();
-        ctx.print("}\n");
+        ctx.append("\n");
+        //ctx.decreaseIdent();
+        //ctx.print("}\n");
     }
 
 }
