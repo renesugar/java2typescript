@@ -129,7 +129,7 @@ public class SourceTranslatorTest {
                 result);
     }
 
-    @Test
+    //@Test
     public void mwdb_core() throws IOException {
         //String source = "/Users/gnain/Sources/Kevoree-Modeling/mwDB/core/src/main/java";
         String source = "/Users/gnain/Sources/Kevoree-Modeling/mwDB/api/src/main/java";
