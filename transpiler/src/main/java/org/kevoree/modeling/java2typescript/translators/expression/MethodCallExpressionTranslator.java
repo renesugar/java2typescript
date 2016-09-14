@@ -16,9 +16,9 @@ public class MethodCallExpressionTranslator {
             if (methodQualifierExpression.getType() != null) {
                 if (methodQualifierExpression.getType() instanceof PsiClassReferenceType) {
                     PsiClass cls = ((PsiClassReferenceType) methodQualifierExpression.getType()).resolve();
-                    if(cls == null) {
-                        PsiClassType rawType = ((PsiClassReferenceType)methodQualifierExpression.getType()).rawType();
-                        if(rawType != null) {
+                    if (cls == null) {
+                        PsiClassType rawType = ((PsiClassReferenceType) methodQualifierExpression.getType()).rawType();
+                        if (rawType != null) {
                             cls = rawType.resolve();
                         }
                     }
@@ -26,7 +26,7 @@ public class MethodCallExpressionTranslator {
                         if (TypeHelper.isCallbackClass(cls)) {
                             ExpressionTranslator.translate(methodQualifierExpression, ctx);
                             ctx.append('(');
-                            printParameters(element.getArgumentList().getExpressions(), ctx);
+                            printCallParameters(element.getArgumentList().getExpressions(), ctx);
                             ctx.append(")");
                             return;
                         }
@@ -49,15 +49,30 @@ public class MethodCallExpressionTranslator {
                 ReferenceExpressionTranslator.translate(methodExpr, ctx);
             }
             ctx.append('(');
-            printParameters(element.getArgumentList().getExpressions(), ctx);
+            printCallParameters(element.getArgumentList().getExpressions(), ctx);
             ctx.append(")");
         }
     }
 
-    private static void printParameters(PsiExpression[] arguments, TranslationContext ctx) {
+    public static void printCallParameters(PsiExpression[] arguments, TranslationContext ctx) {
         for (int i = 0; i < arguments.length; i++) {
             if (arguments[i] instanceof PsiReferenceExpression) {
-                ReferenceExpressionTranslator.translate((PsiReferenceExpression) arguments[i], ctx);
+                boolean isVarArgParam = false;
+                PsiReference ref = arguments[i].getReference();
+                if (ref != null) {
+                    PsiElement resolved = ref.resolve();
+                    if (resolved != null && resolved instanceof PsiParameter) {
+                        if ((((PsiParameter) resolved).isVarArgs())) {
+                            isVarArgParam = true;
+                        }
+                    }
+                }
+                if (isVarArgParam) {
+                    ctx.append("...");
+                    ctx.append(TypeHelper.primitiveStaticCall(((PsiReferenceExpression) arguments[i]).getReferenceName(), ctx));
+                } else {
+                    ReferenceExpressionTranslator.translate((PsiReferenceExpression) arguments[i], ctx);
+                }
             } else {
                 ExpressionTranslator.translate(arguments[i], ctx);
             }

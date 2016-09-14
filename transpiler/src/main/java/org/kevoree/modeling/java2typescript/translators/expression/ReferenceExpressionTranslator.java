@@ -63,7 +63,11 @@ public class ReferenceExpressionTranslator {
                     if (!element.getReferenceName().equals("super")) {
                         result += qualifier + ".";
                     }
-                }
+                }/* else if (resolution instanceof PsiParameter) {
+                    if((((PsiParameter) resolution).isVarArgs())) {
+                        result += "...";
+                    }
+                }*/
             }
         }
 

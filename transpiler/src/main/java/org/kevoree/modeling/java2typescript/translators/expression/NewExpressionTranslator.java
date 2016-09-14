@@ -7,6 +7,8 @@ import org.kevoree.modeling.java2typescript.context.TranslationContext;
 import org.kevoree.modeling.java2typescript.helper.TypeHelper;
 import org.kevoree.modeling.java2typescript.translators.AnonymousClassTranslator;
 
+import static org.kevoree.modeling.java2typescript.translators.expression.MethodCallExpressionTranslator.printCallParameters;
+
 public class NewExpressionTranslator {
 
     public static void translate(PsiNewExpression element, TranslationContext ctx) {
@@ -40,7 +42,8 @@ public class NewExpressionTranslator {
                 } else {
                     ctx.append("new ").append(className).append('(');
                     if (element.getArgumentList() != null) {
-                        ExpressionListTranslator.translate(element.getArgumentList(), ctx);
+                        printCallParameters(element.getArgumentList().getExpressions(), ctx);
+                        //ExpressionListTranslator.translate(element.getArgumentList(), ctx);
                     }
                     ctx.append(')');
                 }
