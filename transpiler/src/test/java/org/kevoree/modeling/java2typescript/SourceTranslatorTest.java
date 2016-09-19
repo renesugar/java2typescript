@@ -131,8 +131,8 @@ public class SourceTranslatorTest {
 
     //@Test
     public void mwdb_core() throws IOException {
-        //String source = "/Users/gnain/Sources/Kevoree-Modeling/mwDB/core/src/main/java";
-        String source = "/Users/gnain/Sources/Kevoree-Modeling/mwDB/api/src/main/java";
+        String source = "/Users/gnain/Sources/Kevoree-Modeling/mwDB/core/src/main/java";
+        //String source = "/Users/gnain/Sources/Kevoree-Modeling/mwDB/api/src/main/java";
 
         String target = Paths.get("target", "generated-sources", "core").toAbsolutePath().toString();
 
@@ -141,7 +141,6 @@ public class SourceTranslatorTest {
         Path classes = Paths.get("/Users/gnain/Sources/Kevoree-Modeling/mwDB/api/target/api-7-SNAPSHOT.jar");
 
         if(classes.toFile().exists()) {
-            System.out.println("DepAdded");
             translator.addToClasspath(classes.toString());
         }
 

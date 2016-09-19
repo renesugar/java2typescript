@@ -179,6 +179,19 @@ public class MethodCallExpressionTranslator {
                         ctx.append(")");
                         return true;
                     }
+                } else if (methodQualifierExpression.getType().getCanonicalText().equalsIgnoreCase("Double")) {
+                    if (methodExpression.getReferenceName() != null &&
+                            methodExpression.getReferenceName().equals("longValue")) {
+                        ctx.append("(");
+                        ExpressionTranslator.translate(methodQualifierExpression, ctx);
+                        ctx.append(" < 0 ? Math.ceil(");
+                        ExpressionTranslator.translate(methodQualifierExpression, ctx);
+                        ctx.append(") : Math.floor(");
+                        ExpressionTranslator.translate(methodQualifierExpression, ctx);
+                        ctx.append(")");
+                        ctx.append(")");
+                        return true;
+                    }
                 }
             } else if (methodQualifierExpression instanceof PsiReferenceExpression) {
                 PsiReferenceExpression objectRef = (PsiReferenceExpression) methodQualifierExpression;
