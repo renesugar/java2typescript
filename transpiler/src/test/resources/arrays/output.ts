@@ -2,7 +2,14 @@ export class DoubleArray {
   public arrayD: Array<Float64Array> = new Array<Float64Array>(1);
   public arrayI: Array<Int32Array>;
   public arrayD2: Array<Array<Array<Float64Array>>> = new Array<Array<Array<Float64Array>>>(10);
+  private _values: Array<Float64Array>;
   public c: any;
+  constructor() {
+    this._values = new Array<Float64Array>(10);
+    for(let _values_d1 = 0; _values_d1 < 10; _values_d1++){
+      this._values[_values_d1] = new Float64Array(10);
+    };
+  }
   public set(): void {
     let d: number = java.lang.Double.POSITIVE_INFINITY;
     let d2: number = java.lang.Double.NEGATIVE_INFINITY;

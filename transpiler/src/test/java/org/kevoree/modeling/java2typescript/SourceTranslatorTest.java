@@ -176,6 +176,26 @@ public class SourceTranslatorTest {
 
     }
 
+    //@Test
+    public void mwdb_ml() throws IOException {
+        String source = "/Users/gnain/Sources/Kevoree-Modeling/mwDB/plugins/ml/src/main/java";
+        String target = Paths.get("target", "generated-sources", "main").toAbsolutePath().toString();
+
+        SourceTranslator translator = new SourceTranslator(source, target, "test");
+        translator.addPackageTransform("sources.strings", "");
+        Path classes = Paths.get("/Users/gnain/Sources/Kevoree-Modeling/mwDB/api/target/api-7-SNAPSHOT.jar");
+
+        if(classes.toFile().exists()) {
+            translator.addToClasspath(classes.toString());
+        }
+
+        translator.process();
+
+        String result = translator.getCtx().toString().trim();
+        //System.out.println(result);
+
+    }
+
     /*
     */
 

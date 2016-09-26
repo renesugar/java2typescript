@@ -14,6 +14,12 @@ public class DoubleArray {
     public int[][] arrayI;
     public double[][][][] arrayD2 = new double[10][9][8][7];
 
+    private double[][] _values;
+
+    DoubleArray() {
+        this._values = new double[10][10];
+    }
+
     public Class<?> c;
 
     public void set() {

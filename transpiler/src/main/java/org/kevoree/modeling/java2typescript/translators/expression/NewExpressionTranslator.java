@@ -101,16 +101,37 @@ public class NewExpressionTranslator {
             if (parentElement instanceof PsiLocalVariable) {
                 fieldName = ((PsiLocalVariable) parentElement).getNameIdentifier().getText();
             } else if (parentElement instanceof PsiAssignmentExpression) {
-                prefix = "this.";
-                fieldName = ((PsiAssignmentExpression) parentElement).getLExpression().getText();
+                PsiExpression left = ((PsiAssignmentExpression) parentElement).getLExpression();
+                if (left instanceof PsiReferenceExpression) {
+                    PsiReferenceExpression leftExpr = (PsiReferenceExpression) left;
+                    fieldName = leftExpr.getReferenceName();
+
+                    PsiExpression qualifierExpression = leftExpr.getQualifierExpression();
+                    if (qualifierExpression != null) {
+                        if (qualifierExpression instanceof PsiThisExpression) {
+                            prefix = "this.";
+                        } else if (qualifierExpression instanceof PsiReferenceExpression) {
+                            prefix = ReferenceExpressionTranslator.translate((PsiReferenceExpression) qualifierExpression, ctx, false);
+                        } else {
+                            prefix = qualifierExpression.getText();
+                        }
+                    } else{
+                        PsiElement resolvedReference = leftExpr.getReference().resolve();
+                      if(resolvedReference instanceof PsiField) {
+                          prefix = "this.";
+                      }
+                    }
+                } else {
+                    fieldName = ((PsiAssignmentExpression) parentElement).getLExpression().getText();
+                }
             }
 
             for (int dimension = 1; dimension < dimensionCount; dimension++) {
                 String varname = fieldName + "_d" + dimension;
-                ctx.print("for(let " + varname + " = 0; " + varname + " < " + element.getArrayDimensions()[dimension-1].getText() + "; " + varname + "++){\n");
+                ctx.print("for(let " + varname + " = 0; " + varname + " < " + element.getArrayDimensions()[dimension - 1].getText() + "; " + varname + "++){\n");
                 ctx.increaseIdent();
                 ctx.print(prefix + fieldName);
-                for(int i = 1; i <= dimension; i++) {
+                for (int i = 1; i <= dimension; i++) {
                     String prevVar = fieldName + "_d" + i;
                     ctx.append("[" + prevVar + "]");
                 }
@@ -128,7 +149,7 @@ public class NewExpressionTranslator {
 
             }
 
-            for (int dimension = 1; dimension < dimensionCount-1; dimension++) {
+            for (int dimension = 1; dimension < dimensionCount - 1; dimension++) {
                 ctx.decreaseIdent();
                 ctx.print("}\n");
             }
