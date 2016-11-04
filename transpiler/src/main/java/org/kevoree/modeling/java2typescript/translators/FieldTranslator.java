@@ -3,14 +3,13 @@ package org.kevoree.modeling.java2typescript.translators;
 
 import com.intellij.psi.*;
 import com.intellij.psi.impl.source.PsiClassReferenceType;
-import org.kevoree.modeling.java2typescript.helper.DocHelper;
 import org.kevoree.modeling.java2typescript.context.TranslationContext;
+import org.kevoree.modeling.java2typescript.helper.DocHelper;
 import org.kevoree.modeling.java2typescript.helper.KeywordHelper;
 import org.kevoree.modeling.java2typescript.helper.TypeHelper;
 import org.kevoree.modeling.java2typescript.metas.DocMeta;
 import org.kevoree.modeling.java2typescript.translators.expression.ExpressionListTranslator;
 import org.kevoree.modeling.java2typescript.translators.expression.ExpressionTranslator;
-import org.kevoree.modeling.java2typescript.translators.expression.MethodCallExpressionTranslator;
 
 public class FieldTranslator {
 
@@ -52,7 +51,7 @@ public class FieldTranslator {
         if (modifierList != null && modifierList.hasModifierProperty("static")) {
             ctx.append("static ");
         }
-        ctx.append(element.getName()).append(": ");
+        ctx.append(KeywordHelper.process(element.getName(),ctx)).append(": ");
 
         if (element.hasInitializer() && (element.getInitializer() instanceof PsiLambdaExpression)) {
             if(element.getType() instanceof PsiClassReferenceType) {

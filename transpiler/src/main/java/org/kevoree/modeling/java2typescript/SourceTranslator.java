@@ -3,7 +3,6 @@ package org.kevoree.modeling.java2typescript;
 import com.google.common.collect.Lists;
 import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.psi.*;
-import com.intellij.util.containers.ComparatorUtil;
 import org.kevoree.modeling.java2typescript.context.TranslationContext;
 import org.kevoree.modeling.java2typescript.translators.ClassTranslator;
 
@@ -11,9 +10,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 public class SourceTranslator {
 
@@ -21,8 +18,11 @@ public class SourceTranslator {
     private List<String> srcPaths;
     private String outPath;
     private String name;
-    private TranslationContext ctx;
+    private List<TranslationContext> ctxs;
     private boolean rootPassed = false;
+
+    private List<String> globalModuleImports;
+    private Map<String, String> globalPkgTransforms;
 
     public SourceTranslator(String srcPath, String outPath, String name) {
         this(Lists.newArrayList(srcPath), outPath, name);
@@ -33,11 +33,12 @@ public class SourceTranslator {
         this.srcPaths = new ArrayList<>(srcPaths);
         this.outPath = outPath;
         this.name = name;
-        this.ctx = new TranslationContext();
+        this.ctxs = new ArrayList<>();
+        this.globalModuleImports = new ArrayList<>();
+        globalPkgTransforms = new HashMap<>();
     }
 
     private void process(String srcPath) {
-        ctx.setSrcPath(srcPath);
         File srcFolder = new File(srcPath);
         if (srcFolder.exists()) {
             if (srcFolder.isFile()) {
@@ -78,23 +79,23 @@ public class SourceTranslator {
     }
 
     public void generate() {
-        String[] modelPath = new String[]{name + ".ts"};
-        File modelFile = Paths.get(outPath, modelPath).toFile();
-        try {
-            FileUtil.writeToFile(modelFile, ctx.toString().getBytes());
+        for(int i=0;i<ctxs.size();i++) {
+            String[] modelPath = new String[]{ctxs.get(i).getFileName() +  ".ts"};
+            File modelFile = Paths.get(outPath, modelPath).toFile();
+            try {
+                FileUtil.writeToFile(modelFile, ctxs.get(i).toString().getBytes());
 
-            // files
-            List<URI> files = new ArrayList<>();
-            files.add(Paths.get(".", modelPath).toUri());
+                // files
+                List<URI> files = new ArrayList<>();
+                files.add(Paths.get(".", modelPath).toUri());
 
-        } catch (IOException e) {
-            e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
     private void visit(PsiDirectory dir, boolean isRoot) {
-        ctx.enterPackage(dir.getName(), isRoot);
-
         PsiFile[] containedFiles = dir.getFiles();
         Arrays.sort(containedFiles, (f1, f2) -> f1.getName().compareTo(f2.getName()) );
         for (PsiFile file : containedFiles) {
@@ -110,18 +111,18 @@ public class SourceTranslator {
         for (PsiDirectory subDir : subDirectories) {
             visit(subDir, false);
         }
-
-        ctx.leavePackage();
     }
 
     private void visit(PsiJavaFile file) {
-
-        ctx.setFile(file);
+        TranslationContext translationContext = new TranslationContext();
+        globalModuleImports.forEach(translationContext::addModuleImport);
+        globalPkgTransforms.forEach(translationContext::addPackageTransform);
+        ctxs.add(translationContext);
         file.acceptChildren(new PsiElementVisitor() {
             @Override
             public void visitElement(PsiElement element) {
                 if (element instanceof PsiClass) {
-                    ClassTranslator.translate((PsiClass) element, ctx);
+                    ClassTranslator.translate((PsiClass) element, ctxs.get(ctxs.size() - 1));
                 }
             }
         });
@@ -138,11 +139,11 @@ public class SourceTranslator {
 
 
     public void addModuleImport(String moduleImport) {
-        ctx.addModuleImport(moduleImport);
+        globalModuleImports.add(moduleImport);
     }
 
     public void addPackageTransform(String initialName, String newName) {
-        ctx.addPackageTransform(initialName, newName);
+        globalPkgTransforms.put(initialName,newName);
     }
 
     /**
@@ -151,7 +152,7 @@ public class SourceTranslator {
      *
      * @return ctx TranslationContext
      */
-    protected TranslationContext getCtx() {
-        return this.ctx;
+    protected List<TranslationContext> getCtx() {
+        return this.ctxs;
     }
 }

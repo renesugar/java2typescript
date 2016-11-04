@@ -1,10 +1,6 @@
 
 package org.kevoree.modeling.java2typescript.context;
 
-import com.intellij.openapi.project.Project;
-import com.intellij.psi.PsiJavaFile;
-import com.intellij.psi.PsiType;
-
 import java.util.*;
 
 public class TranslationContext {
@@ -14,9 +10,7 @@ public class TranslationContext {
 
     private StringBuilder sb = new StringBuilder();
     private int indent = 0;
-    private PsiJavaFile file;
-    private Set<String> javaClasses = new HashSet<>();
-    private String srcPath;
+    private String fileName;
     private List<String> moduleImports = new ArrayList<>();
     private Map<String, String> pkgTransforms = new HashMap<>();
     private ArrayList<String> genericParameterNames;
@@ -44,18 +38,6 @@ public class TranslationContext {
         return this;
     }
 
-    public void setSrcPath(String srcPath) {
-        this.srcPath = srcPath;
-    }
-
-    public void setFile(PsiJavaFile file) {
-        this.file = file;
-    }
-
-    public PsiJavaFile getFile() {
-        return file;
-    }
-
     public TranslationContext append(String str) {
         sb.append(str);
         return this;
@@ -73,10 +55,6 @@ public class TranslationContext {
         }
         this.javaClasses.add(clazz);
         */
-    }
-
-    public Set<String> needsJava() {
-        return this.javaClasses;
     }
 
     @Override
@@ -107,26 +85,6 @@ public class TranslationContext {
             sb.append(' ');
         }
         return this;
-    }
-
-    public void enterPackage(String pkgName, boolean isRoot) {
-        if(isRoot) {
-            this.print("module ");
-        } else {
-            this.print("export module ");
-        }
-        this.append(pkgName);
-        this.append(" {\n");
-        this.increaseIdent();
-    }
-
-    public void leavePackage() {
-        this.decreaseIdent();
-        this.print("}\n");
-    }
-
-    public String getSrcPath() {
-        return srcPath;
     }
 
     public void addModuleImport(String moduleImport) {
@@ -163,5 +121,13 @@ public class TranslationContext {
 
     public void removeGenericParameterNames() {
         this.genericParameterNames = null;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }

@@ -3,24 +3,40 @@ package org.kevoree.modeling.java2typescript.translators;
 
 import com.intellij.psi.*;
 import com.intellij.psi.javadoc.PsiDocComment;
-import org.kevoree.modeling.java2typescript.helper.DocHelper;
 import org.kevoree.modeling.java2typescript.context.TranslationContext;
+import org.kevoree.modeling.java2typescript.helper.DocHelper;
 import org.kevoree.modeling.java2typescript.helper.KeywordHelper;
 import org.kevoree.modeling.java2typescript.helper.TypeHelper;
 import org.kevoree.modeling.java2typescript.metas.DocMeta;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class ClassTranslator {
 
     public static void translate(PsiClass clazz, TranslationContext ctx) {
+        ctx.setFileName(clazz.getQualifiedName());
         DocMeta metas = DocHelper.process(clazz.getDocComment());
         if (metas.ignored) {
             //we skip the class
             return;
+        }
+
+        int nbPkg = 0;
+        String fullName = clazz.getQualifiedName();
+        int start = 0;
+        for(int idxPck = 0;idxPck<fullName.length();idxPck++) {
+            if(fullName.charAt(idxPck) == '.') {
+                if(idxPck + clazz.getName().length() < fullName.length()) {
+                    String pkg = fullName.substring(start,idxPck);
+                    if(start != 0) {
+                        ctx.print("export ");
+                    }
+                    ctx.print("module ")
+                            .append(pkg)
+                            .append(" {\n");
+                    ctx.increaseIdent();
+                    nbPkg++;
+                    start = idxPck + 1;
+                }
+            }
         }
 
         if (clazz.getModifierList() != null &&
@@ -32,7 +48,7 @@ public class ClassTranslator {
             ctx.print("export class ");
         }
 
-        ctx.append(clazz.getName());
+        ctx.append(KeywordHelper.process(clazz.getName(),ctx));
         String genericParams = TypeParametersTranslator.print(clazz.getTypeParameters(), ctx);
         if (!genericParams.isEmpty()) {
             ctx.append("<");
@@ -62,6 +78,11 @@ public class ClassTranslator {
 
         ctx.print("}\n");
         printInnerClasses(clazz, ctx);
+
+        for(int i=nbPkg;i>0;i--) {
+            ctx.decreaseIdent();
+            ctx.print("}\n");
+        }
     }
 
     private static void printInnerClasses(PsiClass element, TranslationContext ctx) {

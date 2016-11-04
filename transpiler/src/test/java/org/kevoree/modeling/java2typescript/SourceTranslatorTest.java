@@ -3,130 +3,82 @@ package org.kevoree.modeling.java2typescript;
 import org.junit.Assert;
 import org.junit.Test;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
 public class SourceTranslatorTest {
 
-    @Test
-    public void generics() throws IOException {
 
-        String source = Paths.get("src", "test", "java", "sources", "generics").toAbsolutePath().toString();
-        String target = Paths.get("target", "generated-sources", "java2ts").toAbsolutePath().toString();
+    private void transpilerTest(String srcF, String[] src, String outF, String[] out, String expF, String[] expPath) throws IOException {
+        String source = Paths.get(srcF,src).toAbsolutePath().toString();
+        String target = Paths.get(outF, out).toAbsolutePath().toString();
 
         SourceTranslator translator = new SourceTranslator(source, target, "generics");
         translator.process();
+        translator.generate();
 
-        String result = translator.getCtx().toString().trim();
-        //System.out.println(result);
+        File expectedRes = Paths.get(expF, expPath).toFile();
+        File actualResult = Paths.get(outF,out).toFile();
+        Assert.assertArrayEquals(expectedRes.list(),actualResult.list());
 
-        BufferedReader br = new BufferedReader(new FileReader(Paths.get("src", "test", "resources", "generics", "output.ts").toFile()));
-        StringBuilder sb = new StringBuilder();
-        String line = null;
-        while ((line = br.readLine()) != null){
-            sb.append('\n').append(line);
+        File[] expFiles = expectedRes.listFiles();
+        File[] actFiles = actualResult.listFiles();
+        for(int i=0;i<expFiles.length;i++) {
+            File exp = expFiles[i];
+            File act = actFiles[i];
+
+            BufferedReader readerExp = new BufferedReader(new FileReader(exp));
+            BufferedReader readerAct = new BufferedReader(new FileReader(act));
+
+            String lgnExp = readerExp.readLine();
+            String lgnAct = readerAct.readLine();
+
+            while (lgnAct!= null || lgnExp != null) {
+                Assert.assertEquals(lgnExp,lgnAct);
+                lgnAct = readerAct.readLine();
+                lgnExp = readerExp.readLine();
+            }
+
+            Assert.assertEquals(lgnExp,lgnAct);
+
         }
+    }
 
-        Assert.assertEquals(
-                sb.toString().substring(1),
-                result);
-
+    @Test
+    public void generics() throws IOException {
+        transpilerTest("src", new String[]{"test", "java", "sources", "generics"},
+                "target",new String[]{"generated-sources", "java2ts", "generics"},
+                "src", new String[]{"test", "resources", "generics"});
     }
 
     @Test
     public void strings() throws IOException {
-        String source = Paths.get("src", "test", "java", "sources", "strings").toAbsolutePath().toString();
-        String target = Paths.get("target", "generated-sources", "java2ts").toAbsolutePath().toString();
-
-        SourceTranslator translator = new SourceTranslator(source, target, "strings");
-        translator.addPackageTransform("sources.strings", "");
-        translator.process();
-
-        String result = translator.getCtx().toString().trim();
-        //System.out.println(result);
-
-        BufferedReader br = new BufferedReader(new FileReader(Paths.get("src", "test", "resources", "strings", "output.ts").toFile()));
-        StringBuilder sb = new StringBuilder();
-        String line = null;
-        while ((line = br.readLine()) != null){
-            sb.append('\n').append(line);
-        }
-
-        Assert.assertEquals(
-                sb.toString().substring(1),
-                result);
+        transpilerTest("src", new String[]{"test", "java", "sources", "strings"},
+                "target",new String[]{"generated-sources", "java2ts","strings"},
+                "src",new String[]{"test", "resources", "strings"});
     }
 
     @Test
     public void arrays() throws IOException {
-        String source = Paths.get("src", "test", "java", "sources", "arrays", "test").toAbsolutePath().toString();
-        String target = Paths.get("target", "generated-sources", "java2ts").toAbsolutePath().toString();
-
-        SourceTranslator translator = new SourceTranslator(source, target, "arrays");
-        translator.process();
-
-        String result = translator.getCtx().toString().trim();
-        //System.out.println(result);
-
-        BufferedReader br = new BufferedReader(new FileReader(Paths.get("src", "test", "resources", "arrays", "output.ts").toFile()));
-        StringBuilder sb = new StringBuilder();
-        String line = null;
-        while ((line = br.readLine()) != null){
-            sb.append('\n').append(line);
-        }
-
-        Assert.assertEquals(
-                sb.toString().substring(1),
-                result);
+        transpilerTest("src", new String[]{"test", "java", "sources", "arrays","test"},
+                "target",new String[]{"generated-sources", "java2ts","arrays"},
+                "src",new String[]{"test", "resources", "arrays"});
     }
 
     @Test
     public void closures() throws IOException {
-        String source = Paths.get("src", "test", "java", "sources", "closures").toAbsolutePath().toString();
-        String target = Paths.get("target", "generated-sources", "java2ts").toAbsolutePath().toString();
-
-        SourceTranslator translator = new SourceTranslator(source, target, "closures");
-        translator.process();
-
-        String result = translator.getCtx().toString().trim();
-        //System.out.println(result);
-
-        BufferedReader br = new BufferedReader(new FileReader(Paths.get("src", "test", "resources", "closures", "output.ts").toFile()));
-        StringBuilder sb = new StringBuilder();
-        String line = null;
-        while ((line = br.readLine()) != null){
-            sb.append('\n').append(line);
-        }
-
-        Assert.assertEquals(
-                sb.toString().substring(1),
-                result);
+        transpilerTest("src", new String[]{"test", "java", "sources", "closures"},
+                "target",new String[]{"generated-sources", "java2ts","closures"},
+                "src",new String[]{"test", "resources", "closures"});
     }
 
     @Test
     public void baseElements() throws IOException {
-        String source = Paths.get("src", "test", "java", "sources", "base").toAbsolutePath().toString();
-        String target = Paths.get("target", "generated-sources", "java2ts").toAbsolutePath().toString();
+        transpilerTest("src", new String[]{"test", "java", "sources", "base"},
+                "target",new String[]{"generated-sources", "java2ts","base"},
+                "src",new String[]{"test", "resources", "base"});
 
-        SourceTranslator translator = new SourceTranslator(source, target, "base");
-        translator.process();
-
-        String result = translator.getCtx().toString().trim();
-        //System.out.println(result);
-
-        BufferedReader br = new BufferedReader(new FileReader(Paths.get("src", "test", "resources", "base", "output.ts").toFile()));
-        StringBuilder sb = new StringBuilder();
-        String line = null;
-        while ((line = br.readLine()) != null){
-            sb.append('\n').append(line);
-        }
-
-        Assert.assertEquals(
-                sb.toString().substring(1),
-                result);
     }
 
     //@Test

@@ -33,7 +33,8 @@ public class PathHelper {
 //    }
 
     public static String lastPart(TranslationContext ctx) {
-        String path = ctx.getFile().getVirtualFile().getPath();
-        return path.substring(ctx.getSrcPath().length()+1);
+//        String path = ctx.getFile().getVirtualFile().getPath();
+//        return path.substring(path.lastIndexOf(File.separator) + 1);
+        return ctx.getFileName().substring(ctx.getFileName().lastIndexOf(".") + 1);
     }
 }
