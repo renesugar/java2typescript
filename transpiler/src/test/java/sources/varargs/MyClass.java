@@ -15,10 +15,17 @@ public class MyClass {
     public void tt() {
         MyClass c = new MyClass(args);
         c.tt2(args);
+        String[] newArgs = new String[]{"a", "b"};
+        c.tt2(newArgs);
+        c.tt2(createVarArgs());
     }
 
     public void tt2(String... its) {
 
+    }
+
+    public String[] createVarArgs() {
+        return new String[0];
     }
 
 

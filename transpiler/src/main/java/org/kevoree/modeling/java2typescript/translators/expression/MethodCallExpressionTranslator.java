@@ -56,62 +56,67 @@ public class MethodCallExpressionTranslator {
 
     public static void printCallParameters(PsiExpression[] arguments, TranslationContext ctx) {
         for (int i = 0; i < arguments.length; i++) {
-            if (arguments[i] instanceof PsiReferenceExpression) {
-                boolean isVarArgParam = false;
+            if(arguments[i] instanceof PsiMethodCallExpression) {
+                if(arguments[i].getType() != null && arguments[i].getType().getArrayDimensions() > 0) {
+                    checkVarArgs(arguments, i, ctx);
+                }
+                ExpressionTranslator.translate(arguments[i], ctx);
+            } else if (arguments[i] instanceof PsiReferenceExpression) {
                 PsiReference ref = arguments[i].getReference();
                 if (ref != null) {
                     PsiElement resolved = ref.resolve();
-
                     if (resolved != null) {
                         if (resolved instanceof PsiParameter) {
                             if ((((PsiParameter) resolved).isVarArgs())) {
-                                isVarArgParam = true;
+                                ctx.append("...");
                             }
-                        } else if (resolved instanceof PsiField) {
-                            boolean isArray = ((PsiField) resolved).getType().getArrayDimensions() > 0;
+                        } else if (resolved instanceof PsiVariable) {
+                            boolean isArray = ((PsiVariable) resolved).getType().getArrayDimensions() > 0;
                             if (isArray) {
-                                PsiElement grandParentExp = ref.getElement().getParent().getParent();
-                                if (grandParentExp instanceof PsiNewExpression) {
-                                    PsiElement resolvedClass = ((PsiNewExpression) grandParentExp).getClassOrAnonymousClassReference().resolve();
-                                    if (resolvedClass instanceof PsiClass) {
-                                        for (PsiMethod m : ((PsiClass) resolvedClass).getConstructors()) {
-                                            PsiParameter[] parameters = m.getParameterList().getParameters();
-                                            if (parameters.length == arguments.length) {
-                                                if (parameters[i].isVarArgs()) {
-                                                    isVarArgParam = true;
-                                                    break;
-                                                }
-                                            }
-                                        }
-                                    }
-                                } else if(grandParentExp instanceof PsiMethodCallExpression) {
-                                    PsiElement method = ((PsiMethodCallExpression)grandParentExp).getMethodExpression().resolve();
-                                    if(method != null && method instanceof PsiMethod) {
-                                        PsiParameter[] parameters = ((PsiMethod)method).getParameterList().getParameters();
-                                        if (parameters.length == arguments.length) {
-                                            if (parameters[i].isVarArgs()) {
-                                                isVarArgParam = true;
-                                            }
-                                        }
-                                    }
-                                }
+                               checkVarArgs(arguments, i, ctx);
                             }
                         }
                     }
                 }
-                if (isVarArgParam) {
-                    ctx.append("...");
-                }
                 ReferenceExpressionTranslator.translate((PsiReferenceExpression) arguments[i], ctx);
-                /*
-                    ctx.append(TypeHelper.primitiveStaticCall(((PsiReferenceExpression) arguments[i]).getReferenceName(), ctx));
-                } else {
-                }*/
             } else {
                 ExpressionTranslator.translate(arguments[i], ctx);
             }
             if (i != arguments.length - 1) {
                 ctx.append(", ");
+            }
+        }
+    }
+
+    private static void checkVarArgs(PsiExpression[] arguments, int index, TranslationContext ctx) {
+        PsiElement parentExp = arguments[index].getParent();
+        if(parentExp != null) {
+            PsiElement grandParentExp = parentExp.getParent();
+            if(grandParentExp != null) {
+                if (grandParentExp instanceof PsiNewExpression) {
+                    PsiElement resolvedClass = ((PsiNewExpression) grandParentExp).getClassOrAnonymousClassReference().resolve();
+                    if (resolvedClass instanceof PsiClass) {
+                        for (PsiMethod m : ((PsiClass) resolvedClass).getConstructors()) {
+                            PsiParameter[] parameters = m.getParameterList().getParameters();
+                            if (parameters.length == arguments.length) {
+                                if (parameters[index].isVarArgs()) {
+                                    ctx.append("...");
+                                    break;
+                                }
+                            }
+                        }
+                    }
+                } else if(grandParentExp instanceof PsiMethodCallExpression) {
+                    PsiElement method = ((PsiMethodCallExpression)grandParentExp).getMethodExpression().resolve();
+                    if(method != null && method instanceof PsiMethod) {
+                        PsiParameter[] parameters = ((PsiMethod)method).getParameterList().getParameters();
+                        if (parameters.length == arguments.length) {
+                            if (parameters[index].isVarArgs()) {
+                                ctx.append("...");
+                            }
+                        }
+                    }
+                }
             }
         }
     }

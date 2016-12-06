@@ -128,7 +128,8 @@ public class Java2TSPlugin extends AbstractMojo {
 
         //Generate package.json
         try {
-            BufferedWriter br = Files.newBufferedWriter(target.toPath().resolve("package.json"), StandardOpenOption.CREATE_NEW);
+            Files.deleteIfExists(target.toPath().resolve("package.json"));
+            BufferedWriter br = Files.newBufferedWriter(target.toPath().resolve("package.json"), StandardOpenOption.CREATE);
             br.append("{\n" +
                     "  \"name\": \""+project.getGroupId() + "." + project.getArtifactId()+"\",\n" +
                     "  \"version\": \""+project.getVersion()+"\"\n" +
