@@ -61,18 +61,52 @@ public class MethodCallExpressionTranslator {
                 PsiReference ref = arguments[i].getReference();
                 if (ref != null) {
                     PsiElement resolved = ref.resolve();
-                    if (resolved != null && resolved instanceof PsiParameter) {
-                        if ((((PsiParameter) resolved).isVarArgs())) {
-                            isVarArgParam = true;
+
+                    if (resolved != null) {
+                        if (resolved instanceof PsiParameter) {
+                            if ((((PsiParameter) resolved).isVarArgs())) {
+                                isVarArgParam = true;
+                            }
+                        } else if (resolved instanceof PsiField) {
+                            boolean isArray = ((PsiField) resolved).getType().getArrayDimensions() > 0;
+                            if (isArray) {
+                                PsiElement grandParentExp = ref.getElement().getParent().getParent();
+                                if (grandParentExp instanceof PsiNewExpression) {
+                                    PsiElement resolvedClass = ((PsiNewExpression) grandParentExp).getClassOrAnonymousClassReference().resolve();
+                                    if (resolvedClass instanceof PsiClass) {
+                                        for (PsiMethod m : ((PsiClass) resolvedClass).getConstructors()) {
+                                            PsiParameter[] parameters = m.getParameterList().getParameters();
+                                            if (parameters.length == arguments.length) {
+                                                if (parameters[i].isVarArgs()) {
+                                                    isVarArgParam = true;
+                                                    break;
+                                                }
+                                            }
+                                        }
+                                    }
+                                } else if(grandParentExp instanceof PsiMethodCallExpression) {
+                                    PsiElement method = ((PsiMethodCallExpression)grandParentExp).getMethodExpression().resolve();
+                                    if(method != null && method instanceof PsiMethod) {
+                                        PsiParameter[] parameters = ((PsiMethod)method).getParameterList().getParameters();
+                                        if (parameters.length == arguments.length) {
+                                            if (parameters[i].isVarArgs()) {
+                                                isVarArgParam = true;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
                 if (isVarArgParam) {
                     ctx.append("...");
+                }
+                ReferenceExpressionTranslator.translate((PsiReferenceExpression) arguments[i], ctx);
+                /*
                     ctx.append(TypeHelper.primitiveStaticCall(((PsiReferenceExpression) arguments[i]).getReferenceName(), ctx));
                 } else {
-                    ReferenceExpressionTranslator.translate((PsiReferenceExpression) arguments[i], ctx);
-                }
+                }*/
             } else {
                 ExpressionTranslator.translate(arguments[i], ctx);
             }

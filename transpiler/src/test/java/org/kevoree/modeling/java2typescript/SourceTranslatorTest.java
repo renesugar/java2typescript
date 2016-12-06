@@ -129,6 +129,29 @@ public class SourceTranslatorTest {
                 result);
     }
 
+    @Test
+    public void varArgs() throws IOException {
+        String source = Paths.get("src", "test", "java", "sources", "varargs").toAbsolutePath().toString();
+        String target = Paths.get("target", "generated-sources", "java2ts").toAbsolutePath().toString();
+
+        SourceTranslator translator = new SourceTranslator(source, target, "varargs");
+        translator.process();
+
+        String result = translator.getCtx().toString().trim();
+        System.out.println(result);
+
+        BufferedReader br = new BufferedReader(new FileReader(Paths.get("src", "test", "resources", "varargs", "output.ts").toFile()));
+        StringBuilder sb = new StringBuilder();
+        String line = null;
+        while ((line = br.readLine()) != null){
+            sb.append('\n').append(line);
+        }
+
+        Assert.assertEquals(
+                sb.toString().substring(1),
+                result);
+    }
+
     //@Test
     public void mwdb_core() throws IOException {
         String source = "/Users/gnain/Sources/Kevoree-Modeling/mwDB/core/src/main/java";
