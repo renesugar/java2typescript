@@ -138,7 +138,7 @@ public class SourceTranslatorTest {
         translator.process();
 
         String result = translator.getCtx().toString().trim();
-        System.out.println(result);
+        //System.out.println(result);
 
         BufferedReader br = new BufferedReader(new FileReader(Paths.get("src", "test", "resources", "varargs", "output.ts").toFile()));
         StringBuilder sb = new StringBuilder();
@@ -152,7 +152,7 @@ public class SourceTranslatorTest {
                 result);
     }
 
-    @Test
+    //@Test
     public void mwdb_core() throws IOException {
         String source = "/Users/gnain/Sources/Kevoree-Modeling/mwDB/core/src/main/java";
         //String source = "/Users/gnain/Sources/Kevoree-Modeling/mwDB/api/src/main/java";
