@@ -394,6 +394,27 @@ module java {
                 return min + rnd * (max - min);
             }
 
+            private haveNextNextGaussian : boolean = false;
+            private nextNextGaussian : number = 0.;
+            public nextGaussian() : number {
+
+                if (this.haveNextNextGaussian) {
+                    this.haveNextNextGaussian = false;
+                    return this.nextNextGaussian;
+                } else {
+                    var v1, v2, s;
+                    do {
+                        v1 = 2 * this.nextDouble() - 1; // between -1 and 1
+                        v2 = 2 * this.nextDouble() - 1; // between -1 and 1
+                        s = v1 * v1 + v2 * v2;
+                    } while (s >= 1 || s == 0);
+                    var  multiplier = Math.sqrt(-2 * Math.log(s)/s);
+                    this.nextNextGaussian = v2 * multiplier;
+                    this.haveNextNextGaussian = true;
+                    return v1 * multiplier;
+                }
+            }
+
         }
 
         export interface Iterator<E> {
