@@ -16,8 +16,8 @@
     <build>
         <plugins>
             <plugin>
-                <groupId>org.kevoree.modeling.j2ts</groupId>
-                <artifactId>mavenplugin</artifactId>
+                <groupId>com.datathings</groupId>
+                <artifactId>j2ts-mavenplugin</artifactId>
                 <version>${j2ts.version}</version>
                 <executions>
                     <execution>

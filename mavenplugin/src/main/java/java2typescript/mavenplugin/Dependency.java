@@ -13,18 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.kevoree.modeling.java2typescript.translators.expression;
+package java2typescript.mavenplugin;
 
-import com.intellij.psi.PsiArrayAccessExpression;
-import org.kevoree.modeling.java2typescript.context.TranslationContext;
+public class Dependency {
 
-public class ArrayAccessExpressionTranslator {
-
-    public static void translate(PsiArrayAccessExpression element, TranslationContext ctx) {
-        ExpressionTranslator.translate(element.getArrayExpression(), ctx);
-        ctx.append('[');
-        ExpressionTranslator.translate(element.getIndexExpression(), ctx);
-        ctx.append(']');
+    private String name;
+    private String version;
+    public String getVersion() {
+        return version;
+    }
+    public void setVersion(String version) {
+        this.version = version;
+    }
+    public String getName() {
+        return name;
+    }
+    public void setName(String name) {
+        this.name = name;
     }
 
 }

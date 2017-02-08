@@ -1,408 +1,405 @@
-module java {
-    export module lang {
-        export class System {
-            static gc() {
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var java;
+(function (java) {
+    var lang;
+    (function (lang) {
+        var System = (function () {
+            function System() {
             }
-
-            static arraycopy(src: any[]| Float64Array | Int32Array | Int8Array, srcPos: number, dest: any[]| Float64Array | Int32Array | Int8Array, destPos: number, numElements: number): void {
+            System.gc = function () {
+            };
+            System.arraycopy = function (src, srcPos, dest, destPos, numElements) {
                 if ((dest instanceof Float64Array || dest instanceof Int32Array || dest instanceof Int8Array)
                     && (src instanceof Float64Array || src instanceof Int32Array || src instanceof Int8Array)) {
                     if (numElements == src.length) {
                         dest.set(src, destPos);
-                    } else {
+                    }
+                    else {
                         dest.set(src.subarray(srcPos, srcPos + numElements), destPos);
                     }
-                } else {
-                    for (let i = 0; i < numElements; i++) {
+                }
+                else {
+                    for (var i = 0; i < numElements; i++) {
                         dest[destPos + i] = src[srcPos + i];
                     }
                 }
+            };
+            return System;
+        }());
+        lang.System = System;
+        var StringBuilder = (function () {
+            function StringBuilder() {
+                this._buffer = "";
+                this.length = 0;
             }
-        }
-
-        export class StringBuilder {
-            private _buffer: string = "";
-            public length = 0;
-
-            append(val: any): StringBuilder {
+            StringBuilder.prototype.append = function (val) {
                 this._buffer = this._buffer + val;
                 this.length = this._buffer.length;
                 return this;
-            }
-
-            insert(position: number, val: any): StringBuilder {
+            };
+            StringBuilder.prototype.insert = function (position, val) {
                 this._buffer = this._buffer.slice(0, position) + val + this._buffer.slice(position);
-
                 return this;
-            }
-
-            toString(): string {
+            };
+            StringBuilder.prototype.toString = function () {
                 return this._buffer;
+            };
+            return StringBuilder;
+        }());
+        lang.StringBuilder = StringBuilder;
+        var String = (function () {
+            function String() {
             }
-        }
-
-        export class String {
-            static valueOf(data: any, offset?: number, count?: number): string {
+            String.valueOf = function (data, offset, count) {
                 if (typeof offset === 'undefined' && typeof count === 'undefined') {
                     return data + '';
-                } else {
+                }
+                else {
                     return data.slice(offset, offset + count);
                 }
-            }
-
-            static hashCode(str: string): number {
-                var h: number = str['_hashCode'] ? str['_hashCode'] : 0;
+            };
+            String.hashCode = function (str) {
+                var h = str['_hashCode'] ? str['_hashCode'] : 0;
                 if (h === 0 && str.length > 0) {
-                    var val: string = str;
-
-                    for (var i: number = 0; i < str.length; i++) {
+                    var val = str;
+                    for (var i = 0; i < str.length; i++) {
                         h = 31 * h + str.charCodeAt(i);
                     }
                     str['_hashCode'] = h;
                 }
                 return h;
-            }
-
-            static isEmpty(str: string): boolean {
+            };
+            String.isEmpty = function (str) {
                 return str.length === 0;
-            }
-
-            static join(delimiter: string, elements: string[]): string {
+            };
+            String.join = function (delimiter, elements) {
                 return elements.join(delimiter);
+            };
+            return String;
+        }());
+        lang.String = String;
+        var Thread = (function () {
+            function Thread() {
             }
-        }
-
-        export class Thread {
-            static sleep(time: number): void {
-
+            Thread.sleep = function (time) {
+            };
+            return Thread;
+        }());
+        lang.Thread = Thread;
+        var Double = (function () {
+            function Double() {
             }
-        }
-        export class Double {
-            public static MAX_VALUE: number = Number.MAX_VALUE;
-            public static POSITIVE_INFINITY: number = Number.POSITIVE_INFINITY;
-            public static NEGATIVE_INFINITY: number = Number.NEGATIVE_INFINITY;
-            public static NaN = NaN;
-        }
-        export class Long {
-            public static parseLong(d: any) {
+            Double.MAX_VALUE = Number.MAX_VALUE;
+            Double.POSITIVE_INFINITY = Number.POSITIVE_INFINITY;
+            Double.NEGATIVE_INFINITY = Number.NEGATIVE_INFINITY;
+            Double.NaN = NaN;
+            return Double;
+        }());
+        lang.Double = Double;
+        var Long = (function () {
+            function Long() {
+            }
+            Long.parseLong = function (d) {
                 return parseInt(d);
+            };
+            return Long;
+        }());
+        lang.Long = Long;
+        var Integer = (function () {
+            function Integer() {
             }
-        }
-        export class Integer {
-            public static parseInt(d: any) {
+            Integer.parseInt = function (d) {
                 return parseInt(d);
-            }
-        }
-
-    }
-
-    export namespace util {
-        export namespace concurrent {
-            export namespace atomic {
-                export class AtomicIntegerArray {
-                    _internal: Int32Array;
-
-                    constructor(initialCapacity: number) {
+            };
+            return Integer;
+        }());
+        lang.Integer = Integer;
+    })(lang = java.lang || (java.lang = {}));
+    var util;
+    (function (util) {
+        var concurrent;
+        (function (concurrent) {
+            var atomic;
+            (function (atomic) {
+                var AtomicIntegerArray = (function () {
+                    function AtomicIntegerArray(initialCapacity) {
                         this._internal = new Int32Array(initialCapacity);
                     }
-
-                    set(index: number, newVal: number) {
+                    AtomicIntegerArray.prototype.set = function (index, newVal) {
                         this._internal[index] = newVal;
-                    }
-
-                    get(index: number) {
+                    };
+                    AtomicIntegerArray.prototype.get = function (index) {
                         return this._internal[index];
-                    }
-
-                    getAndSet(index: number, newVal: number) {
+                    };
+                    AtomicIntegerArray.prototype.getAndSet = function (index, newVal) {
                         var temp = this._internal[index];
                         this._internal[index] = newVal;
                         return temp;
-                    }
-
-                    compareAndSet(index: number, expect: number, update: number): boolean {
+                    };
+                    AtomicIntegerArray.prototype.compareAndSet = function (index, expect, update) {
                         if (this._internal[index] == expect) {
                             this._internal[index] = update;
                             return true;
-                        } else {
+                        }
+                        else {
                             return false;
                         }
-                    }
-                }
-
-                export class AtomicLongArray {
-                    _internal: Float64Array;
-
-                    constructor(initialCapacity: number) {
+                    };
+                    return AtomicIntegerArray;
+                }());
+                atomic.AtomicIntegerArray = AtomicIntegerArray;
+                var AtomicLongArray = (function () {
+                    function AtomicLongArray(initialCapacity) {
                         this._internal = new Float64Array(initialCapacity);
                     }
-
-                    set(index: number, newVal: number) {
+                    AtomicLongArray.prototype.set = function (index, newVal) {
                         this._internal[index] = newVal;
-                    }
-
-                    get(index: number) {
+                    };
+                    AtomicLongArray.prototype.get = function (index) {
                         return this._internal[index];
-                    }
-
-                    getAndSet(index: number, newVal: number) {
+                    };
+                    AtomicLongArray.prototype.getAndSet = function (index, newVal) {
                         var temp = this._internal[index];
                         this._internal[index] = newVal;
                         return temp;
-                    }
-
-                    compareAndSet(index: number, expect: number, update: number): boolean {
+                    };
+                    AtomicLongArray.prototype.compareAndSet = function (index, expect, update) {
                         if (this._internal[index] == expect) {
                             this._internal[index] = update;
                             return true;
-                        } else {
+                        }
+                        else {
                             return false;
                         }
-                    }
-
-                    length(): number {
+                    };
+                    AtomicLongArray.prototype.length = function () {
                         return this._internal.length;
+                    };
+                    return AtomicLongArray;
+                }());
+                atomic.AtomicLongArray = AtomicLongArray;
+                var AtomicReferenceArray = (function () {
+                    function AtomicReferenceArray(initialCapacity) {
+                        this._internal = new Array();
                     }
-                }
-
-                export class AtomicReferenceArray<A> {
-                    _internal: Array<A>;
-
-                    constructor(initialCapacity: number) {
-                        this._internal = new Array<A>();
-                    }
-
-                    set(index: number, newVal: A) {
+                    AtomicReferenceArray.prototype.set = function (index, newVal) {
                         this._internal[index] = newVal;
-                    }
-
-                    get(index: number): A {
+                    };
+                    AtomicReferenceArray.prototype.get = function (index) {
                         return this._internal[index];
-                    }
-
-                    getAndSet(index: number, newVal: A) {
+                    };
+                    AtomicReferenceArray.prototype.getAndSet = function (index, newVal) {
                         var temp = this._internal[index];
                         this._internal[index] = newVal;
                         return temp;
-                    }
-
-                    compareAndSet(index: number, expect: A, update: A): boolean {
+                    };
+                    AtomicReferenceArray.prototype.compareAndSet = function (index, expect, update) {
                         if (this._internal[index] == expect) {
                             this._internal[index] = update;
                             return true;
-                        } else {
+                        }
+                        else {
                             return false;
                         }
-                    }
-
-                    length(): number {
+                    };
+                    AtomicReferenceArray.prototype.length = function () {
                         return this._internal.length;
+                    };
+                    return AtomicReferenceArray;
+                }());
+                atomic.AtomicReferenceArray = AtomicReferenceArray;
+                var AtomicReference = (function () {
+                    function AtomicReference() {
+                        this._internal = null;
                     }
-                }
-
-                export class AtomicReference<A> {
-                    _internal: A = null;
-
-                    compareAndSet(expect: A, update: A): boolean {
+                    AtomicReference.prototype.compareAndSet = function (expect, update) {
                         if (this._internal == expect) {
                             this._internal = update;
                             return true;
-                        } else {
+                        }
+                        else {
                             return false;
                         }
-                    }
-
-                    get(): A {
-                        return this._internal
-                    }
-
-                    set(newRef: A) {
+                    };
+                    AtomicReference.prototype.get = function () {
+                        return this._internal;
+                    };
+                    AtomicReference.prototype.set = function (newRef) {
                         this._internal = newRef;
-                    }
-
-                    getAndSet(newVal: A): A {
+                    };
+                    AtomicReference.prototype.getAndSet = function (newVal) {
                         var temp = this._internal;
                         this._internal = newVal;
                         return temp;
-                    }
-                }
-
-                export class AtomicLong {
-                    _internal = 0;
-
-                    constructor(init: number) {
+                    };
+                    return AtomicReference;
+                }());
+                atomic.AtomicReference = AtomicReference;
+                var AtomicLong = (function () {
+                    function AtomicLong(init) {
+                        this._internal = 0;
                         this._internal = init;
                     }
-
-                    compareAndSet(expect: number, update: number): boolean {
+                    AtomicLong.prototype.compareAndSet = function (expect, update) {
                         if (this._internal == expect) {
                             this._internal = update;
                             return true;
-                        } else {
+                        }
+                        else {
                             return false;
                         }
-                    }
-
-                    get(): number {
+                    };
+                    AtomicLong.prototype.get = function () {
                         return this._internal;
-                    }
-
-                    incrementAndGet(): number {
+                    };
+                    AtomicLong.prototype.incrementAndGet = function () {
                         this._internal++;
                         return this._internal;
-                    }
-
-                    decrementAndGet(): number {
+                    };
+                    AtomicLong.prototype.decrementAndGet = function () {
                         this._internal--;
                         return this._internal;
-                    }
-                }
-
-                export class AtomicBoolean {
-                    _internal = false;
-
-                    constructor(init: boolean) {
+                    };
+                    return AtomicLong;
+                }());
+                atomic.AtomicLong = AtomicLong;
+                var AtomicBoolean = (function () {
+                    function AtomicBoolean(init) {
+                        this._internal = false;
                         this._internal = init;
                     }
-
-                    compareAndSet(expect: boolean, update: boolean): boolean {
+                    AtomicBoolean.prototype.compareAndSet = function (expect, update) {
                         if (this._internal == expect) {
                             this._internal = update;
                             return true;
-                        } else {
+                        }
+                        else {
                             return false;
                         }
-                    }
-
-                    get(): boolean {
+                    };
+                    AtomicBoolean.prototype.get = function () {
                         return this._internal;
-                    }
-
-                    set(newVal: boolean) {
-                        this._internal = newVal
-                    }
-
-                }
-
-                export class AtomicInteger {
-                    _internal = 0;
-
-                    constructor(init: number) {
+                    };
+                    AtomicBoolean.prototype.set = function (newVal) {
+                        this._internal = newVal;
+                    };
+                    return AtomicBoolean;
+                }());
+                atomic.AtomicBoolean = AtomicBoolean;
+                var AtomicInteger = (function () {
+                    function AtomicInteger(init) {
+                        this._internal = 0;
                         this._internal = init;
                     }
-
-                    compareAndSet(expect: number, update: number): boolean {
+                    AtomicInteger.prototype.compareAndSet = function (expect, update) {
                         if (this._internal == expect) {
                             this._internal = update;
                             return true;
-                        } else {
+                        }
+                        else {
                             return false;
                         }
-                    }
-
-                    get(): number {
+                    };
+                    AtomicInteger.prototype.get = function () {
                         return this._internal;
-                    }
-
-                    set(newVal: number) {
-                        this._internal = newVal
-                    }
-
-                    getAndSet(newVal: number): number {
+                    };
+                    AtomicInteger.prototype.set = function (newVal) {
+                        this._internal = newVal;
+                    };
+                    AtomicInteger.prototype.getAndSet = function (newVal) {
                         var temp = this._internal;
                         this._internal = newVal;
                         return temp;
-                    }
-
-                    incrementAndGet(): number {
+                    };
+                    AtomicInteger.prototype.incrementAndGet = function () {
                         this._internal++;
                         return this._internal;
-                    }
-
-                    decrementAndGet(): number {
+                    };
+                    AtomicInteger.prototype.decrementAndGet = function () {
                         this._internal--;
                         return this._internal;
-                    }
-
-                    getAndIncrement(): number {
+                    };
+                    AtomicInteger.prototype.getAndIncrement = function () {
                         var temp = this._internal;
                         this._internal++;
                         return temp;
-                    }
-
-                    getAndDecrement(): number {
+                    };
+                    AtomicInteger.prototype.getAndDecrement = function () {
                         var temp = this._internal;
                         this._internal--;
                         return temp;
+                    };
+                    return AtomicInteger;
+                }());
+                atomic.AtomicInteger = AtomicInteger;
+            })(atomic = concurrent.atomic || (concurrent.atomic = {}));
+            var locks;
+            (function (locks) {
+                var ReentrantLock = (function () {
+                    function ReentrantLock() {
                     }
-                }
+                    ReentrantLock.prototype.lock = function () {
+                    };
+                    ReentrantLock.prototype.unlock = function () {
+                    };
+                    return ReentrantLock;
+                }());
+                locks.ReentrantLock = ReentrantLock;
+            })(locks = concurrent.locks || (concurrent.locks = {}));
+        })(concurrent = util.concurrent || (util.concurrent = {}));
+        var Random = (function () {
+            function Random() {
+                this.seed = undefined;
+                this.haveNextNextGaussian = false;
+                this.nextNextGaussian = 0.;
             }
-            export namespace locks {
-                export class ReentrantLock {
-                    public lock(): void {
-
-                    }
-
-                    public unlock(): void {
-
-                    }
-                }
-            }
-        }
-
-        export class Random {
-            private seed: number = undefined;
-
-            public nextInt(max?: number): number {
+            Random.prototype.nextInt = function (max) {
                 if (typeof max === 'undefined') {
                     max = Math.pow(2, 32);
                 }
                 if (this.seed == undefined) {
                     return Math.floor(Math.random() * max);
-                } else {
+                }
+                else {
                     return Math.floor(this.nextSeeded(0, max));
                 }
-            }
-
-            public nextDouble(): number {
+            };
+            Random.prototype.nextDouble = function () {
                 if (this.seed == undefined) {
                     return Math.random();
-                } else {
+                }
+                else {
                     return this.nextSeeded();
                 }
-            }
-
-            public nextBoolean(): boolean {
+            };
+            Random.prototype.nextBoolean = function () {
                 if (this.seed == undefined) {
                     return Math.random() >= 0.5;
-                } else {
+                }
+                else {
                     return this.nextSeeded() >= 0.5;
                 }
-            }
-
-            public setSeed(seed: number): void {
+            };
+            Random.prototype.setSeed = function (seed) {
                 this.seed = seed;
-            }
-
-            private nextSeeded(min?: number, max?: number) {
+            };
+            Random.prototype.nextSeeded = function (min, max) {
                 var max = max || 1;
                 var min = min || 0;
-
                 this.seed = (this.seed * 9301 + 49297) % 233280;
                 var rnd = this.seed / 233280;
-
                 return min + rnd * (max - min);
-            }
-
-            private haveNextNextGaussian: boolean = false;
-            private nextNextGaussian: number = 0.;
-
-            public nextGaussian(): number {
-
+            };
+            Random.prototype.nextGaussian = function () {
                 if (this.haveNextNextGaussian) {
                     this.haveNextNextGaussian = false;
                     return this.nextNextGaussian;
-                } else {
+                }
+                else {
                     var v1, v2, s;
                     do {
                         v1 = 2 * this.nextDouble() - 1; // between -1 and 1
@@ -414,399 +411,325 @@ module java {
                     this.haveNextNextGaussian = true;
                     return v1 * multiplier;
                 }
+            };
+            return Random;
+        }());
+        util.Random = Random;
+        var Arrays = (function () {
+            function Arrays() {
             }
-
-        }
-
-        export interface Iterator<E> {
-            hasNext(): boolean;
-            next(): E;
-        }
-
-        export class Arrays {
-            public static fill(data: any, begin: number, nbElem: number, param: number): void {
+            Arrays.fill = function (data, begin, nbElem, param) {
                 var max = begin + nbElem;
                 for (var i = begin; i < max; i++) {
                     data[i] = param;
                 }
-            }
-
-            public static copyOf<T>(original: any[], newLength: number, ignore?: any): T[] {
-                var copy = new Array<T>(newLength);
+            };
+            Arrays.copyOf = function (original, newLength, ignore) {
+                var copy = new Array(newLength);
                 lang.System.arraycopy(original, 0, copy, 0, Math.min(original.length, newLength));
                 return copy;
+            };
+            return Arrays;
+        }());
+        util.Arrays = Arrays;
+        var Collections = (function () {
+            function Collections() {
             }
-        }
-
-        export class Collections {
-
-            public static swap(list: List<any>, i: number, j: number) {
-                const l = list;
+            Collections.swap = function (list, i, j) {
+                var l = list;
                 l.set(i, l.set(j, l.get(i)));
-            }
-
-        }
-
-        export interface Collection<E> {
-            add(val: E): void;
-            addAll(vals: Collection<E>): void;
-            get(index: number): E;
-            remove(o: any): any;
-            clear(): void;
-            isEmpty(): boolean;
-            size(): number;
-            contains(o: E): boolean;
-            toArray<E>(a: Array<E>): E[];
-            iterator(): Iterator<E>;
-            containsAll(c: Collection<any>): boolean;
-            addAll(c: Collection<any>): boolean;
-            removeAll(c: Collection<any>): boolean;
-
-        }
-
-        export interface List<E> extends Collection<E> {
-            add(elem: E): void;
-            add(index: number, elem: E): void;
-            poll(): E;
-            addAll(c: Collection<E>): boolean;
-            addAll(index: number, c: Collection<E>): boolean;
-            get(index: number): E;
-            set(index: number, element: E): E;
-            indexOf(o: E): number;
-            lastIndexOf(o: E): number;
-            remove(index: number): E;
-        }
-
-        export interface Set<E> extends Collection<E> {
-            forEach(f: (e: any) => void): void;
-        }
-
-        export class Itr<E> implements Iterator<E> {
-            public cursor: number = 0;
-            public lastRet: number = -1;
-            protected list: Collection<E>;
-
-            constructor(list: Collection<E>) {
+            };
+            return Collections;
+        }());
+        util.Collections = Collections;
+        var Itr = (function () {
+            function Itr(list) {
+                this.cursor = 0;
+                this.lastRet = -1;
                 this.list = list;
             }
-
-            public hasNext(): boolean {
+            Itr.prototype.hasNext = function () {
                 return this.cursor != this.list.size();
-            }
-
-            public next(): E {
+            };
+            Itr.prototype.next = function () {
                 try {
-                    var i: number = this.cursor;
-                    var next: E = this.list.get(i);
+                    var i = this.cursor;
+                    var next = this.list.get(i);
                     this.lastRet = i;
                     this.cursor = i + 1;
                     return next;
-                } catch ($ex$) {
+                }
+                catch ($ex$) {
                     if ($ex$ instanceof Error) {
-                        var e: Error = <Error>$ex$;
+                        var e = $ex$;
                         throw new Error("no such element exception");
-                    } else {
+                    }
+                    else {
                         throw $ex$;
                     }
                 }
-            }
-        }
-
-        export class HashSet<E> implements Set<E> {
-            private content = {};
-
-            add(val: E) {
-                this.content[<any>val] = val;
-            }
-
-            clear() {
+            };
+            return Itr;
+        }());
+        util.Itr = Itr;
+        var HashSet = (function () {
+            function HashSet() {
                 this.content = {};
             }
-
-            contains(val: E): boolean {
-                return this.content.hasOwnProperty(<any>val);
-            }
-
-            containsAll(elems: Collection<E>): boolean {
+            HashSet.prototype.add = function (val) {
+                this.content[val] = val;
+            };
+            HashSet.prototype.clear = function () {
+                this.content = {};
+            };
+            HashSet.prototype.contains = function (val) {
+                return this.content.hasOwnProperty(val);
+            };
+            HashSet.prototype.containsAll = function (elems) {
                 return false;
-            }
-
-            addAll(vals: Collection<E>): boolean {
+            };
+            HashSet.prototype.addAll = function (vals) {
                 var tempArray = vals.toArray(null);
                 for (var i = 0; i < tempArray.length; i++) {
-                    this.content[<any>tempArray[i]] = tempArray[i];
+                    this.content[tempArray[i]] = tempArray[i];
                 }
                 return true;
-            }
-
-            remove(val: E): boolean {
+            };
+            HashSet.prototype.remove = function (val) {
                 var b = false;
-                if (this.content[<any>val]) {
+                if (this.content[val]) {
                     b = true;
                 }
-                delete this.content[<any>val];
+                delete this.content[val];
                 return b;
-            }
-
-            removeAll(): boolean {
+            };
+            HashSet.prototype.removeAll = function () {
                 return false;
-            }
-
-            size(): number {
+            };
+            HashSet.prototype.size = function () {
                 return Object.keys(this.content).length;
-            }
-
-            isEmpty(): boolean {
+            };
+            HashSet.prototype.isEmpty = function () {
                 return this.size() == 0;
-            }
-
-            toArray<E>(a: Array<E>): E[] {
-                return <E[]><any>Object.keys(this.content).map(key => this.content[key]);
-            }
-
-            iterator(): Iterator<E> {
+            };
+            HashSet.prototype.toArray = function (a) {
+                var _this = this;
+                return Object.keys(this.content).map(function (key) { return _this.content[key]; });
+            };
+            HashSet.prototype.iterator = function () {
                 return new java.util.Itr(this);
-            }
-
-            forEach(f: (e: any) => void): void {
+            };
+            HashSet.prototype.forEach = function (f) {
                 for (var p in this.content) {
                     f(this.content[p]);
                 }
-            }
-
-            get(index: number): E {
+            };
+            HashSet.prototype.get = function (index) {
                 return this.content[index];
+            };
+            return HashSet;
+        }());
+        util.HashSet = HashSet;
+        var AbstractList = (function () {
+            function AbstractList() {
+                this.content = [];
             }
-        }
-
-
-        export class AbstractList<E> implements List<E> {
-            private content: E[] = [];
-
-            addAll(index: any, vals?: any): boolean {
+            AbstractList.prototype.addAll = function (index, vals) {
                 var tempArray = vals.toArray(null);
                 for (var i = 0; i < tempArray.length; i++) {
                     this.content.push(tempArray[i]);
                 }
                 return false;
-            }
-
-            clear() {
+            };
+            AbstractList.prototype.clear = function () {
                 this.content = [];
-            }
-
-            poll(): E {
+            };
+            AbstractList.prototype.poll = function () {
                 return this.content.shift();
-            }
-
-            remove(indexOrElem: any): any {
+            };
+            AbstractList.prototype.remove = function (indexOrElem) {
                 this.content.splice(indexOrElem, 1);
                 return true;
-            }
-
-            removeAll(): boolean {
+            };
+            AbstractList.prototype.removeAll = function () {
                 this.content = [];
                 return true;
-            }
-
-            toArray(a: Array<E>): E[] {
+            };
+            AbstractList.prototype.toArray = function (a) {
                 return this.content;
-            }
-
-            size(): number {
+            };
+            AbstractList.prototype.size = function () {
                 return this.content.length;
-            }
-
-            add(index: any, elem?: E) {
+            };
+            AbstractList.prototype.add = function (index, elem) {
                 if (typeof elem !== 'undefined') {
                     this.content.splice(index, 0, elem);
-                } else {
+                }
+                else {
                     this.content.push(index);
                 }
-            }
-
-            get(index: number): E {
+            };
+            AbstractList.prototype.get = function (index) {
                 return this.content[index];
-            }
-
-            contains(val: E): boolean {
+            };
+            AbstractList.prototype.contains = function (val) {
                 return this.content.indexOf(val) != -1;
-            }
-
-            containsAll(elems: Collection<E>): boolean {
+            };
+            AbstractList.prototype.containsAll = function (elems) {
                 return false;
-            }
-
-            isEmpty(): boolean {
+            };
+            AbstractList.prototype.isEmpty = function () {
                 return this.content.length == 0;
-            }
-
-            set(index: number, element: E): E {
+            };
+            AbstractList.prototype.set = function (index, element) {
                 this.content[index] = element;
                 return element;
-            }
-
-            indexOf(element: E): number {
+            };
+            AbstractList.prototype.indexOf = function (element) {
                 return this.content.indexOf(element);
-            }
-
-            lastIndexOf(element: E): number {
+            };
+            AbstractList.prototype.lastIndexOf = function (element) {
                 return this.content.lastIndexOf(element);
-            }
-
-            iterator(): Iterator<E> {
+            };
+            AbstractList.prototype.iterator = function () {
                 return new Itr(this);
+            };
+            return AbstractList;
+        }());
+        util.AbstractList = AbstractList;
+        var LinkedList = (function (_super) {
+            __extends(LinkedList, _super);
+            function LinkedList() {
+                _super.apply(this, arguments);
             }
-
-        }
-
-        export class LinkedList<E> extends AbstractList<E> {
-        }
-        export class ArrayList<E> extends AbstractList<E> {
-        }
-
-        export class Stack<E> {
-            content = new Array();
-
-            pop(): E {
+            return LinkedList;
+        }(AbstractList));
+        util.LinkedList = LinkedList;
+        var ArrayList = (function (_super) {
+            __extends(ArrayList, _super);
+            function ArrayList() {
+                _super.apply(this, arguments);
+            }
+            return ArrayList;
+        }(AbstractList));
+        util.ArrayList = ArrayList;
+        var Stack = (function () {
+            function Stack() {
+                this.content = new Array();
+            }
+            Stack.prototype.pop = function () {
                 return this.content.pop();
-            }
-
-            push(t: E): void {
+            };
+            Stack.prototype.push = function (t) {
                 this.content.push(t);
-            }
-
-            isEmpty(): boolean {
+            };
+            Stack.prototype.isEmpty = function () {
                 return this.content.length == 0;
-            }
-
-            peek(): E {
+            };
+            Stack.prototype.peek = function () {
                 return this.content.slice(-1)[0];
+            };
+            return Stack;
+        }());
+        util.Stack = Stack;
+        var HashMap = (function () {
+            function HashMap() {
+                this.content = {};
             }
-        }
-
-        export interface Map<K, V> {
-            get(key: K): V;
-            put(key: K, value: V): V;
-            containsKey(key: K): boolean;
-            remove(key: K): V;
-            keySet(): Set<K>;
-            isEmpty(): boolean;
-            values(): Set<V>;
-            clear(): void;
-            size(): number;
-        }
-
-        export class HashMap<K, V> implements Map<K, V> {
-
-            private content = {};
-
-            get(key: K): V {
-                return this.content[<any>key];
-            }
-
-            put(key: K, value: V): V {
-                var previous_val = this.content[<any>key];
-                this.content[<any>key] = value;
+            HashMap.prototype.get = function (key) {
+                return this.content[key];
+            };
+            HashMap.prototype.put = function (key, value) {
+                var previous_val = this.content[key];
+                this.content[key] = value;
                 return previous_val;
-            }
-
-            containsKey(key: K): boolean {
-                return this.content.hasOwnProperty(<any>key);
-            }
-
-            remove(key: K): V {
-                var tmp = this.content[<any>key];
-                delete this.content[<any>key];
+            };
+            HashMap.prototype.containsKey = function (key) {
+                return this.content.hasOwnProperty(key);
+            };
+            HashMap.prototype.remove = function (key) {
+                var tmp = this.content[key];
+                delete this.content[key];
                 return tmp;
-            }
-
-            keySet(): Set<K> {
-                var result = new HashSet<K>();
+            };
+            HashMap.prototype.keySet = function () {
+                var result = new HashSet();
                 for (var p in this.content) {
                     if (this.content.hasOwnProperty(p)) {
-                        result.add(<any> p);
+                        result.add(p);
                     }
                 }
-                return <Set<K>> result;
-            }
-
-            isEmpty(): boolean {
+                return result;
+            };
+            HashMap.prototype.isEmpty = function () {
                 return Object.keys(this.content).length == 0;
-            }
-
-            values(): Set<V> {
-                var result = new HashSet<V>();
+            };
+            HashMap.prototype.values = function () {
+                var result = new HashSet();
                 for (var p in this.content) {
                     if (this.content.hasOwnProperty(p)) {
                         result.add(this.content[p]);
                     }
                 }
-                return <Set<V>> result;
-            }
-
-            clear(): void {
+                return result;
+            };
+            HashMap.prototype.clear = function () {
                 this.content = {};
+            };
+            HashMap.prototype.size = function () {
+                return Object.keys(this.content).length;
+            };
+            return HashMap;
+        }());
+        util.HashMap = HashMap;
+        var ConcurrentHashMap = (function (_super) {
+            __extends(ConcurrentHashMap, _super);
+            function ConcurrentHashMap() {
+                _super.apply(this, arguments);
             }
-
-            size(): number {
-                return Object.keys(this.content).length
-            }
-        }
-        export class ConcurrentHashMap<K, V> extends HashMap<K, V> {
-
-        }
-    }
-}
-
-function arrayInstanceOf(arr: any, arg: Function): boolean {
+            return ConcurrentHashMap;
+        }(HashMap));
+        util.ConcurrentHashMap = ConcurrentHashMap;
+    })(util = java.util || (java.util = {}));
+})(java || (java = {}));
+function arrayInstanceOf(arr, arg) {
     if (!(arr instanceof Array)) {
         return false;
-    } else {
+    }
+    else {
         if (arr.length == 0) {
             return true;
-        } else {
+        }
+        else {
             return (arr[0] instanceof arg);
         }
     }
 }
-
-
-class Long {
-
-    /*
-     long.js (c) 2013 Daniel Wirtz <dcode@dcode.io>
-     Released under the Apache License, Version 2.0
-     see: https://github.com/dcodeIO/long.js for details
-     */
-
-    private high: number = 0;
-    private low: number = 0;
-    private unsigned: boolean = false;
-
-    private static INT_CACHE = {};
-    private static UINT_CACHE = {};
-    private static pow_dbl = Math.pow;
-
-
-    private static TWO_PWR_16_DBL = 1 << 16;
-    private static TWO_PWR_24_DBL = 1 << 24;
-    private static TWO_PWR_32_DBL = Long.TWO_PWR_16_DBL * Long.TWO_PWR_16_DBL;
-    private static TWO_PWR_64_DBL = Long.TWO_PWR_32_DBL * Long.TWO_PWR_32_DBL;
-    private static TWO_PWR_63_DBL = Long.TWO_PWR_64_DBL / 2;
-    private static TWO_PWR_24 = Long.fromInt(Long.TWO_PWR_24_DBL);
-
-    public static ZERO: Long = Long.fromInt(0);
-    public static UZERO: Long = Long.fromInt(0, true);
-    public static ONE: Long = Long.fromInt(1);
-    public static UONE: Long = Long.fromInt(1, true);
-    public static NEG_ONE: Long = Long.fromInt(-1);
-    public static MAX_VALUE: Long = Long.fromBits(0x7FFFFFFF, 0xFFFFFFFF, false);
-    public static MAX_UNSIGNED_VALUE: Long = Long.fromBits(0xFFFFFFFF, 0xFFFFFFFF, true);
-    public static MIN_VALUE: Long = Long.fromBits(0x80000000, 0, false);
-
-
-    constructor(low ?: number, high ?: number, unsigned ?: boolean) {
+var Long = (function () {
+    function Long(low, high, unsigned) {
+        /*
+         long.js (c) 2013 Daniel Wirtz <dcode@dcode.io>
+         Released under the Apache License, Version 2.0
+         see: https://github.com/dcodeIO/long.js for details
+         */
+        this.high = 0;
+        this.low = 0;
+        this.unsigned = false;
+        this.eq = this.equals;
+        this.neq = this.notEquals;
+        this.lt = this.lessThan;
+        this.lte = this.lessThanOrEqual;
+        this.gt = this.greaterThan;
+        this.gte = this.greaterThanOrEqual;
+        this.comp = this.compare;
+        this.neg = this.negate;
+        this.sub = this.subtract;
+        this.mul = this.multiply;
+        this.div = this.divide;
+        this.mod = this.modulo;
+        this.shl = this.shiftLeft;
+        this.shr = this.shiftRight;
+        this.shru = this.shiftRightUnsigned;
         if (!(high == undefined)) {
             this.high = high;
         }
@@ -817,12 +740,10 @@ class Long {
             this.unsigned = unsigned;
         }
     }
-
-    public static isLong(obj: any): boolean {
+    Long.isLong = function (obj) {
         return (obj && obj["__isLong__"]) === true;
-    }
-
-    public static fromInt(value: number, unsigned ?: boolean): Long {
+    };
+    Long.fromInt = function (value, unsigned) {
         var obj, cachedObj, cache;
         if (unsigned) {
             value >>>= 0;
@@ -835,7 +756,8 @@ class Long {
             if (cache)
                 Long.UINT_CACHE[value] = obj;
             return obj;
-        } else {
+        }
+        else {
             value |= 0;
             if (cache = (-128 <= value && value < 128)) {
                 cachedObj = Long.INT_CACHE[value];
@@ -847,9 +769,8 @@ class Long {
                 Long.INT_CACHE[value] = obj;
             return obj;
         }
-    }
-
-    public static fromNumber(value: number, unsigned ?: boolean): Long {
+    };
+    Long.fromNumber = function (value, unsigned) {
         if (isNaN(value) || !isFinite(value))
             return unsigned ? Long.UZERO : Long.ZERO;
         if (unsigned) {
@@ -857,7 +778,8 @@ class Long {
                 return Long.UZERO;
             if (value >= Long.TWO_PWR_64_DBL)
                 return Long.MAX_UNSIGNED_VALUE;
-        } else {
+        }
+        else {
             if (value <= -Long.TWO_PWR_63_DBL)
                 return Long.MIN_VALUE;
             if (value + 1 >= Long.TWO_PWR_63_DBL)
@@ -866,13 +788,13 @@ class Long {
         if (value < 0)
             return Long.fromNumber(-value, unsigned).neg();
         return Long.fromBits((value % Long.TWO_PWR_32_DBL) | 0, (value / Long.TWO_PWR_32_DBL) | 0, unsigned);
-    }
-
-    public static fromBits(lowBits ?: number, highBits ?: number, unsigned ?: boolean): Long {
+    };
+    Long.fromBits = function (lowBits, highBits, unsigned) {
         return new Long(lowBits, highBits, unsigned);
-    }
-
-    public static fromString(str: string, radix: number = 10, unsigned: boolean = false): Long {
+    };
+    Long.fromString = function (str, radix, unsigned) {
+        if (radix === void 0) { radix = 10; }
+        if (unsigned === void 0) { unsigned = false; }
         if (str.length === 0)
             throw Error('empty string');
         if (str === "NaN" || str === "Infinity" || str === "+Infinity" || str === "-Infinity")
@@ -880,35 +802,31 @@ class Long {
         radix = radix || 10;
         if (radix < 2 || 36 < radix)
             throw RangeError('radix');
-
         var p;
         if ((p = str.indexOf('-')) > 0)
             throw Error('interior hyphen');
         else if (p === 0) {
             return Long.fromString(str.substring(1), radix, unsigned).neg();
         }
-
         // Do several (8) digits each time through the loop, so as to
         // minimize the calls to the very expensive emulated div.
         var radixToPower = Long.fromNumber(Long.pow_dbl(radix, 8));
-
         var result = Long.ZERO;
         for (var i = 0; i < str.length; i += 8) {
-            var size = Math.min(8, str.length - i),
-                value = parseInt(str.substring(i, i + size), radix);
+            var size = Math.min(8, str.length - i), value = parseInt(str.substring(i, i + size), radix);
             if (size < 8) {
                 var power = Long.fromNumber(Long.pow_dbl(radix, size));
                 result = result.mul(power).add(Long.fromNumber(value));
-            } else {
+            }
+            else {
                 result = result.mul(radixToPower);
                 result = result.add(Long.fromNumber(value));
             }
         }
         result.unsigned = unsigned;
         return result;
-    }
-
-    public static  fromValue(val: any): Long {
+    };
+    Long.fromValue = function (val) {
         if (val /* is compatible */ instanceof Long)
             return val;
         if (typeof val === 'number')
@@ -917,41 +835,37 @@ class Long {
             return Long.fromString(val);
         // Throws for non-objects, converts non-instanceof Long:
         return Long.fromBits(val.low, val.high, val.unsigned);
-    }
-
-
-    public toInt(): number {
+    };
+    Long.prototype.toInt = function () {
         return this.unsigned ? this.low >>> 0 : this.low;
     };
-
-    public toNumber(): number {
+    ;
+    Long.prototype.toNumber = function () {
         if (this.unsigned)
             return ((this.high >>> 0) * Long.TWO_PWR_32_DBL) + (this.low >>> 0);
         return this.high * Long.TWO_PWR_32_DBL + (this.low >>> 0);
     };
-
-    public toString(radix: number): string {
+    ;
+    Long.prototype.toString = function (radix) {
         radix = radix || 10;
         if (radix < 2 || 36 < radix)
             throw RangeError('radix');
         if (this.isZero())
             return '0';
-        if (this.isNegative()) { // Unsigned Longs are never negative
+        if (this.isNegative()) {
             if (this.eq(Long.MIN_VALUE)) {
                 // We need to change the Long value before it can be negated, so we remove
                 // the bottom-most digit in this base and then recurse to do the rest.
-                var radixLong = Long.fromNumber(radix),
-                    div = this.div(radixLong),
-                    rem1 = div.mul(radixLong).sub(this);
+                var radixLong = Long.fromNumber(radix), div = this.div(radixLong), rem1 = div.mul(radixLong).sub(this);
                 return div.toString(radix) + rem1.toInt().toString(radix);
-            } else
+            }
+            else
                 return '-' + this.neg().toString(radix);
         }
-
         // Do several (6) digits each time through the loop, so as to
         // minimize the calls to the very expensive emulated div.
         var radixToPower = Long.fromNumber(Long.pow_dbl(radix, 6), this.unsigned);
-        var rem: Long = this;
+        var rem = this;
         var result = '';
         while (true) {
             var remDiv = rem.div(radixToPower);
@@ -967,25 +881,25 @@ class Long {
             }
         }
     };
-
-    public getHighBits(): number {
+    ;
+    Long.prototype.getHighBits = function () {
         return this.high;
     };
-
-    public getHighBitsUnsigned(): number {
+    ;
+    Long.prototype.getHighBitsUnsigned = function () {
         return this.high >>> 0;
     };
-
-    public getLowBits(): number {
+    ;
+    Long.prototype.getLowBits = function () {
         return this.low;
     };
-
-    public getLowBitsUnsigned(): number {
+    ;
+    Long.prototype.getLowBitsUnsigned = function () {
         return this.low >>> 0;
     };
-
-    public getNumBitsAbs(): number {
-        if (this.isNegative()) // Unsigned Longs are never negative
+    ;
+    Long.prototype.getNumBitsAbs = function () {
+        if (this.isNegative())
             return this.eq(Long.MIN_VALUE) ? 64 : this.neg().getNumBitsAbs();
         var val = this.high != 0 ? this.high : this.low;
         for (var bit = 31; bit > 0; bit--)
@@ -993,74 +907,61 @@ class Long {
                 break;
         return this.high != 0 ? bit + 33 : bit + 1;
     };
-
-    public isZero(): boolean {
+    ;
+    Long.prototype.isZero = function () {
         return this.high === 0 && this.low === 0;
     };
-
-    public isNegative(): boolean {
+    ;
+    Long.prototype.isNegative = function () {
         return !this.unsigned && this.high < 0;
     };
-
-    public isPositive(): boolean {
+    ;
+    Long.prototype.isPositive = function () {
         return this.unsigned || this.high >= 0;
     };
-
-    public isOdd(): boolean {
+    ;
+    Long.prototype.isOdd = function () {
         return (this.low & 1) === 1;
     };
-
-    public isEven(): boolean {
+    ;
+    Long.prototype.isEven = function () {
         return (this.low & 1) === 0;
     };
-
-    public equals(other: any): boolean {
+    ;
+    Long.prototype.equals = function (other) {
         if (!Long.isLong(other))
             other = Long.fromValue(other);
         if (this.unsigned !== other.unsigned && (this.high >>> 31) === 1 && (other.high >>> 31) === 1)
             return false;
         return this.high === other.high && this.low === other.low;
     };
-
-    public eq = this.equals;
-
-    public notEquals(other: any): boolean {
+    ;
+    Long.prototype.notEquals = function (other) {
         return !this.eq(other);
     };
-
-    public neq = this.notEquals;
-
-    public lessThan(other: any): boolean {
+    ;
+    Long.prototype.lessThan = function (other) {
         return this.comp(other) < 0;
     };
-
-    public lt = this.lessThan;
-
-    public lessThanOrEqual(other: any): boolean {
+    ;
+    Long.prototype.lessThanOrEqual = function (other) {
         return this.comp(other) <= 0;
     };
-
-    public lte = this.lessThanOrEqual;
-
-    public greaterThan(other: any): boolean {
+    ;
+    Long.prototype.greaterThan = function (other) {
         return this.comp(other) > 0;
     };
-
-    public gt = this.greaterThan;
-
-    public greaterThanOrEqual(other: any): boolean {
+    ;
+    Long.prototype.greaterThanOrEqual = function (other) {
         return this.comp(other) >= 0;
     };
-
-    public gte = this.greaterThanOrEqual;
-
-    public compare(other: any): number {
+    ;
+    Long.prototype.compare = function (other) {
         if (!Long.isLong(other))
             other = Long.fromValue(other);
         if (this.eq(other))
             return 0;
-        var thisNeg = this.isNegative(),
-            otherNeg = other.isNegative();
+        var thisNeg = this.isNegative(), otherNeg = other.isNegative();
         if (thisNeg && !otherNeg)
             return -1;
         if (!thisNeg && otherNeg)
@@ -1071,34 +972,26 @@ class Long {
         // Both are positive if at least one is unsigned
         return (other.high >>> 0) > (this.high >>> 0) || (other.high === this.high && (other.low >>> 0) > (this.low >>> 0)) ? -1 : 1;
     };
-
-    public comp = this.compare;
-
-    public negate(): Long {
+    ;
+    Long.prototype.negate = function () {
         if (!this.unsigned && this.eq(Long.MIN_VALUE))
             return Long.MIN_VALUE;
         return this.not().add(Long.ONE);
     };
-
-    public neg = this.negate;
-
-    public add(addend: any): Long {
+    ;
+    Long.prototype.add = function (addend) {
         if (!Long.isLong(addend)) {
             addend = Long.fromValue(addend);
         }
-
         // Divide each number into 4 chunks of 16 bits, and then sum the chunks.
-
         var a48 = this.high >>> 16;
         var a32 = this.high & 0xFFFF;
         var a16 = this.low >>> 16;
         var a00 = this.low & 0xFFFF;
-
         var b48 = addend.high >>> 16;
         var b32 = addend.high & 0xFFFF;
         var b16 = addend.low >>> 16;
         var b00 = addend.low & 0xFFFF;
-
         var c48 = 0, c32 = 0, c16 = 0, c00 = 0;
         c00 += a00 + b00;
         c16 += c00 >>> 16;
@@ -1113,16 +1006,14 @@ class Long {
         c48 &= 0xFFFF;
         return Long.fromBits((c16 << 16) | c00, (c48 << 16) | c32, this.unsigned);
     };
-
-    public subtract(subtrahend: any): Long {
+    ;
+    Long.prototype.subtract = function (subtrahend) {
         if (!Long.isLong(subtrahend))
             subtrahend = Long.fromValue(subtrahend);
         return this.add(subtrahend.neg());
     };
-
-    public sub = this.subtract;
-
-    public multiply(multiplier: any): Long {
+    ;
+    Long.prototype.multiply = function (multiplier) {
         if (this.isZero())
             return Long.ZERO;
         if (!Long.isLong(multiplier))
@@ -1133,32 +1024,27 @@ class Long {
             return multiplier.isOdd() ? Long.MIN_VALUE : Long.ZERO;
         if (multiplier.eq(Long.MIN_VALUE))
             return this.isOdd() ? Long.MIN_VALUE : Long.ZERO;
-
         if (this.isNegative()) {
             if (multiplier.isNegative())
                 return this.neg().mul(multiplier.neg());
             else
                 return this.neg().mul(multiplier).neg();
-        } else if (multiplier.isNegative())
+        }
+        else if (multiplier.isNegative())
             return this.mul(multiplier.neg()).neg();
-
         // If both longs are small, use float multiplication
         if (this.lt(Long.TWO_PWR_24) && multiplier.lt(Long.TWO_PWR_24))
             return Long.fromNumber(this.toNumber() * multiplier.toNumber(), this.unsigned);
-
         // Divide each long into 4 chunks of 16 bits, and then add up 4x4 products.
         // We can skip products that would overflow.
-
         var a48 = this.high >>> 16;
         var a32 = this.high & 0xFFFF;
         var a16 = this.low >>> 16;
         var a00 = this.low & 0xFFFF;
-
         var b48 = multiplier.high >>> 16;
         var b32 = multiplier.high & 0xFFFF;
         var b16 = multiplier.low >>> 16;
         var b00 = multiplier.low & 0xFFFF;
-
         var c48 = 0, c32 = 0, c16 = 0, c00 = 0;
         c00 += a00 * b00;
         c16 += c00 >>> 16;
@@ -1182,10 +1068,8 @@ class Long {
         c48 &= 0xFFFF;
         return Long.fromBits((c16 << 16) | c00, (c48 << 16) | c32, this.unsigned);
     };
-
-    public mul = this.multiply;
-
-    public divide(divisor: any): Long {
+    ;
+    Long.prototype.divide = function (divisor) {
         if (!Long.isLong(divisor))
             divisor = Long.fromValue(divisor);
         if (divisor.isZero())
@@ -1198,7 +1082,7 @@ class Long {
             // closure library as a whole.
             if (this.eq(Long.MIN_VALUE)) {
                 if (divisor.eq(Long.ONE) || divisor.eq(Long.NEG_ONE))
-                    return Long.MIN_VALUE;  // recall that -MIN_VALUE == MIN_VALUE
+                    return Long.MIN_VALUE; // recall that -MIN_VALUE == MIN_VALUE
                 else if (divisor.eq(Long.MIN_VALUE))
                     return Long.ONE;
                 else {
@@ -1207,33 +1091,36 @@ class Long {
                     approx = halfThis.div(divisor).shl(1);
                     if (approx.eq(Long.ZERO)) {
                         return divisor.isNegative() ? Long.ONE : Long.NEG_ONE;
-                    } else {
+                    }
+                    else {
                         rem = this.sub(divisor.mul(approx));
                         res = approx.add(rem.div(divisor));
                         return res;
                     }
                 }
-            } else if (divisor.eq(Long.MIN_VALUE))
+            }
+            else if (divisor.eq(Long.MIN_VALUE))
                 return this.unsigned ? Long.UZERO : Long.ZERO;
             if (this.isNegative()) {
                 if (divisor.isNegative())
                     return this.neg().div(divisor.neg());
                 return this.neg().div(divisor).neg();
-            } else if (divisor.isNegative())
+            }
+            else if (divisor.isNegative())
                 return this.div(divisor.neg()).neg();
             res = Long.ZERO;
-        } else {
+        }
+        else {
             // The algorithm below has not been made for unsigned longs. It's therefore
             // required to take special care of the MSB prior to running it.
             if (!divisor.unsigned)
                 divisor = divisor.toUnsigned();
             if (divisor.gt(this))
                 return Long.UZERO;
-            if (divisor.gt(this.shru(1))) // 15 >>> 1 = 7 ; with divisor = 8 ; true
+            if (divisor.gt(this.shru(1)))
                 return Long.UONE;
             res = Long.UZERO;
         }
-
         // Repeat the following until the remainder is less than other:  find a
         // floating-point that approximates remainder / other *from below*, add this
         // into the result, and subtract it from the remainder.  It is critical that
@@ -1244,66 +1131,56 @@ class Long {
             // Approximate the result of division. This may be a little greater or
             // smaller than the actual value.
             approx = Math.max(1, Math.floor(rem.toNumber() / divisor.toNumber()));
-
             // We will tweak the approximate result by changing it in the 48-th digit or
             // the smallest non-fractional digit, whichever is larger.
-            var log2 = Math.ceil(Math.log(approx) / Math.LN2),
-                delta = (log2 <= 48) ? 1 : Long.pow_dbl(2, log2 - 48),
-
-                // Decrease the approximation until it is smaller than the remainder.  Note
-                // that if it is too large, the product overflows and is negative.
-                approxRes = Long.fromNumber(approx),
-                approxRem = approxRes.mul(divisor);
+            var log2 = Math.ceil(Math.log(approx) / Math.LN2), delta = (log2 <= 48) ? 1 : Long.pow_dbl(2, log2 - 48), 
+            // Decrease the approximation until it is smaller than the remainder.  Note
+            // that if it is too large, the product overflows and is negative.
+            approxRes = Long.fromNumber(approx), approxRem = approxRes.mul(divisor);
             while (approxRem.isNegative() || approxRem.gt(rem)) {
                 approx -= delta;
                 approxRes = Long.fromNumber(approx, this.unsigned);
                 approxRem = approxRes.mul(divisor);
             }
-
             // We know the answer can't be zero... and actually, zero would cause
             // infinite recursion since we would make no progress.
             if (approxRes.isZero())
                 approxRes = Long.ONE;
-
             res = res.add(approxRes);
             rem = rem.sub(approxRem);
         }
         return res;
     };
-
-    public div = this.divide;
-
-    public modulo(divisor: any): Long {
+    ;
+    Long.prototype.modulo = function (divisor) {
         if (!Long.isLong(divisor))
             divisor = Long.fromValue(divisor);
         return this.sub(this.div(divisor).mul(divisor));
     };
-
-    public mod = this.modulo;
-
-    public not(): Long {
+    ;
+    Long.prototype.not = function () {
         return Long.fromBits(~this.low, ~this.high, this.unsigned);
     };
-
-    public and(other: any): Long {
+    ;
+    Long.prototype.and = function (other) {
         if (!Long.isLong(other))
             other = Long.fromValue(other);
         return Long.fromBits(this.low & other.low, this.high & other.high, this.unsigned);
     };
-
-    public or(other: any): Long {
+    ;
+    Long.prototype.or = function (other) {
         if (!Long.isLong(other))
             other = Long.fromValue(other);
         return Long.fromBits(this.low | other.low, this.high | other.high, this.unsigned);
     };
-
-    public xor(other: any): Long {
+    ;
+    Long.prototype.xor = function (other) {
         if (!Long.isLong(other))
             other = Long.fromValue(other);
         return Long.fromBits(this.low ^ other.low, this.high ^ other.high, this.unsigned);
     };
-
-    public shiftLeft(numBits): Long {
+    ;
+    Long.prototype.shiftLeft = function (numBits) {
         if (Long.isLong(numBits))
             numBits = numBits.toInt();
         if ((numBits &= 63) === 0)
@@ -1313,10 +1190,8 @@ class Long {
         else
             return Long.fromBits(0, this.low << (numBits - 32), this.unsigned);
     };
-
-    public shl = this.shiftLeft;
-
-    public shiftRight(numBits): Long {
+    ;
+    Long.prototype.shiftRight = function (numBits) {
         if (Long.isLong(numBits))
             numBits = numBits.toInt();
         if ((numBits &= 63) === 0)
@@ -1326,10 +1201,8 @@ class Long {
         else
             return Long.fromBits(this.high >> (numBits - 32), this.high >= 0 ? 0 : -1, this.unsigned);
     };
-
-    public shr = this.shiftRight;
-
-    public shiftRightUnsigned(numBits): Long {
+    ;
+    Long.prototype.shiftRightUnsigned = function (numBits) {
         if (Long.isLong(numBits))
             numBits = numBits.toInt();
         numBits &= 63;
@@ -1340,33 +1213,47 @@ class Long {
             if (numBits < 32) {
                 var low = this.low;
                 return Long.fromBits((low >>> numBits) | (high << (32 - numBits)), high >>> numBits, this.unsigned);
-            } else if (numBits === 32)
+            }
+            else if (numBits === 32)
                 return Long.fromBits(high, 0, this.unsigned);
             else
                 return Long.fromBits(high >>> (numBits - 32), 0, this.unsigned);
         }
     };
-
-    public shru = this.shiftRightUnsigned;
-
-    public toSigned(): Long {
+    ;
+    Long.prototype.toSigned = function () {
         if (!this.unsigned)
             return this;
         return Long.fromBits(this.low, this.high, false);
     };
-
-    public toUnsigned(): Long {
+    ;
+    Long.prototype.toUnsigned = function () {
         if (this.unsigned)
             return this;
         return Long.fromBits(this.low, this.high, true);
     };
-
-
-}
-
+    ;
+    Long.INT_CACHE = {};
+    Long.UINT_CACHE = {};
+    Long.pow_dbl = Math.pow;
+    Long.TWO_PWR_16_DBL = 1 << 16;
+    Long.TWO_PWR_24_DBL = 1 << 24;
+    Long.TWO_PWR_32_DBL = Long.TWO_PWR_16_DBL * Long.TWO_PWR_16_DBL;
+    Long.TWO_PWR_64_DBL = Long.TWO_PWR_32_DBL * Long.TWO_PWR_32_DBL;
+    Long.TWO_PWR_63_DBL = Long.TWO_PWR_64_DBL / 2;
+    Long.TWO_PWR_24 = Long.fromInt(Long.TWO_PWR_24_DBL);
+    Long.ZERO = Long.fromInt(0);
+    Long.UZERO = Long.fromInt(0, true);
+    Long.ONE = Long.fromInt(1);
+    Long.UONE = Long.fromInt(1, true);
+    Long.NEG_ONE = Long.fromInt(-1);
+    Long.MAX_VALUE = Long.fromBits(0x7FFFFFFF, 0xFFFFFFFF, false);
+    Long.MAX_UNSIGNED_VALUE = Long.fromBits(0xFFFFFFFF, 0xFFFFFFFF, true);
+    Long.MIN_VALUE = Long.fromBits(0x80000000, 0, false);
+    return Long;
+}());
 Object.defineProperty(Long.prototype, "__isLong__", {
     value: true,
     enumerable: false,
     configurable: false
 });
-
