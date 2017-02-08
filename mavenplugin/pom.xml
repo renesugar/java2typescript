@@ -44,8 +44,8 @@
         </dependency>
         -->
         <dependency>
-            <groupId>org.kevoree.modeling.j2ts</groupId>
-            <artifactId>transpiler</artifactId>
+            <groupId>com.datathings</groupId>
+            <artifactId>j2ts-transpiler</artifactId>
             <version>${project.parent.version}</version>
         </dependency>
         <dependency>
