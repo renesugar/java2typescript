@@ -24,7 +24,7 @@
     <version>83-SNAPSHOT</version>
     <name>j2ts-parent</name>
     <url>https://github.com/datathings/java2typescript</url>
-    <description>Kevoree Modeling Java2TypeScript</description>
+    <description>Java2TypeScript</description>
 
     <licenses>
         <license>
@@ -181,11 +181,11 @@
 
     <distributionManagement>
         <repository>
-            <id>kevoree.oss.release</id>
+            <id>datathings.oss.release</id>
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
         </repository>
         <snapshotRepository>
-            <id>kevoree.oss.snapshots</id>
+            <id>datathings.oss.snapshots</id>
             <url>https://oss.sonatype.org/content/repositories/snapshots</url>
         </snapshotRepository>
     </distributionManagement>

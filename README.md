@@ -19,8 +19,8 @@ Hereafter is a simple snippet of usage:
 
 ```xml
 <plugin>
-    <groupId>org.kevoree.modeling.j2ts</groupId>
-    <artifactId>mavenplugin</artifactId>
+    <groupId>com.datathings</groupId>
+    <artifactId>j2ts-mavenplugin</artifactId>
     <version>${j2ts.version}</version>
     <executions>
         <execution>
@@ -48,7 +48,7 @@ These values can be overriden as follows:
 
 ### Sample project
 
-A full sample project is hosted [here](https://github.com/kevoree-modeling/java2typescript/raw/master/sample.zip)
+A full sample project is hosted [here](https://github.com/datathings/java2typescript/raw/master/sample.zip)
 
 This project can be compiled through the following command
 ```sh
@@ -78,7 +78,7 @@ To add your class with the same name than in Java.
 Finally in case of inferred package please also update this class:
 
 ```
-transpiler/src/main/java/org/kevoree/modeling/java2typescript/helper/TypeHelper.java#L162
+transpiler/src/main/java/java2typescript/helper/TypeHelper.java#L162
 ```
 
 Finally to provide a new JRE class permanently, please do a push request.
