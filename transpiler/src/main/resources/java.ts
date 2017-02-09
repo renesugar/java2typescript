@@ -1360,8 +1360,7 @@ class Long {
             return this;
         return Long.fromBits(this.low, this.high, true);
     };
-
-
+    
 }
 
 Object.defineProperty(Long.prototype, "__isLong__", {
