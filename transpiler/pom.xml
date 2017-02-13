@@ -16,7 +16,8 @@
     limitations under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>j2ts-transpiler</artifactId>
     <name>j2ts-transpiler</name>
@@ -45,5 +46,74 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.8</version>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                        <configuration>
+                            <target>
+                                <echo message="Compiling module: j2ts-jre"/>
+                                <!-- prepare java.ts for compilation -->
+                                <copy file="${basedir}/src/main/resources/java.ts"
+                                      todir="${basedir}/target/pre-npm"/>
+                                <replace file="${basedir}/target/pre-npm/java.ts">
+                                    <replacetoken>module java</replacetoken>
+                                    <replacevalue>export module java</replacevalue>
+                                </replace>
+                                <copy file="${basedir}/src/main/resources/package.json" todir="${basedir}/target/pre-npm"/>
+                                <replace file="${basedir}/target/pre-npm/package.json">
+                                    <replacetoken>J2TS_VERSION</replacetoken>
+                                    <replacevalue>${project.version}</replacevalue>
+                                </replace>
+                                <replace file="${basedir}/target/pre-npm/package.json">
+                                    <replacetoken>-SNAPSHOT</replacetoken>
+                                    <replacevalue/>
+                                </replace>
+                                <exec executable="npm" dir="${basedir}/target/pre-npm" failonerror="true">
+                                    <arg value="install"/>
+                                </exec>
+                                <exec executable="${basedir}/target/pre-npm/node_modules/typescript/bin/tsc"
+                                      dir="${basedir}/target/pre-npm/" failonerror="true">
+                                    <arg value="-d"/>
+                                    <arg value="--sourceMap"/>
+                                    <arg value="--target"/>
+                                    <arg value="es5"/>
+                                    <arg value="${basedir}/target/pre-npm/java.ts"/>
+                                </exec>
+                                <copy file="${basedir}/target/pre-npm/java.d.ts"
+                                      todir="${basedir}/target/classes-npm"/>
+                                <copy file="${basedir}/target/pre-npm/java.js"
+                                      todir="${basedir}/target/classes-npm"/>
+                                <!-- prepare package.json -->
+                                <copy file="${basedir}/src/main/resources/package.json" todir="${basedir}/target/classes-npm"/>
+                                <copy file="${basedir}/src/main/resources/readme.md" todir="${basedir}/target/classes-npm"/>
+                                <replace file="${basedir}/target/classes-npm/package.json">
+                                    <replacetoken>J2TS_VERSION</replacetoken>
+                                    <replacevalue>${project.version}</replacevalue>
+                                </replace>
+                                <replace file="${basedir}/target/classes-npm/package.json">
+                                    <replacetoken>-SNAPSHOT</replacetoken>
+                                    <replacevalue/>
+                                </replace>
+                                <exec executable="npm" dir="${basedir}/target/classes-npm" failonerror="true">
+                                    <arg value="link"/>
+                                </exec>
+                            </target>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
