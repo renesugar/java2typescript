@@ -772,7 +772,7 @@ function arrayInstanceOf(arr: any, arg: Function): boolean {
 }
 
 
-class Long {
+export class Long {
 
     /*
      long.js (c) 2013 Daniel Wirtz <dcode@dcode.io>
@@ -1360,7 +1360,6 @@ class Long {
             return this;
         return Long.fromBits(this.low, this.high, true);
     };
-    
 }
 
 Object.defineProperty(Long.prototype, "__isLong__", {
