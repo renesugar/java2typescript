@@ -20,10 +20,6 @@ import com.intellij.psi.PsiStatement;
 import java2typescript.context.TranslationContext;
 import java2typescript.translators.statement.StatementTranslator;
 
-/**
- *
- * Created by duke on 11/6/14.
- */
 public class CodeBlockTranslator {
 
     public static void translate(PsiCodeBlock block, TranslationContext ctx) {

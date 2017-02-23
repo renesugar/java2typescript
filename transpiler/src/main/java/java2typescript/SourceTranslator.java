@@ -78,10 +78,10 @@ public class SourceTranslator {
             }
         }
         PsiDirectory[] subDirectories = root.getSubdirectories();
-        Arrays.sort(subDirectories, (f1, f2) -> f1.getName().compareTo(f2.getName()) );
+        Arrays.sort(subDirectories, (f1, f2) -> f1.getName().compareTo(f2.getName()));
         for (PsiDirectory subDir : subDirectories) {
             visit(subDir, !rootPassed);
-            if(!rootPassed) {
+            if (!rootPassed) {
                 rootPassed = true;
             }
         }
@@ -108,9 +108,8 @@ public class SourceTranslator {
 
     private void visit(PsiDirectory dir, boolean isRoot) {
         ctx.enterPackage(dir.getName(), isRoot);
-
         PsiFile[] containedFiles = dir.getFiles();
-        Arrays.sort(containedFiles, (f1, f2) -> f1.getName().compareTo(f2.getName()) );
+        Arrays.sort(containedFiles, (f1, f2) -> f1.getName().compareTo(f2.getName()));
         for (PsiFile file : containedFiles) {
             if (file instanceof PsiJavaFile) {
                 visit((PsiJavaFile) file);
@@ -118,18 +117,15 @@ public class SourceTranslator {
                 visit(file);
             }
         }
-
         PsiDirectory[] subDirectories = dir.getSubdirectories();
-        Arrays.sort(subDirectories, (f1, f2) -> f1.getName().compareTo(f2.getName()) );
+        Arrays.sort(subDirectories, (f1, f2) -> f1.getName().compareTo(f2.getName()));
         for (PsiDirectory subDir : subDirectories) {
             visit(subDir, false);
         }
-
         ctx.leavePackage();
     }
 
     private void visit(PsiJavaFile file) {
-
         ctx.setFile(file);
         file.acceptChildren(new PsiElementVisitor() {
             @Override
@@ -145,14 +141,13 @@ public class SourceTranslator {
         System.out.println("Ignored file= " + elem);
     }
 
-
     public void addToClasspath(String path) {
         this.analyzer.addClasspath(path);
     }
 
 
-    public void addModuleImport(String moduleImport) {
-        ctx.addModuleImport(moduleImport);
+    public void addHeader(String moduleImport) {
+        ctx.addHeader(moduleImport);
     }
 
     public void addPackageTransform(String initialName, String newName) {
@@ -168,4 +163,5 @@ public class SourceTranslator {
     protected TranslationContext getCtx() {
         return this.ctx;
     }
+
 }

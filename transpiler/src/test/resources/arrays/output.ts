@@ -38,7 +38,7 @@ export class DoubleArray {
     let arr: Int32Array = new Int32Array([0, 1, 2, 3, 4]);
     arr.sort();
     for (let i: number = 0; i < 10; i++) {
-      org.junit.Assert.assertEquals(2.,3.,1.);
+      junit.Assert.assertEquals(2.,3.,1.);
     }
   }
 }

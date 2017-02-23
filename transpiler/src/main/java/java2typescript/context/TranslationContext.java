@@ -29,7 +29,7 @@ public class TranslationContext {
     private PsiJavaFile file;
     private Set<String> javaClasses = new HashSet<>();
     private String srcPath;
-    private List<String> moduleImports = new ArrayList<>();
+    private List<String> headers = new ArrayList<>();
     private Map<String, String> pkgTransforms = new HashMap<>();
     private ArrayList<String> genericParameterNames;
 
@@ -81,7 +81,7 @@ public class TranslationContext {
     public void needsJava(String clazz) {
        /*
         if (this.javaClasses.isEmpty()) {
-            this.addModuleImport("* as java from './jre.ts'");
+            this.addHeader("* as java from './jre.ts'");
         }
         this.javaClasses.add(clazz);
         */
@@ -94,14 +94,11 @@ public class TranslationContext {
     @Override
     public String toString() {
         StringBuilder importsBuilder = new StringBuilder();
-
-        for (String moduleImport : moduleImports) {
-            importsBuilder.append("/// <reference path=\"");
-            importsBuilder.append(moduleImport.toString());
-            importsBuilder.append("\" />\n");
+        for (String header : headers) {
+            importsBuilder.append(header);
+            importsBuilder.append("\n");
         }
-
-        if (!moduleImports.isEmpty()) {
+        if (!headers.isEmpty()) {
             importsBuilder.append("\n");
         }
 
@@ -122,10 +119,10 @@ public class TranslationContext {
     }
 
     public void enterPackage(String pkgName, boolean isRoot) {
-        if(isRoot) {
-            this.print("module ");
+        if (isRoot) {
+            this.print("namespace ");
         } else {
-            this.print("export module ");
+            this.print("export namespace ");
         }
         this.append(pkgName);
         this.append(" {\n");
@@ -141,8 +138,8 @@ public class TranslationContext {
         return srcPath;
     }
 
-    public void addModuleImport(String moduleImport) {
-        this.moduleImports.add(moduleImport);
+    public void addHeader(String header) {
+        this.headers.add(header);
     }
 
     public void addPackageTransform(String initialName, String newName) {

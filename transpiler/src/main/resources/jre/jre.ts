@@ -1,5 +1,5 @@
-module java {
-    export module lang {
+namespace java {
+    export namespace lang {
         export class System {
             static gc() {
             }
@@ -1367,3 +1367,4 @@ Object.defineProperty(Long.prototype, "__isLong__", {
     configurable: false
 });
 
+export default java;

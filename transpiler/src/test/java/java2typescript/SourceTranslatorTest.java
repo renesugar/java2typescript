@@ -15,7 +15,6 @@
  */
 package java2typescript;
 
-import java2typescript.SourceTranslator;
 import org.junit.Assert;
 import org.junit.Test;
 

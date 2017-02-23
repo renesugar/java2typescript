@@ -84,7 +84,7 @@ public class ClassTranslator {
         }
 
         if (innerClasses.length > 0 && atLeastOne) {
-            ctx.print("export module ");
+            ctx.print("export namespace ");
             ctx.append(element.getName());
             ctx.append(" {\n");
             ctx.increaseIdent();

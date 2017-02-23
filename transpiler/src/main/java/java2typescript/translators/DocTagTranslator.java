@@ -18,10 +18,6 @@ package java2typescript.translators;
 import java2typescript.context.TranslationContext;
 import java2typescript.metas.DocMeta;
 
-/**
- * Created by gregory.nain on 08/01/15.
- */
-
 public class DocTagTranslator {
 
     public static final String NATIVE = "native";

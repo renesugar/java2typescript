@@ -66,16 +66,10 @@ public class Java2TSPlugin extends AbstractMojo {
     private List<Dependency> dependencies = new ArrayList<Dependency>();
 
     @Parameter
-    private List<String> moduleImports = new ArrayList<String>();
+    private List<String> headers = new ArrayList<String>();
 
     @Parameter
     private Map<String, String> pkgTransforms = new HashMap<String, String>();
-
-    @Parameter(defaultValue = "false")
-    private boolean copyJRE;
-
-    @Parameter(defaultValue = "false")
-    private boolean copyJunit;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -87,13 +81,16 @@ public class Java2TSPlugin extends AbstractMojo {
         }
 
         SourceTranslator sourceTranslator = new SourceTranslator(sources, target.getPath(), name);
-        moduleImports.forEach(sourceTranslator::addModuleImport);
-        if (copyJRE) {
-            sourceTranslator.addModuleImport("./jre.ts");
-        }
+        headers.forEach(sourceTranslator::addHeader);
+        /*if (copyJRE) {
+            sourceTranslator.addHeader("./jre.ts");
+        }*/
+
+        /*
         if (copyJunit) {
-            sourceTranslator.addModuleImport("./junit.ts");
+            sourceTranslator.addHeader("./junit.ts");
         }
+        */
         pkgTransforms.forEach(sourceTranslator::addPackageTransform);
 
         String outDir = project.getBuild().getOutputDirectory();
@@ -121,15 +118,17 @@ public class Java2TSPlugin extends AbstractMojo {
         sourceTranslator.process();
         sourceTranslator.generate();
 
+        /*
         if (copyJRE) {
             try {
                 Files.copy(getClass().getClassLoader().getResourceAsStream("java.ts"), Paths.get(target.getAbsolutePath(), "jre.ts"), StandardCopyOption.REPLACE_EXISTING);
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
 
         //Generate tests
+        /*
         if (copyJunit) {
             try {
                 Files.copy(getClass().getClassLoader().getResourceAsStream("junit.ts"), Paths.get(target.getAbsolutePath(), "junit.ts"), StandardCopyOption.REPLACE_EXISTING);
@@ -139,22 +138,7 @@ public class Java2TSPlugin extends AbstractMojo {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-        }
-
-        //Generate package.json
-        try {
-            Files.deleteIfExists(target.toPath().resolve("package.json"));
-            BufferedWriter br = Files.newBufferedWriter(target.toPath().resolve("package.json"), StandardOpenOption.CREATE);
-            br.append("{\n" +
-                    "  \"name\": \""+project.getGroupId() + "." + project.getArtifactId()+"\",\n" +
-                    "  \"version\": \""+project.getVersion()+"\"\n" +
-                    "}");
-            br.flush();
-            br.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        }*/
 
     }
 }

@@ -15,5 +15,11 @@
 # limitations under the License.
 #
 
-cd transpiler/target/classes-npm
+basedir="$PWD"
+
+cd transpiler/target/classes-npm-jre
+npm publish ./
+cd "$basedir"
+
+cd transpiler/target/classes-npm-junit
 npm publish ./

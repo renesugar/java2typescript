@@ -1,9 +1,9 @@
 {
-  "name": "j2ts-jre",
+  "name": "j2ts-junit",
   "homepage": "https://github.com/datathings/java2typescript",
   "version": "J2TS_VERSION.0.0",
-  "main": "java.js",
-  "typings": "java.d.ts",
+  "main": "junit.js",
+  "typings": "junit.d.ts",
   "repository": {
     "type": "git",
     "url": "git://github.com/datathings/java2typescript.git"
@@ -18,6 +18,6 @@
     }
   ],
   "devDependencies": {
-    "typescript": "2.1.5"
+    "typescript": "^2.1.5"
   }
 }

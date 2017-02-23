@@ -43,8 +43,6 @@ public class TypeHelper {
         if (result.equals("Pattern")) {
             return "RegExp";
         }
-
-
         if (objects.contains(result) || classes.contains(result)) {
             return "any";
         } else if (primitiveNumbers.contains(result) || objectNumbers.contains(result)) {
@@ -171,7 +169,7 @@ public class TypeHelper {
 
     static {
 
-        javaTypes.put("Assert", "org.junit.Assert");
+        javaTypes.put("Assert", "junit.Assert");
 
         javaTypes.put("System", "java.lang.System");
 
