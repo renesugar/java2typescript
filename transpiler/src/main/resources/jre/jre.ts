@@ -1,4 +1,4 @@
-namespace java {
+export namespace java {
     export namespace lang {
         export class System {
             static gc() {
@@ -1366,5 +1366,3 @@ Object.defineProperty(Long.prototype, "__isLong__", {
     enumerable: false,
     configurable: false
 });
-
-export default java;

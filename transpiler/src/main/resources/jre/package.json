@@ -2,8 +2,8 @@
   "name": "j2ts-jre",
   "homepage": "https://github.com/datathings/java2typescript",
   "version": "J2TS_VERSION.0.0",
-  "main": "java.js",
-  "typings": "java.d.ts",
+  "main": "jre.js",
+  "typings": "jre.d.ts",
   "repository": {
     "type": "git",
     "url": "git://github.com/datathings/java2typescript.git"
