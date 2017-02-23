@@ -788,6 +788,55 @@ export class Long {
     private static UINT_CACHE = {};
     private static pow_dbl = Math.pow;
 
+    public static fromInt(value: number, unsigned ?: boolean): Long {
+        var obj, cachedObj, cache;
+        if (unsigned) {
+            value >>>= 0;
+            if (cache = (0 <= value && value < 256)) {
+                cachedObj = Long.UINT_CACHE[value];
+                if (cachedObj)
+                    return cachedObj;
+            }
+            obj = Long.fromBits(value, (value | 0) < 0 ? -1 : 0, true);
+            if (cache)
+                Long.UINT_CACHE[value] = obj;
+            return obj;
+        } else {
+            value |= 0;
+            if (cache = (-128 <= value && value < 128)) {
+                cachedObj = Long.INT_CACHE[value];
+                if (cachedObj)
+                    return cachedObj;
+            }
+            obj = Long.fromBits(value, value < 0 ? -1 : 0, false);
+            if (cache)
+                Long.INT_CACHE[value] = obj;
+            return obj;
+        }
+    }
+
+    public static fromBits(lowBits ?: number, highBits ?: number, unsigned ?: boolean): Long {
+        return new Long(lowBits, highBits, unsigned);
+    }
+
+    public static fromNumber(value: number, unsigned ?: boolean): Long {
+        if (isNaN(value) || !isFinite(value))
+            return unsigned ? Long.UZERO : Long.ZERO;
+        if (unsigned) {
+            if (value < 0)
+                return Long.UZERO;
+            if (value >= Long.TWO_PWR_64_DBL)
+                return Long.MAX_UNSIGNED_VALUE;
+        } else {
+            if (value <= -Long.TWO_PWR_63_DBL)
+                return Long.MIN_VALUE;
+            if (value + 1 >= Long.TWO_PWR_63_DBL)
+                return Long.MAX_VALUE;
+        }
+        if (value < 0)
+            return Long.fromNumber(-value, unsigned).neg();
+        return Long.fromBits((value % Long.TWO_PWR_32_DBL) | 0, (value / Long.TWO_PWR_32_DBL) | 0, unsigned);
+    }
 
     private static TWO_PWR_16_DBL = 1 << 16;
     private static TWO_PWR_24_DBL = 1 << 24;
@@ -820,56 +869,6 @@ export class Long {
 
     public static isLong(obj: any): boolean {
         return (obj && obj["__isLong__"]) === true;
-    }
-
-    public static fromInt(value: number, unsigned ?: boolean): Long {
-        var obj, cachedObj, cache;
-        if (unsigned) {
-            value >>>= 0;
-            if (cache = (0 <= value && value < 256)) {
-                cachedObj = Long.UINT_CACHE[value];
-                if (cachedObj)
-                    return cachedObj;
-            }
-            obj = Long.fromBits(value, (value | 0) < 0 ? -1 : 0, true);
-            if (cache)
-                Long.UINT_CACHE[value] = obj;
-            return obj;
-        } else {
-            value |= 0;
-            if (cache = (-128 <= value && value < 128)) {
-                cachedObj = Long.INT_CACHE[value];
-                if (cachedObj)
-                    return cachedObj;
-            }
-            obj = Long.fromBits(value, value < 0 ? -1 : 0, false);
-            if (cache)
-                Long.INT_CACHE[value] = obj;
-            return obj;
-        }
-    }
-
-    public static fromNumber(value: number, unsigned ?: boolean): Long {
-        if (isNaN(value) || !isFinite(value))
-            return unsigned ? Long.UZERO : Long.ZERO;
-        if (unsigned) {
-            if (value < 0)
-                return Long.UZERO;
-            if (value >= Long.TWO_PWR_64_DBL)
-                return Long.MAX_UNSIGNED_VALUE;
-        } else {
-            if (value <= -Long.TWO_PWR_63_DBL)
-                return Long.MIN_VALUE;
-            if (value + 1 >= Long.TWO_PWR_63_DBL)
-                return Long.MAX_VALUE;
-        }
-        if (value < 0)
-            return Long.fromNumber(-value, unsigned).neg();
-        return Long.fromBits((value % Long.TWO_PWR_32_DBL) | 0, (value / Long.TWO_PWR_32_DBL) | 0, unsigned);
-    }
-
-    public static fromBits(lowBits ?: number, highBits ?: number, unsigned ?: boolean): Long {
-        return new Long(lowBits, highBits, unsigned);
     }
 
     public static fromString(str: string, radix: number = 10, unsigned: boolean = false): Long {
