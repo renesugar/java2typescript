@@ -37,7 +37,12 @@ public class ReferenceExpressionTranslator {
         PsiElement resolution = element.resolve();
         if (element.getQualifierExpression() != null) {
             if (element.getQualifierExpression() instanceof PsiReferenceExpression) {
-                result += translate((PsiReferenceExpression) element.getQualifierExpression(), ctx, false);
+
+                if(element.getQualifierExpression().getText().equals("org.junit")) {
+                    result += "junit";
+                } else {
+                    result += translate((PsiReferenceExpression) element.getQualifierExpression(), ctx, false);
+                }
             } else {
                 ExpressionTranslator.translate(element.getQualifierExpression(), ctx);
             }
