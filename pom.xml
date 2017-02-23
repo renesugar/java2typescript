@@ -20,7 +20,7 @@
     <groupId>com.datathings</groupId>
     <artifactId>j2ts-parent</artifactId>
     <packaging>pom</packaging>
-    <version>84</version>
+    <version>85-SNAPSHOT</version>
     <name>j2ts-parent</name>
     <url>https://github.com/datathings/java2typescript</url>
     <description>Java2TypeScript</description>
