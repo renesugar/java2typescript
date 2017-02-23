@@ -69,7 +69,13 @@ public class Java2TSPlugin extends AbstractMojo {
     private List<String> headers = new ArrayList<String>();
 
     @Parameter
+    private List<String> testHeaders = new ArrayList<String>();
+
+    @Parameter
     private Map<String, String> pkgTransforms = new HashMap<String, String>();
+
+    @Parameter
+    private boolean withJUnit = false;
 
     @Override
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -128,17 +134,16 @@ public class Java2TSPlugin extends AbstractMojo {
         }*/
 
         //Generate tests
-        /*
-        if (copyJunit) {
+
+        if (withJUnit) {
             try {
-                Files.copy(getClass().getClassLoader().getResourceAsStream("junit.ts"), Paths.get(target.getAbsolutePath(), "junit.ts"), StandardCopyOption.REPLACE_EXISTING);
                 FlatJUnitGenerator generator = new FlatJUnitGenerator();
-                generator.addModuleImport("./" + name + ".ts");
+                generator.headers = testHeaders;
                 generator.generate(source, Paths.get(target.getAbsolutePath()).toFile());
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
-        }*/
+        }
 
     }
 }

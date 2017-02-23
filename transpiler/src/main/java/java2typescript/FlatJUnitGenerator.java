@@ -25,14 +25,11 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.List;
 
 public class FlatJUnitGenerator {
 
-    private ArrayList<String> moduleImports = new ArrayList<>();
-
-    public void addModuleImport(String s) {
-        moduleImports.add(s);
-    }
+    public List<String> headers = null;
 
     public void generate(File sourceDir, File targetDir) {
         try {
@@ -40,14 +37,12 @@ public class FlatJUnitGenerator {
             StringBuilder sb = new StringBuilder();
             StringBuilder sbDev = new StringBuilder();
 
-            /*
-            for (String s : moduleImports) {
-                sb.append("/// <reference path=\"");
-                sb.append(s);
-                sb.append("\" />\n");
+            if (headers != null) {
+                for (String s : headers) {
+                    sb.append(s + "\n");
+                    sbDev.append(s + "\n");
+                }
             }
-            */
-
 
             JavaAnalyzer javaAnalyzer = new JavaAnalyzer();
             PsiDirectory parsedDir = javaAnalyzer.analyze(sourceDir);
