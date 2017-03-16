@@ -155,7 +155,8 @@ public class ClassTranslator {
                 MethodTranslator.translate(method, ctx, false);
             }
         }
-        if (clazz.isEnum()) {
+
+        /*if (clazz.isEnum()) {
             ctx.print("public equals(other: any): boolean {\n");
             ctx.increaseIdent();
             ctx.print("return this == other;\n");
@@ -193,7 +194,7 @@ public class ClassTranslator {
             ctx.decreaseIdent();
             ctx.print("}\n");
 
-        }
+        }*/
         ctx.decreaseIdent();
     }
 

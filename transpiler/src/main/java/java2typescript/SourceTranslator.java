@@ -20,6 +20,7 @@ import com.intellij.openapi.util.io.FileUtil;
 import com.intellij.psi.*;
 import java2typescript.context.TranslationContext;
 import java2typescript.translators.ClassTranslator;
+import java2typescript.translators.EnumTranslator;
 
 import java.io.File;
 import java.io.IOException;
@@ -131,7 +132,11 @@ public class SourceTranslator {
             @Override
             public void visitElement(PsiElement element) {
                 if (element instanceof PsiClass) {
-                    ClassTranslator.translate((PsiClass) element, ctx);
+                    if (((PsiClass) element).isEnum()) {
+                        EnumTranslator.translate((PsiClass) element, ctx);
+                    } else {
+                        ClassTranslator.translate((PsiClass) element, ctx);
+                    }
                 }
             }
         });

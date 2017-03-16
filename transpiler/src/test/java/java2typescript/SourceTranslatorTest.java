@@ -76,6 +76,30 @@ public class SourceTranslatorTest {
     }
 
     @Test
+    public void enums() throws IOException {
+        String source = Paths.get("src", "test", "java", "sources", "enums").toAbsolutePath().toString();
+        String target = Paths.get("target", "generated-sources", "java2ts").toAbsolutePath().toString();
+
+        SourceTranslator translator = new SourceTranslator(source, target, "enums");
+        translator.addPackageTransform("sources.enums", "");
+        translator.process();
+
+        String result = translator.getCtx().toString().trim();
+        //System.out.println(result);
+
+        BufferedReader br = new BufferedReader(new FileReader(Paths.get("src", "test", "resources", "enums", "output.ts").toFile()));
+        StringBuilder sb = new StringBuilder();
+        String line = null;
+        while ((line = br.readLine()) != null){
+            sb.append('\n').append(line);
+        }
+
+        Assert.assertEquals(
+                sb.toString().substring(1),
+                result);
+    }
+
+    @Test
     public void arrays() throws IOException {
         String source = Paths.get("src", "test", "java", "sources", "arrays", "test").toAbsolutePath().toString();
         String target = Paths.get("target", "generated-sources", "java2ts").toAbsolutePath().toString();
