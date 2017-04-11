@@ -30,9 +30,13 @@ export class InFunction {
 }
 export class Primitive {
   public s: string = "a" + "b" + "c";
+  public static s2: string = "a" + "b" + "c";
   private static p: Primitive = Primitive.newPrim();
   private static newPrim(): Primitive {
     let p: Primitive = new Primitive();
+    if (typeof(Primitive.s2) === "string") {
+      Primitive.s2 = Primitive.s2 + "d";
+    }
     return p;
   }
   public funct(t: string): string {

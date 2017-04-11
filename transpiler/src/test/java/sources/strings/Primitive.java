@@ -18,11 +18,15 @@ package sources.strings;
 public class Primitive {
 
     String s = "a" + "b" + "c";
+    static String s2 = "a" + "b" + "c";
 
     private static Primitive p = newPrim();
 
     private static Primitive newPrim() {
         Primitive p = new Primitive();
+        if(s2 instanceof String) {
+            s2 = s2 + "d";
+        }
         return p;
     }
 

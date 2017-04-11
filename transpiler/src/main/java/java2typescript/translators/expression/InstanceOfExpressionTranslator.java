@@ -26,7 +26,7 @@ public class InstanceOfExpressionTranslator {
         String rightHandType = TypeHelper.printType(element.getCheckType().getType(), ctx, false, false);
 
         if (!isNativeArray(rightHandType) && element.getCheckType().getType().getArrayDimensions() == 1) {
-            if(element.getCheckType().getText().equals("Object[]")){
+            if (element.getCheckType().getText().equals("Object[]")) {
                 ctx.append("Array.isArray(");
                 ExpressionTranslator.translate(element.getOperand(), ctx);
                 ctx.append(")");
@@ -37,10 +37,14 @@ public class InstanceOfExpressionTranslator {
                 ctx.append(rightHandType);
                 ctx.append(")");
             }
+        } else if(rightHandType.equals("string")) {
+            ctx.append("typeof(");
+            ExpressionTranslator.translate(element.getOperand(), ctx);
+            ctx.append(") === \"string\"");
         } else {
             ExpressionTranslator.translate(element.getOperand(), ctx);
             ctx.append(" instanceof ");
-            if(rightHandType.equals("number") || rightHandType.equals("string") || rightHandType.equals("boolean")) {
+            if(rightHandType.equals("number") || rightHandType.equals("boolean")) {
                 ctx.append(rightHandType.substring(0, 1).toUpperCase()).append(rightHandType.substring(1));
             } else {
                 ctx.append(rightHandType);
