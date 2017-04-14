@@ -82,6 +82,12 @@ export namespace java {
             public static POSITIVE_INFINITY: number = Number.POSITIVE_INFINITY;
             public static NEGATIVE_INFINITY: number = Number.NEGATIVE_INFINITY;
             public static NaN = NaN;
+            public static parseDouble(d: any) {
+                return Number(d);
+            }
+            public static valueOf(d: any) {
+                return Number(d);
+            }
         }
         export class Long {
             public static parseLong(d: any) {
