@@ -341,6 +341,10 @@ export namespace java {
                         this._internal--;
                         return temp;
                     }
+
+                    intValue() : number {
+                        return this._internal;
+                    }
                 }
             }
             export namespace locks {
