@@ -41,7 +41,7 @@ public class SourceTranslatorTest {
         BufferedReader br = new BufferedReader(new FileReader(Paths.get("src", "test", "resources", "generics", "output.ts").toFile()));
         StringBuilder sb = new StringBuilder();
         String line = null;
-        while ((line = br.readLine()) != null){
+        while ((line = br.readLine()) != null) {
             sb.append('\n').append(line);
         }
 
@@ -66,7 +66,7 @@ public class SourceTranslatorTest {
         BufferedReader br = new BufferedReader(new FileReader(Paths.get("src", "test", "resources", "strings", "output.ts").toFile()));
         StringBuilder sb = new StringBuilder();
         String line = null;
-        while ((line = br.readLine()) != null){
+        while ((line = br.readLine()) != null) {
             sb.append('\n').append(line);
         }
 
@@ -90,7 +90,7 @@ public class SourceTranslatorTest {
         BufferedReader br = new BufferedReader(new FileReader(Paths.get("src", "test", "resources", "enums", "output.ts").toFile()));
         StringBuilder sb = new StringBuilder();
         String line = null;
-        while ((line = br.readLine()) != null){
+        while ((line = br.readLine()) != null) {
             sb.append('\n').append(line);
         }
 
@@ -113,7 +113,7 @@ public class SourceTranslatorTest {
         BufferedReader br = new BufferedReader(new FileReader(Paths.get("src", "test", "resources", "arrays", "output.ts").toFile()));
         StringBuilder sb = new StringBuilder();
         String line = null;
-        while ((line = br.readLine()) != null){
+        while ((line = br.readLine()) != null) {
             sb.append('\n').append(line);
         }
 
@@ -136,7 +136,7 @@ public class SourceTranslatorTest {
         BufferedReader br = new BufferedReader(new FileReader(Paths.get("src", "test", "resources", "closures", "output.ts").toFile()));
         StringBuilder sb = new StringBuilder();
         String line = null;
-        while ((line = br.readLine()) != null){
+        while ((line = br.readLine()) != null) {
             sb.append('\n').append(line);
         }
 
@@ -159,7 +159,7 @@ public class SourceTranslatorTest {
         BufferedReader br = new BufferedReader(new FileReader(Paths.get("src", "test", "resources", "base", "output.ts").toFile()));
         StringBuilder sb = new StringBuilder();
         String line = null;
-        while ((line = br.readLine()) != null){
+        while ((line = br.readLine()) != null) {
             sb.append('\n').append(line);
         }
 
@@ -182,7 +182,7 @@ public class SourceTranslatorTest {
         BufferedReader br = new BufferedReader(new FileReader(Paths.get("src", "test", "resources", "varargs", "output.ts").toFile()));
         StringBuilder sb = new StringBuilder();
         String line = null;
-        while ((line = br.readLine()) != null){
+        while ((line = br.readLine()) != null) {
             sb.append('\n').append(line);
         }
 
@@ -191,28 +191,26 @@ public class SourceTranslatorTest {
                 result);
     }
 
-    //@Test
-    public void mwdb_core() throws IOException {
-        String source = "/Users/gnain/Sources/Kevoree-Modeling/mwDB/core/src/main/java";
-        //String source = "/Users/gnain/Sources/Kevoree-Modeling/mwDB/api/src/main/java";
+  //  @Test
+    public void greycat_core() throws IOException {
+        String source = "/Users/duke/Documents/datathings/greycat/greycat/src/main/java";
 
         String target = Paths.get("target", "generated-sources", "core").toAbsolutePath().toString();
 
         SourceTranslator translator = new SourceTranslator(source, target, "strings");
         translator.addPackageTransform("sources.strings", "");
-        Path classes = Paths.get("/Users/gnain/Sources/Kevoree-Modeling/mwDB/api/target/api-11-SNAPSHOT.jar");
+        //  Path classes = Paths.get("/Users/gnain/Sources/Kevoree-Modeling/mwDB/api/target/api-11-SNAPSHOT.jar");
 
-        if(classes.toFile().exists()) {
-            translator.addToClasspath(classes.toString());
-        }
-
+        //  if(classes.toFile().exists()) {
+        //      translator.addToClasspath(classes.toString());
+        //  }
 
 
         translator.process();
 
         //TODO comment
-       // String result = translator.getCtx().toString().trim();
-       // System.out.println(result);
+         String result = translator.getCtx().toString().trim();
+         System.out.println(result);
 
 
     }
@@ -226,7 +224,7 @@ public class SourceTranslatorTest {
         translator.addPackageTransform("sources.strings", "");
         Path classes = Paths.get("/Users/gnain/Sources/Kevoree-Modeling/mwDB/api/target/api-7-SNAPSHOT.jar");
 
-        if(classes.toFile().exists()) {
+        if (classes.toFile().exists()) {
             System.out.println("DepAdded");
             translator.addToClasspath(classes.toString());
         }
@@ -247,7 +245,7 @@ public class SourceTranslatorTest {
         translator.addPackageTransform("sources.strings", "");
         Path classes = Paths.get("/Users/gnain/Sources/Kevoree-Modeling/mwDB/api/target/api-7-SNAPSHOT.jar");
 
-        if(classes.toFile().exists()) {
+        if (classes.toFile().exists()) {
             translator.addToClasspath(classes.toString());
         }
 

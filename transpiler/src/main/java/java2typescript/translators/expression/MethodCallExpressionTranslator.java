@@ -16,7 +16,6 @@
 package java2typescript.translators.expression;
 
 import com.intellij.psi.*;
-import com.intellij.psi.impl.source.PsiClassReferenceType;
 import java2typescript.context.TranslationContext;
 import java2typescript.helper.TypeHelper;
 
@@ -28,10 +27,10 @@ public class MethodCallExpressionTranslator {
 
         if (methodQualifierExpression != null) {
             if (methodQualifierExpression.getType() != null) {
-                if (methodQualifierExpression.getType() instanceof PsiClassReferenceType) {
-                    PsiClass cls = ((PsiClassReferenceType) methodQualifierExpression.getType()).resolve();
+                if (methodQualifierExpression.getType() instanceof PsiClassType) {
+                    PsiClass cls = ((PsiClassType) methodQualifierExpression.getType()).resolve();
                     if (cls == null) {
-                        PsiClassType rawType = ((PsiClassReferenceType) methodQualifierExpression.getType()).rawType();
+                        PsiClassType rawType = ((PsiClassType) methodQualifierExpression.getType()).rawType();
                         if (rawType != null) {
                             cls = rawType.resolve();
                         }
@@ -70,8 +69,8 @@ public class MethodCallExpressionTranslator {
 
     public static void printCallParameters(PsiExpression[] arguments, TranslationContext ctx) {
         for (int i = 0; i < arguments.length; i++) {
-            if(arguments[i] instanceof PsiMethodCallExpression) {
-                if(arguments[i].getType() != null && arguments[i].getType().getArrayDimensions() > 0) {
+            if (arguments[i] instanceof PsiMethodCallExpression) {
+                if (arguments[i].getType() != null && arguments[i].getType().getArrayDimensions() > 0) {
                     checkVarArgs(arguments, i, ctx);
                 }
                 ExpressionTranslator.translate(arguments[i], ctx);
@@ -87,7 +86,7 @@ public class MethodCallExpressionTranslator {
                         } else if (resolved instanceof PsiVariable) {
                             boolean isArray = ((PsiVariable) resolved).getType().getArrayDimensions() > 0;
                             if (isArray) {
-                               checkVarArgs(arguments, i, ctx);
+                                checkVarArgs(arguments, i, ctx);
                             }
                         }
                     }
@@ -104,9 +103,9 @@ public class MethodCallExpressionTranslator {
 
     private static void checkVarArgs(PsiExpression[] arguments, int index, TranslationContext ctx) {
         PsiElement parentExp = arguments[index].getParent();
-        if(parentExp != null) {
+        if (parentExp != null) {
             PsiElement grandParentExp = parentExp.getParent();
-            if(grandParentExp != null) {
+            if (grandParentExp != null) {
                 if (grandParentExp instanceof PsiNewExpression) {
                     PsiElement resolvedClass = ((PsiNewExpression) grandParentExp).getClassOrAnonymousClassReference().resolve();
                     if (resolvedClass instanceof PsiClass) {
@@ -120,10 +119,10 @@ public class MethodCallExpressionTranslator {
                             }
                         }
                     }
-                } else if(grandParentExp instanceof PsiMethodCallExpression) {
-                    PsiElement method = ((PsiMethodCallExpression)grandParentExp).getMethodExpression().resolve();
-                    if(method != null && method instanceof PsiMethod) {
-                        PsiParameter[] parameters = ((PsiMethod)method).getParameterList().getParameters();
+                } else if (grandParentExp instanceof PsiMethodCallExpression) {
+                    PsiElement method = ((PsiMethodCallExpression) grandParentExp).getMethodExpression().resolve();
+                    if (method != null && method instanceof PsiMethod) {
+                        PsiParameter[] parameters = ((PsiMethod) method).getParameterList().getParameters();
                         if (parameters.length == arguments.length) {
                             if (parameters[index].isVarArgs()) {
                                 ctx.append("...");

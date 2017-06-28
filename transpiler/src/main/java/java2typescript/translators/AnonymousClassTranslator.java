@@ -25,7 +25,7 @@ import java.util.*;
 
 public class AnonymousClassTranslator {
 
-    private static final Joiner joiner = Joiner.on(", ");
+    // private static final Joiner joiner = Joiner.on(", ").withKeyValueSeparator().;
 
     public static void translate(PsiAnonymousClass element, TranslationContext ctx) {
         if (TypeHelper.isCallbackClass(element.getBaseClassType().resolve())) {
@@ -85,7 +85,17 @@ public class AnonymousClassTranslator {
             paramSB.append(TypeHelper.printType(parameter.getType(), ctx));
             params.add(paramSB.toString());
         }
-        ctx.append(joiner.join(params));
+        //JOIN
+        StringBuilder buf = new StringBuilder();
+        for (int i = 0; i < params.size(); i++) {
+            if (i == 0) {
+                buf.append(params.get(i));
+            } else {
+                buf.append(", ");
+                buf.append(params.get(i));
+            }
+        }
+        ctx.append(buf.toString());
     }
 
 }

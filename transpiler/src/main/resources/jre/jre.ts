@@ -4,7 +4,7 @@ export namespace java {
             static gc() {
             }
 
-            static arraycopy(src: any[]| Float64Array | Int32Array | Int8Array, srcPos: number, dest: any[]| Float64Array | Int32Array | Int8Array, destPos: number, numElements: number): void {
+            static arraycopy(src: any[] | Float64Array | Int32Array | Int8Array, srcPos: number, dest: any[] | Float64Array | Int32Array | Int8Array, destPos: number, numElements: number): void {
                 if ((dest instanceof Float64Array || dest instanceof Int32Array || dest instanceof Int8Array)
                     && (src instanceof Float64Array || src instanceof Int32Array || src instanceof Int8Array)) {
                     if (numElements == src.length) {
@@ -82,9 +82,11 @@ export namespace java {
             public static POSITIVE_INFINITY: number = Number.POSITIVE_INFINITY;
             public static NEGATIVE_INFINITY: number = Number.NEGATIVE_INFINITY;
             public static NaN = NaN;
+
             public static parseDouble(d: any) {
                 return Number(d);
             }
+
             public static valueOf(d: any) {
                 return Number(d);
             }
@@ -342,7 +344,7 @@ export namespace java {
                         return temp;
                     }
 
-                    intValue() : number {
+                    intValue(): number {
                         return this._internal;
                     }
                 }
@@ -619,8 +621,8 @@ export namespace java {
                 return true;
             }
 
-            toArray(a: Array<E>): E[] {
-                return this.content;
+            toArray<E>(a: Array<E>): E[] {
+                return <E[]><any>this.content;
             }
 
             size(): number {

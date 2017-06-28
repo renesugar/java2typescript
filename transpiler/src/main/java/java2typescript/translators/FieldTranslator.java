@@ -67,8 +67,14 @@ public class FieldTranslator {
         ctx.append(element.getName()).append(": ");
 
         if (element.hasInitializer() && (element.getInitializer() instanceof PsiLambdaExpression)) {
-            if(element.getType() instanceof PsiClassReferenceType) {
-                MethodTranslator.translateToLambdaType(((PsiClassReferenceType)element.getType()).rawType().resolve().getMethods()[0], ctx, docMeta);
+            if (element.getType() instanceof PsiClassReferenceType) {
+                try {
+                    MethodTranslator.translateToLambdaType(((PsiClassReferenceType) element.getType()).rawType().resolve().getMethods()[0], ctx, docMeta);
+                } catch (Exception e){
+                    ((PsiClassReferenceType) element.getType()).rawType()
+                            .resolve();
+                    e.printStackTrace();
+                }
             } else {
                 System.err.println("FieldTranslator:: Type not instance of PsiClassReferenceType. Could not translate lambda expression. (" + element.getType().getClass().getName() + ")");
             }

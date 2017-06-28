@@ -11,13 +11,8 @@
   "bugs": {
     "url": "https://github.com/datathings/java2typescript/issues"
   },
-  "licenses": [
-    {
-      "type": "Apache-2.0",
-      "url": "http://www.apache.org/licenses/LICENSE-2.0"
-    }
-  ],
+  "license": "Apache-2.0",
   "devDependencies": {
-    "typescript": "^2.1.5"
+    "typescript": "2.4.1"
   }
 }
