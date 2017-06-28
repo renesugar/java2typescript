@@ -24,6 +24,8 @@ public class DocTagTranslator {
 
     public static final String IGNORE = "ignore";
 
+    public static final String EXTEND = "extend";
+
     public static final String TS = "ts";
 
     public static final String TS_CALLBACK = "ts_callback";

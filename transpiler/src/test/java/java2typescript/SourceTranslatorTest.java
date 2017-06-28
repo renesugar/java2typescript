@@ -191,7 +191,31 @@ public class SourceTranslatorTest {
                 result);
     }
 
-  //  @Test
+    @Test
+    public void extendClass() throws IOException {
+        String source = Paths.get("src", "test", "java", "sources", "extend").toAbsolutePath().toString();
+        String target = Paths.get("target", "generated-sources", "java2ts").toAbsolutePath().toString();
+
+        SourceTranslator translator = new SourceTranslator(source, target, "extend");
+        translator.process();
+
+        String result = translator.getCtx().toString().trim();
+        //System.out.println(result);
+
+        BufferedReader br = new BufferedReader(new FileReader(Paths.get("src", "test", "resources", "extend", "output.ts").toFile()));
+        StringBuilder sb = new StringBuilder();
+        String line = null;
+        while ((line = br.readLine()) != null) {
+            sb.append('\n').append(line);
+        }
+
+        Assert.assertEquals(
+                sb.toString().substring(1),
+                result);
+    }
+
+
+    //  @Test
     public void greycat_core() throws IOException {
         String source = "/Users/duke/Documents/datathings/greycat/greycat/src/main/java";
 
@@ -209,8 +233,8 @@ public class SourceTranslatorTest {
         translator.process();
 
         //TODO comment
-         String result = translator.getCtx().toString().trim();
-         System.out.println(result);
+        String result = translator.getCtx().toString().trim();
+        System.out.println(result);
 
 
     }

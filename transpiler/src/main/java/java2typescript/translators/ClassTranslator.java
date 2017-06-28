@@ -65,7 +65,7 @@ public class ClassTranslator {
             DocTagTranslator.translate(metas, ctx);
             ctx.decreaseIdent();
         } else {
-            printClassMembers(clazz, ctx);
+            printClassMembers(clazz, ctx, metas);
         }
 
         ctx.print("}\n");
@@ -100,7 +100,7 @@ public class ClassTranslator {
         }
     }
 
-    private static void printClassMembers(PsiClass clazz, TranslationContext ctx) {
+    private static void printClassMembers(PsiClass clazz, TranslationContext ctx, DocMeta classMetas) {
         ctx.increaseIdent();
         PsiField[] fields = clazz.getFields();
         for (PsiField field : fields) {
@@ -108,7 +108,6 @@ public class ClassTranslator {
         }
         PsiClassInitializer[] initializers = clazz.getInitializers();
         initLoop : for (PsiClassInitializer initializer : initializers) {
-
             PsiElement p = initializer.getModifierList();
             while(p != null) {
                 if(p instanceof PsiDocComment) {
@@ -195,6 +194,7 @@ public class ClassTranslator {
             ctx.print("}\n");
 
         }*/
+        DocTagTranslator.translate(classMetas, ctx);
         ctx.decreaseIdent();
     }
 

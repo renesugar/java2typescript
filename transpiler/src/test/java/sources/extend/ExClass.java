@@ -13,17 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package java2typescript.metas;
+package sources.extend;
 
-import java.util.ArrayList;
-import java.util.List;
 
-public class DocMeta {
+/**
+ *{@native ts
+ * sayHello(){ console.log("hello"); }
+ * }
+ */
+public class ExClass {
 
-    public boolean nativeActivated = false;
-    public boolean ignored = false;
-    public boolean extend = false;
-    public boolean functionType = false;
-    public List<String> optional = new ArrayList<String>();
-    public List<String> nativeBodyLines;
 }
