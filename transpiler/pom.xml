@@ -49,8 +49,6 @@
 
     <build>
         <plugins>
-
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -87,8 +85,9 @@
                                 <exec executable="${basedir}/target/classes-npm-jre/node_modules/typescript/bin/tsc"
                                       dir="${basedir}/target/classes-npm-jre" failonerror="true"/>
                                 <delete file="${basedir}/target/classes-npm-jre/jre.ts"/>
-                                <exec executable="npm" dir="${basedir}/target/classes-npm-jre" failonerror="true">
+                                <exec executable="npm" dir="${basedir}/target/" failonerror="true">
                                     <arg value="pack"/>
+                                    <arg value="classes-npm-jre/"/>
                                 </exec>
                                 <echo message="Compiling module: j2ts-junit"/>
                                 <copy file="${basedir}/src/main/resources/junit/junit.ts"
@@ -113,8 +112,9 @@
                                 <exec executable="${basedir}/target/classes-npm-junit/node_modules/typescript/bin/tsc"
                                       dir="${basedir}/target/classes-npm-junit" failonerror="true"/>
                                 <delete file="${basedir}/target/classes-npm-junit/junit.ts"/>
-                                <exec executable="npm" dir="${basedir}/target/classes-npm-junit" failonerror="true">
+                                <exec executable="npm" dir="${basedir}/target/" failonerror="true">
                                     <arg value="pack"/>
+                                    <arg value="classes-npm-junit/"/>
                                 </exec>
                             </target>
                         </configuration>
