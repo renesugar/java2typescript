@@ -34,8 +34,8 @@ public class DocTagTranslator {
 
 
     public static void translate(DocMeta docMeta, TranslationContext ctx) {
-        if(docMeta.nativeActivated && docMeta.nativeBodyLines != null) {
-            for(String line : docMeta.nativeBodyLines) {
+        if ((docMeta.nativeActivated || docMeta.extend) && docMeta.nativeBodyLines != null) {
+            for (String line : docMeta.nativeBodyLines) {
                 ctx.print(line);
             }
         }

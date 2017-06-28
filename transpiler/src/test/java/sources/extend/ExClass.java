@@ -17,10 +17,14 @@ package sources.extend;
 
 
 /**
- *{@native ts
+ * {@extend ts
  * sayHello(){ console.log("hello"); }
  * }
  */
 public class ExClass {
+
+    public final String getHello() {
+        return "hello";
+    }
 
 }
