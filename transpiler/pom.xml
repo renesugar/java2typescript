@@ -16,8 +16,7 @@
     limitations under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>j2ts-transpiler</artifactId>
     <name>j2ts-transpiler</name>
@@ -25,7 +24,7 @@
     <parent>
         <groupId>com.datathings</groupId>
         <artifactId>j2ts-parent</artifactId>
-        <version>89-SNAPSHOT</version>
+        <version>89</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
@@ -62,59 +61,49 @@
                         </goals>
                         <configuration>
                             <target>
-                                <echo message="Compiling module: j2ts-jre"/>
-                                <copy file="${basedir}/src/main/resources/jre/jre.ts"
-                                      todir="${basedir}/target/classes-npm-jre"/>
-                                <copy file="${basedir}/src/main/resources/jre/package.json"
-                                      todir="${basedir}/target/classes-npm-jre"/>
-                                <copy file="${basedir}/src/main/resources/jre/readme.md"
-                                      todir="${basedir}/target/classes-npm-jre"/>
-                                <copy file="${basedir}/src/main/resources/jre/tsconfig.json"
-                                      todir="${basedir}/target/classes-npm-jre"/>
+                                <echo message="Compiling module: j2ts-jre" />
+                                <copy file="${basedir}/src/main/resources/jre/jre.ts" todir="${basedir}/target/classes-npm-jre" />
+                                <copy file="${basedir}/src/main/resources/jre/package.json" todir="${basedir}/target/classes-npm-jre" />
+                                <copy file="${basedir}/src/main/resources/jre/readme.md" todir="${basedir}/target/classes-npm-jre" />
+                                <copy file="${basedir}/src/main/resources/jre/tsconfig.json" todir="${basedir}/target/classes-npm-jre" />
                                 <replace file="${basedir}/target/classes-npm-jre/package.json">
                                     <replacetoken>J2TS_VERSION</replacetoken>
                                     <replacevalue>${project.version}</replacevalue>
                                 </replace>
                                 <replace file="${basedir}/target/classes-npm-jre/package.json">
                                     <replacetoken>-SNAPSHOT</replacetoken>
-                                    <replacevalue/>
+                                    <replacevalue />
                                 </replace>
                                 <exec executable="npm" dir="${basedir}/target/classes-npm-jre" failonerror="true">
-                                    <arg value="install"/>
+                                    <arg value="install" />
                                 </exec>
-                                <exec executable="${basedir}/target/classes-npm-jre/node_modules/typescript/bin/tsc"
-                                      dir="${basedir}/target/classes-npm-jre" failonerror="true"/>
-                                <delete file="${basedir}/target/classes-npm-jre/jre.ts"/>
+                                <exec executable="${basedir}/target/classes-npm-jre/node_modules/typescript/bin/tsc" dir="${basedir}/target/classes-npm-jre" failonerror="true" />
+                                <delete file="${basedir}/target/classes-npm-jre/jre.ts" />
                                 <exec executable="npm" dir="${basedir}/target/" failonerror="true">
-                                    <arg value="pack"/>
-                                    <arg value="classes-npm-jre/"/>
+                                    <arg value="pack" />
+                                    <arg value="classes-npm-jre/" />
                                 </exec>
-                                <echo message="Compiling module: j2ts-junit"/>
-                                <copy file="${basedir}/src/main/resources/junit/junit.ts"
-                                      todir="${basedir}/target/classes-npm-junit"/>
-                                <copy file="${basedir}/src/main/resources/junit/package.json"
-                                      todir="${basedir}/target/classes-npm-junit"/>
-                                <copy file="${basedir}/src/main/resources/junit/readme.md"
-                                      todir="${basedir}/target/classes-npm-junit"/>
-                                <copy file="${basedir}/src/main/resources/junit/tsconfig.json"
-                                      todir="${basedir}/target/classes-npm-junit"/>
+                                <echo message="Compiling module: j2ts-junit" />
+                                <copy file="${basedir}/src/main/resources/junit/junit.ts" todir="${basedir}/target/classes-npm-junit" />
+                                <copy file="${basedir}/src/main/resources/junit/package.json" todir="${basedir}/target/classes-npm-junit" />
+                                <copy file="${basedir}/src/main/resources/junit/readme.md" todir="${basedir}/target/classes-npm-junit" />
+                                <copy file="${basedir}/src/main/resources/junit/tsconfig.json" todir="${basedir}/target/classes-npm-junit" />
                                 <replace file="${basedir}/target/classes-npm-junit/package.json">
                                     <replacetoken>J2TS_VERSION</replacetoken>
                                     <replacevalue>${project.version}</replacevalue>
                                 </replace>
                                 <replace file="${basedir}/target/classes-npm-junit/package.json">
                                     <replacetoken>-SNAPSHOT</replacetoken>
-                                    <replacevalue/>
+                                    <replacevalue />
                                 </replace>
                                 <exec executable="npm" dir="${basedir}/target/classes-npm-junit" failonerror="true">
-                                    <arg value="install"/>
+                                    <arg value="install" />
                                 </exec>
-                                <exec executable="${basedir}/target/classes-npm-junit/node_modules/typescript/bin/tsc"
-                                      dir="${basedir}/target/classes-npm-junit" failonerror="true"/>
-                                <delete file="${basedir}/target/classes-npm-junit/junit.ts"/>
+                                <exec executable="${basedir}/target/classes-npm-junit/node_modules/typescript/bin/tsc" dir="${basedir}/target/classes-npm-junit" failonerror="true" />
+                                <delete file="${basedir}/target/classes-npm-junit/junit.ts" />
                                 <exec executable="npm" dir="${basedir}/target/" failonerror="true">
-                                    <arg value="pack"/>
-                                    <arg value="classes-npm-junit/"/>
+                                    <arg value="pack" />
+                                    <arg value="classes-npm-junit/" />
                                 </exec>
                             </target>
                         </configuration>
