@@ -704,7 +704,7 @@ export namespace java {
             remove(key: K): V;
             keySet(): Set<K>;
             isEmpty(): boolean;
-            values(): Set<V>;
+            values(): Collection<V>;
             clear(): void;
             size(): number;
         }
@@ -747,14 +747,14 @@ export namespace java {
                 return Object.keys(this.content).length == 0;
             }
 
-            values(): Set<V> {
-                var result = new HashSet<V>();
+            values(): Collection<V> {
+                var result = new ArrayList<V>();
                 for (var p in this.content) {
                     if (this.content.hasOwnProperty(p)) {
                         result.add(this.content[p]);
                     }
                 }
-                return <Set<V>> result;
+                return <Collection<V>>result;
             }
 
             clear(): void {
