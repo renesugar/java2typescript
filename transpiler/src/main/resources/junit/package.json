@@ -1,7 +1,7 @@
 {
   "name": "j2ts-junit",
   "homepage": "https://github.com/datathings/java2typescript",
-  "version": "J2TS_VERSION.0.0",
+  "version": "J2TS_VERSION",
   "main": "junit.js",
   "typings": "junit.d.ts",
   "repository": {
