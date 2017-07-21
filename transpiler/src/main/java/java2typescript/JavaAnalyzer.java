@@ -90,6 +90,7 @@ public class JavaAnalyzer {
         applicationEnvironment = new ApplicationEnvironment(disposable);
         environment = new ProjectEnvironment(disposable, applicationEnvironment);
 
+        System.setProperty("idea.use.native.fs.for.win","false");
     }
 
     final ApplicationEnvironment applicationEnvironment;
