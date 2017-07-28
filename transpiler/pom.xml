@@ -24,7 +24,7 @@
     <parent>
         <groupId>com.datathings</groupId>
         <artifactId>j2ts-parent</artifactId>
-        <version>93</version>
+        <version>94-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
