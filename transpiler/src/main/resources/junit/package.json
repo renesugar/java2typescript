@@ -1,5 +1,5 @@
 {
-  "name": "j2ts-junit",
+  "name": "@greycat/j2ts-junit",
   "homepage": "https://github.com/datathings/java2typescript",
   "version": "J2TS_VERSION",
   "main": "junit.js",
@@ -13,6 +13,6 @@
   },
   "license": "Apache-2.0",
   "devDependencies": {
-    "typescript": "2.4.1"
+    "typescript": "2.4.2"
   }
 }

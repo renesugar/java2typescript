@@ -15,7 +15,8 @@
     limitations under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.datathings</groupId>
     <artifactId>j2ts-parent</artifactId>
@@ -180,12 +181,12 @@
 
     <distributionManagement>
         <repository>
-            <id>datathings.oss.release</id>
-            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+            <id>datathings.protected</id>
+            <url>https://registry.datathings.com/repository/public/</url>
         </repository>
         <snapshotRepository>
-            <id>datathings.oss.snapshots</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+            <id>datathings.protected</id>
+            <url>https://registry.datathings.com/repository/public/</url>
         </snapshotRepository>
     </distributionManagement>
 

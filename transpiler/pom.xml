@@ -16,7 +16,8 @@
     limitations under the License.
 
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>j2ts-transpiler</artifactId>
     <name>j2ts-transpiler</name>
@@ -126,6 +127,40 @@
                     </execution>
                 </executions>
             </plugin>
+
+
+            <plugin>
+                <groupId>org.codehaus.gmaven</groupId>
+                <artifactId>groovy-maven-plugin</artifactId>
+                <version>2.0</version>
+                <executions>
+                    <execution>
+                        <id>main.ts.deploy</id>
+                        <phase>deploy</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                        <configuration>
+                            <source>
+                                //windows compat...
+                                def gbasedir = basedir.getAbsolutePath().replace('\\', '/')
+                                def prefix = (System.getProperty("os.name").toLowerCase().contains("win")) ? "CMD /C " : ""
+                                def npmInstallProcessJRE = (prefix + "npm publish").execute(null, new File("${gbasedir}/target/classes-npm-jre"))
+                                npmInstallProcessJRE.waitForProcessOutput(System.out, System.err)
+                                if (npmInstallProcessJRE.exitValue() != 0) {
+                                    exit
+                                }
+                                def npmInstallProcessUnit = (prefix + "npm publish").execute(null, new File("${gbasedir}/target/classes-npm-junit"))
+                                npmInstallProcessUnit.waitForProcessOutput(System.out, System.err)
+                                if (npmInstallProcessUnit.exitValue() != 0) {
+                                    exit
+                                }
+                            </source>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
     </build>
 </project>
