@@ -89,12 +89,12 @@
                                 if (tscProcess.exitValue() != 0) {
                                     exit
                                 }
-                                ant.delete(file: "${gbasedir}/target/classes-npm-jre/jre.ts")
                                 def npmPackProcess = (prefix + "npm pack classes-npm-jre/").execute(null, new File("${gbasedir}/target/"))
                                 npmPackProcess.waitForProcessOutput(System.out, System.err)
                                 if (npmPackProcess.exitValue() != 0) {
                                     exit
                                 }
+                                ant.delete(file: "${gbasedir}/target/classes-npm-jre/tsconfig.json")
 
                                 //prepare junit.ts dir
                                 //prepare dir
@@ -115,12 +115,13 @@
                                 if (tscProcessUnit.exitValue() != 0) {
                                     exit
                                 }
-                                ant.delete(file: "${gbasedir}/target/classes-npm-junit/junit.ts")
+
                                 def npmPackProcessUnit = (prefix + "npm pack classes-npm-junit/").execute(null, new File("${gbasedir}/target/"))
                                 npmPackProcessUnit.waitForProcessOutput(System.out, System.err)
                                 if (npmPackProcessUnit.exitValue() != 0) {
                                     exit
                                 }
+                                ant.delete(file: "${gbasedir}/target/classes-npm-junit/tsconfig.json")
                             </source>
                         </configuration>
                     </execution>
