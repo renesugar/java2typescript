@@ -22,7 +22,7 @@
     <parent>
         <artifactId>j2ts-parent</artifactId>
         <groupId>com.datathings</groupId>
-        <version>96</version>
+        <version>97-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
 
